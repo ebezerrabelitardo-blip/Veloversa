@@ -134,7 +134,7 @@ async function hp(pw,salt){const k=await crypto.subtle.importKey('raw',new TextE
 const pwScore=p=>[p.length>=8,/[A-Z]/.test(p)&&/[a-z]/.test(p),/\d/.test(p),/[^\w\s]/.test(p)].filter(Boolean).length;
 const sc=p=>{let s=-(Date.now()-p.t)/36e5;(p.cap.match(/#\w+/g)||[]).forEach(h=>s+=(S.top[h]||0)*6);return s};
 const allTags=()=>[...new Set(S.posts.flatMap(p=>p.cap.match(/#\w+/g)||[]))];
-const authHtml=()=>{const up=mode=='up';return `<div class="ab"><div class="logo" style="flex:none;justify-content:center;font-size:1.1rem">${LOGO}VELOVERSA</div><h1>${up?'Crie sua conta':'Bem-vindo de volta'}</h1><p class="mu">${up?'Compartilhe momentos, descubra tendências e crie comunidades.':'Entre para continuar no seu universo.'}</p>${up?'<input id="ae" type="email" autocomplete="email" placeholder="E-mail" aria-label="E-mail"><input id="auu" autocomplete="username" autocapitalize="none" maxlength="20" placeholder="Nome de usuário" aria-label="Nome de usuário">':'<input id="ai" autocomplete="username" autocapitalize="none" placeholder="E-mail ou usuário" aria-label="E-mail ou usuário">'}<div class="pw"><input id="ap" type="password" autocomplete="${up?'new-password':'current-password'}" placeholder="Senha" aria-label="Senha"><button type="button" class="eye" data-a="eye">Mostrar</button></div>${up?'<div class="pbar"><i id="pb"></i></div><label class="mu">Data de nascimento<input id="ab" type="date"></label><label class="ck"><input id="at" type="checkbox"> Aceito os Termos de Uso e a Política de Privacidade</label>':''}<p id="er" class="er" role="alert"></p><button class="bt" data-a="auth">${up?'Criar conta':'Entrar'}</button>${up?'':`<button class="lk" data-a="awipe">${aw?'Toque de novo para apagar tudo':'Esqueci a senha / recomeçar'}</button>`}<p class="mu" style="font-size:.72rem;text-align:center">Modo demonstração: conta e senha (protegida com PBKDF2) ficam só neste aparelho. Login entre dispositivos exige o servidor.</p></div>`};
+const authHtml=()=>{const up=mode=='up';return `<div class="ab"><div class="logo" style="flex:none;justify-content:center;font-size:1.1rem">${LOGO}VELOVERSA</div><h1>${up?'Crie sua conta':'Bem-vindo de volta'}</h1><p class="mu">${up?'Compartilhe momentos, descubra tendências e crie comunidades.':'Entre para continuar no seu universo.'}</p>${up?'<input id="ae" type="email" autocomplete="email" placeholder="E-mail" aria-label="E-mail"><input id="auu" autocomplete="username" autocapitalize="none" maxlength="20" placeholder="Nome de usuário" aria-label="Nome de usuário">':'<input id="ai" autocomplete="username" autocapitalize="none" placeholder="E-mail" aria-label="E-mail">'}<div class="pw"><input id="ap" type="password" autocomplete="${up?'new-password':'current-password'}" placeholder="Senha" aria-label="Senha"><button type="button" class="eye" data-a="eye">Mostrar</button></div>${up?'<div class="pbar"><i id="pb"></i></div><label class="mu">Data de nascimento<input id="ab" type="date"></label><label class="ck"><input id="at" type="checkbox"> Aceito os Termos de Uso e a Política de Privacidade</label>':''}<p id="er" class="er" role="alert"></p><button class="bt" data-a="auth">${up?'Criar conta':'Entrar'}</button><button class="lk" data-a="mode">${up?'Já tenho conta':'Criar conta nova'}</button><p class="mu" style="font-size:.72rem;text-align:center">Conta online: use o mesmo login em qualquer aparelho.</p></div>`};
 const authShow=()=>{const a=$('#au');a.hidden=false;a.innerHTML=authHtml()};
 document.addEventListener('input',e=>{if(e.target.id=='ap'&&mode=='up'){const n=pwScore(e.target.value),b=$('#pb');b.style.width=n*25+'%';b.style.background=['#e5484d','#e5484d','#f5a524','#3dd68c','#3dd68c'][n]}});
 const algoHtml=()=>`<h3>Seu algoritmo</h3><p class="mu">Escolha o que aparece mais ou menos no seu feed. Isso muda a ordem real das publicações.</p>${allTags().map(h=>`<div class="tg2"><span>${h}</span><button class="lk" data-a="topic" data-i="${h}">${['Ocultar','Normal','Mais'][(S.top[h]||0)+1]}</button></div>`).join('')}`;
@@ -156,7 +156,7 @@ home(){const reels=S.posts.filter(p=>p.type=='reel');const L=S.posts.filter(p=>p
  const strip=reels.length?`<div class="hd"><span>Reels sugeridos</span></div><div class="row">${reels.map(p=>`<div class="gt" style="width:110px;height:170px;border-radius:12px;flex:none;${p.img?'':art(p.art||200)}" data-a="reels" data-i="${p.id}" role="button" aria-label="Abrir Reels"><i>▶</i></div>`).join('')}</div>`:'';
  return `<div class="demo">Modo demonstração · seus dados ficam apenas neste aparelho</div><span class="chip">🔥 ${S.str.n} dia(s) seguidos</span><button class="chip" style="margin-left:8px;color:var(--ac)" data-a="algo">Seu algoritmo ✦</button><div class="row">${ring(S.me.u,'Seu story')}${U.map(u=>ring(u)).join('')}</div>`+L.map((p,i)=>card(p)+(i==1?strip:'')).join('')},
 exp(){return `<div style="padding:12px 16px"><input id="q" type="search" placeholder="Pesquisar perfis, #hashtags e publicações" value="${esc(q)}" aria-label="Pesquisar"></div><div id="res">${res()}</div>`},
-msg(){const ks=Object.keys(S.chats);return `<div class="hd"><span>${esc(S.me.u)}</span><button data-a="newc" aria-label="Nova mensagem">${ic('edit')}</button></div><div class="row"><button class="st" data-a="note"><span class="nt">${S.note?esc(S.note):'+ Nota'}</span><span class="rg">${av(S.me.u,56)}</span>Sua nota</button></div><div class="demo">Conversas salvas só neste aparelho (sem envio real em tempo real)</div>`+(ks.length?ks.map(u=>{const m=S.chats[u],l=m[m.length-1];return `<div class="li" data-a="chat" data-i="${esc(u)}" role="button">${av(u,48)}<div><b>${esc(u)}</b><p class="mu">${l?(l.m?'Você: ':'')+esc(l.x):'Nova conversa'}</p></div></div>`}).join(''):`<div class="empty">Nenhuma conversa ainda.<br>Toque no lápis para começar uma.</div>`)},
+msg(){const ks=Object.keys(S.chats);return `<div class="hd"><span>${esc(S.me.u)}</span><button data-a="newc" aria-label="Nova mensagem">${ic('edit')}</button></div><div class="row"><button class="st" data-a="note"><span class="nt">${S.note?esc(S.note):'+ Nota'}</span><span class="rg">${av(S.me.u,56)}</span>Sua nota</button></div><div class="demo">Conversas online em tempo real</div>`+(ks.length?ks.map(u=>{const m=S.chats[u],l=m[m.length-1];return `<div class="li" data-a="chat" data-i="${esc(u)}" role="button">${av(u,48)}<div><b>${esc(u)}</b><p class="mu">${l?(l.m?'Você: ':'')+esc(l.x):'Nova conversa'}</p></div></div>`}).join(''):`<div class="empty">Nenhuma conversa ainda.<br>Toque no lápis para começar uma.</div>`)},
 me(){const mine=S.posts.filter(p=>p.u==S.me.u),sub=S.sub||'g';const L=sub=='g'?mine:sub=='r'?mine.filter(p=>p.type=='reel'):S.posts.filter(p=>p.saved);
  return `<div class="hd"><span>${esc(S.me.u)}${S.priv?' 🔒':''}</span><button data-a="set" aria-label="Configurações">${ic('menu')}</button></div><div class="pf">${av(S.me.u,76)}<div><b>${mine.length}</b><span class="mu">posts</span></div><div><b>0</b><span class="mu">seguidores</span></div><div><b>${Object.values(S.fol).filter(Boolean).length}</b><span class="mu">seguindo</span></div></div><div class="tx"><b>${esc(S.me.n)}</b><p>${tags(S.me.b)}</p></div><span class="chip">🔥 ${S.str.n} dia(s) seguidos</span>${S.me.mu?`<span class="chip">♪ ${esc(S.me.mu)}</span>`:''}${S.links.length?`<div class="row" style="padding:8px 16px">${S.links.map(l=>{let h='';try{h=new URL(l).hostname}catch(e){}return `<a class="chip" style="margin:0;color:var(--ac);text-decoration:none" href="${esc(l)}" target="_blank" rel="noopener noreferrer nofollow">${esc(h)} ↗</a>`}).join('')}</div>`:''}<div class="cb"><button class="bt g" data-a="edit">Editar perfil</button><button class="bt g" data-a="shp">Compartilhar perfil</button></div>
  <div class="tabs"><button data-a="sub" data-i="g" class="${sub=='g'?'on':''}">Posts</button><button data-a="sub" data-i="r" class="${sub=='r'?'on':''}">Reels</button><button data-a="sub" data-i="s" class="${sub=='s'?'on':''}">Salvos</button></div>`+(L.length?`<div class="gr">${L.map(tile).join('')}</div>`:`<div class="empty">${sub=='s'?'Nada salvo ainda. Toque no marcador de uma publicação.':'Nada por aqui ainda.<br>Toque em + para publicar.'}</div>`)}
@@ -183,7 +183,7 @@ function story(u,i=0){const L=u==S.me.u?myStories():[{art:hh(u)+40,tx:(S.posts.f
  const o=$('#sv');o.hidden=false;o.innerHTML=`<div class="stb" style="${s.img||s.vid?'':art(s.art||200)}">${s.img?`<img src="${s.img}" alt="">`:''}${s.vid?`<video src="${s.vid}" autoplay muted playsinline loop></video>`:''}<div class="pg">${L.map((_,k)=>`<i class="${k<i?'d':''}">${k==i?'<b></b>':''}</i>`).join('')}</div><div class="sh2">${av(u,32)}<b>${esc(u)}</b><span>${s.t?ago(s.t):'agora'}</span><button data-a="sx" aria-label="Fechar">${ic('x')}</button></div><p class="stx">${tags(s.tx||'')}</p><i class="l" data-a="sp"></i><i class="r" data-a="sn"></i></div>`;
  o._s=[u,i];tm=setTimeout(()=>story(u,i+1),5000);render()}
 const tg=(k,on,l)=>`<div class="tg2"><span>${l}</span><button class="sw ${on?'on':''}" role="switch" aria-checked="${!!on}" aria-label="${l}" data-a="tgl" data-i="${k}"></button></div>`;
-const setHtml=()=>`<h3>Configurações</h3>${tg('dark',S.theme=='dark','Tema escuro')}${tg('priv',S.priv,'Conta privada')}${tg('calm',S.calm,'Animações reduzidas')}${tg('big',S.big,'Texto maior')}<div class="tg2"><span class="mu">Contas, mensagens e privacidade reais exigem um servidor. Nesta versão, tudo é local.</span></div><button class="bt g" style="margin-top:12px" data-a="algo">Seu algoritmo</button><button class="bt g" style="margin-top:8px" data-a="out">Sair da conta</button><button class="bt g" style="margin-top:8px" data-a="wipe">${S.wipe?'Toque de novo para confirmar':'Apagar dados deste aparelho'}</button>`;
+const setHtml=()=>`<h3>Configurações</h3>${tg('dark',S.theme=='dark','Tema escuro')}${tg('priv',S.priv,'Conta privada')}${tg('calm',S.calm,'Animações reduzidas')}${tg('big',S.big,'Texto maior')}<div class="tg2"><span class="mu">Contas, perfis, seguir e mensagens são online. Posts e stories ainda são locais.</span></div><button class="bt g" style="margin-top:12px" data-a="algo">Seu algoritmo</button><button class="bt g" style="margin-top:8px" data-a="out">Sair da conta</button><button class="bt g" style="margin-top:8px" data-a="wipe">${S.wipe?'Toque de novo para confirmar':'Apagar dados deste aparelho'}</button>`;
 const editHtml=()=>`<h3>Editar perfil</h3><p class="mu">Nome de usuário</p><input id="eu" value="${esc(S.me.u)}" maxlength="20" autocapitalize="none"><p class="mu">Nome</p><input id="en" value="${esc(S.me.n)}" maxlength="40"><p class="mu">Biografia</p><textarea id="eb" maxlength="150">${esc(S.me.b)}</textarea><p class="mu">Música em destaque (texto)</p><input id="em" maxlength="60" value="${esc(S.me.mu||'')}"><p class="mu">Links (até 4, um por linha, https://)</p><textarea id="el">${esc(S.links.join('\n'))}</textarea><button class="bt" style="margin-top:12px" data-a="esave">Salvar</button>`;
 const chatHtml=u=>`<div><div class="hd"><button data-a="close" aria-label="Voltar">${ic('back')}</button>${av(u,34)}<span>${esc(u)}</span></div><div id="msgs">${(S.chats[u]||[]).map(m=>`<div class="bb ${m.m?'me':''}">${esc(m.x)}</div>`).join('')||'<p class="empty">Diga olá 👋</p>'}</div><div class="cb"><input id="mi" maxlength="500" placeholder="Mensagem..." aria-label="Mensagem"><button data-a="ms" data-i="${esc(u)}">Enviar</button></div></div>`;
 const A={
@@ -246,9 +246,72 @@ document.addEventListener('keydown',e=>{if(e.key!='Enter')return;if(e.target.id=
 document.addEventListener('input',e=>{if(e.target.id=='q'){q=e.target.value;$('#res').innerHTML=res()}});
 $('#fi').onchange=e=>{const f=e.target.files[0];if(!f)return;if(f.size>2e8)return toast('Arquivo muito grande (máx. 200 MB)');
  if(f.type.startsWith('video/')){if(pend.kind=='foto')return toast('Escolha uma imagem');pend.vid=URL.createObjectURL(f);A.compose()}
- else if(f.type.startsWith('image/')){if(pend.kind=='video'||pend.kind=='reel')return toast('Escolha um vídeo');const im=new Image();im.onload=()=>{const r=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*r;c.height=im.height*r;c.getContext('2d').drawImage(im,0,0,c.width,c.height);pend.img=c.toDataURL('image/jpeg',.8);A.compose()};im.onerror=()=>toast('Imagem inválida');im.src=URL.createObjectURL(f)}
+ else if(f.type.startsWith('image/')){if(pend.kind=='video'||pend.kind=='reel')return toast('Escolha um vídeo');const im=new Image();im.onload=()=>{const r=Math.min(1,2000/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*r;c.height=im.height*r;c.getContext('2d').drawImage(im,0,0,c.width,c.height);pend.img=c.toDataURL('image/jpeg',.8);A.compose()};im.onerror=()=>toast('Imagem inválida');im.src=URL.createObjectURL(f)}
  else toast('Tipo de arquivo não suportado')};
 streak();render();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const SB_URL='https://impixpuavvhinwuxjumt.supabase.co',SB_KEY='sb_publishable_Dj-w-LQ6UNiD0JegbVwtXA_gYLIKJ_6';
+const sb=window.supabase?window.supabase.createClient(SB_URL,SB_KEY):null;
+let ME=null,ID={},PRIV={},CID={},chan=null,qt;
+const erx=t=>{const e=$('#er');e?e.textContent=t:toast(t)};
+async function boot(session){
+ const{data:p}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
+ if(!p){await sb.auth.signOut();S.sess=0;return}
+ ME=p;S.me={u:p.username,n:p.name||p.username,b:p.bio||'',mu:S.me.mu};S.priv=p.is_private?1:0;S.sess=1;S.fol={};mode='in';
+ try{localStorage.setItem('vvacct','1')}catch(e){}
+ const{data:f}=await sb.from('follows').select('following:profiles!follows_following_fkey(id,username)').eq('follower',p.id);
+ (f||[]).forEach(r=>{S.fol[r.following.username]=true;ID[r.following.username]=r.following.id});
+ save();watch();loadChats()}
+async function loadU(t){let r=sb.from('profiles').select('id,username,is_private').neq('id',ME.id).limit(20);
+ if(t)r=r.ilike('username','%'+t.replace(/[%_,]/g,'')+'%');const{data}=await r;U.length=0;
+ (data||[]).forEach(p=>{U.push(p.username);ID[p.username]=p.id;PRIV[p.username]=p.is_private});const x=$('#res');if(x)x.innerHTML=res()}
+async function loadChats(){
+ const{data:m}=await sb.from('conversation_members').select('conversation_id,user_id,profiles(username)').neq('user_id',ME.id);
+ const{data:ms}=await sb.from('messages').select('conversation_id,sender,body').order('created_at',{ascending:false}).limit(300);
+ S.chats={};CID={};const by={};
+ (m||[]).forEach(r=>{const u=r.profiles.username;CID[u]=r.conversation_id;ID[u]=r.user_id;S.chats[u]=[];by[r.conversation_id]=u});
+ (ms||[]).reverse().forEach(x=>{const u=by[x.conversation_id];u&&S.chats[u].push({m:x.sender==ME.id?1:0,x:x.body})});
+ if(tab=='msg')R()}
+function watch(){if(chan)return;chan=sb.channel('msgs').on('postgres_changes',{event:'INSERT',schema:'public',table:'messages'},p=>{
+ const x=p.new;if(x.sender==ME.id)return;const u=Object.keys(CID).find(k=>CID[k]==x.conversation_id);if(!u){loadChats();return}
+ (S.chats[u]=S.chats[u]||[]).push({m:0,x:x.body});const i=$('#mi'),v=i?i.value:'';R();if(v&&$('#mi'))$('#mi').value=v}).subscribe()}
+A.auth=async()=>{if(!sb)return erx('Sem conexão com o servidor.');const pw=$('#ap').value;
+ if(mode=='up'){const e=$('#ae').value.trim().toLowerCase(),u=$('#auu').value.trim().toLowerCase(),bd=$('#ab').value;
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e))return erx('Informe um e-mail válido.');
+  if(!/^[a-z0-9._]{3,20}$/.test(u))return erx('Usuário: 3 a 20 letras minúsculas, números, . ou _');
+  if(pw.length<8||pwScore(pw)<3)return erx('Senha fraca: use 8+ caracteres com maiúsculas, minúsculas e números.');
+  if(!bd)return erx('Informe sua data de nascimento.');const age=(Date.now()-new Date(bd))/315576e5;if(!(age>=13))return erx('O VELOVERSA é para maiores de 13 anos.');
+  if(!$('#at').checked)return erx('Aceite os termos para continuar.');
+  const{data,error}=await sb.auth.signUp({email:e,password:pw,options:{data:{username:u,priv:age<18}}});
+  if(error)return erx(/database|already|registered/i.test(error.message)?'Usuário ou e-mail já existe.':error.message);
+  if(!data.session){mode='in';authShow();return erx('Conta criada! Confirme o e-mail que enviamos e depois entre.')}
+  await boot(data.session)}
+ else{const{data,error}=await sb.auth.signInWithPassword({email:$('#ai').value.trim().toLowerCase(),password:pw});
+  if(error)return erx(/api key/i.test(error.message)?error.message:'E-mail ou senha incorretos.');await boot(data.session)}
+ if(!S.sess)return erx('Perfil não encontrado.');tab='home';render();toast('Bem-vindo ao VELOVERSA')};
+A.mode=()=>{mode=mode=='up'?'in':'up';authShow()};
+A.out=async()=>{await sb.auth.signOut();S.sess=0;ME=null;S.chats={};S.fol={};if(chan){sb.removeChannel(chan);chan=null}save();shut();render()};
+A.fol=async u=>{const id=ID[u];if(!id)return toast('Perfil de demonstração');
+ if(S.fol[u]){const{error}=await sb.from('follows').delete().eq('follower',ME.id).eq('following',id);if(error)return toast('Erro ao atualizar');S.fol[u]=false}
+ else{const{error}=await sb.from('follows').insert({follower:ME.id,following:id,status:PRIV[u]?'pending':'ok'});if(error)return toast('Erro ao seguir');S.fol[u]=true;if(PRIV[u])return toast('Pedido enviado a '+u),R()}
+ toast(S.fol[u]?'Seguindo '+u:'Deixou de seguir');R()};
+{const o=A.tab;A.tab=t=>{o(t);if(!ME)return;if(t=='exp')loadU(q||'');if(t=='msg')loadChats()}}
+{const o=A.newc;A.newc=async()=>{await loadU('');o()}}
+A.chat=async u=>{cur=u;if(!CID[u]){const{data,error}=await sb.rpc('start_dm',{other:ID[u]});if(error)return toast('Não foi possível abrir a conversa');CID[u]=data}
+ S.chats[u]=S.chats[u]||[];shf=null;ovl(()=>chatHtml(u))};
+A.ms=async u=>{const i=$('#mi'),v=i.value.trim();if(!v)return;i.value='';
+ const{error}=await sb.from('messages').insert({conversation_id:CID[u],body:v});if(error)return toast('Não foi possível enviar');
+ (S.chats[u]=S.chats[u]||[]).push({m:1,x:v});draw();render();const n=$('#mi');n&&n.focus()};
+{const o=A.esave;A.esave=async()=>{const u=$('#eu').value.trim().toLowerCase();
+ const{error}=await sb.from('profiles').update({username:u,name:$('#en').value.trim()||u,bio:$('#eb').value.trim()}).eq('id',ME.id);
+ if(error)return toast(/duplicate|unique/i.test(error.message)?'Este nome de usuário já existe':'Usuário inválido');o()}}
+{const o=A.tgl;A.tgl=k=>{o(k);k=='priv'&&ME&&sb.from('profiles').update({is_private:!!S.priv}).eq('id',ME.id).then(()=>{})}}
+document.addEventListener('input',e=>{if(e.target.id=='q'&&ME){clearTimeout(qt);qt=setTimeout(()=>loadU(e.target.value.trim().toLowerCase().replace(/^@/,'')),300)}});
+(async()=>{if(!sb){S.sess=0;render();return toast('Sem conexão com o servidor')}
+ const{data:{session}}=await sb.auth.getSession();if(session)await boot(session);else S.sess=0;
+ try{if(!localStorage.getItem('vvacct'))mode='up'}catch(e){}render()})();
 </script>
 </body>
 </html>
