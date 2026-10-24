@@ -113,6 +113,7 @@ nav{position:fixed;left:0;top:0;bottom:0;width:84px;flex-direction:column;justif
 <input type="file" id="fav" accept="image/*" hidden>
 <input type="file" id="fcv" accept="image/*" hidden>
 <script>
+const VER='3.1';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const P={home:'M3 11l9-8 9 8v10h-6v-6H9v6H3z',search:'M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5',plus:'M12 5v14M5 12h14',send:'M22 3L9.5 13.5M22 3l-7 18-5.5-7.5L2 10z',user:'M12 3a4.5 4.5 0 100 9 4.5 4.5 0 000-9zM4 21c0-4.4 3.6-7 8-7s8 2.6 8 7',heart:'M12 21s-8-5-8-11a4.5 4.5 0 018-3 4.5 4.5 0 018 3c0 6-8 11-8 11z',cm:'M21 12a8 8 0 01-11.5 7.2L3 21l1.8-6A8 8 0 1121 12z',bm:'M6 3h12v18l-6-4-6 4z',reel:'M4 4h16v16H4zM10 9l5 3-5 3z',x:'M5 5l14 14M19 5L5 19',menu:'M4 6h16M4 12h16M4 18h16',back:'M15 5l-7 7 7 7',edit:'M4 20h4L19 9l-4-4L4 16zM14 6l4 4'};
 const ic=(n,f)=>`<svg viewBox="0 0 24 24" width="24" height="24" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${P[n]}"/></svg>`;
@@ -138,7 +139,7 @@ async function hp(pw,salt){const k=await crypto.subtle.importKey('raw',new TextE
 const pwScore=p=>[p.length>=8,/[A-Z]/.test(p)&&/[a-z]/.test(p),/\d/.test(p),/[^\w\s]/.test(p)].filter(Boolean).length;
 const sc=p=>{let s=-(Date.now()-p.t)/36e5;(p.cap.match(/#\w+/g)||[]).forEach(h=>s+=(S.top[h]||0)*6);return s};
 const allTags=()=>[...new Set(S.posts.flatMap(p=>p.cap.match(/#\w+/g)||[]))];
-const authHtml=()=>{if(window.REC||mode=='rec')return recHtml();const up=mode=='up';return `<div class="ab"><div class="logo" style="flex:none;justify-content:center;font-size:1.1rem">${LOGO}VELOVERSA</div><h1>${up?'Crie sua conta':'Bem-vindo de volta'}</h1><p class="mu">${up?'Compartilhe momentos, descubra tendências e crie comunidades.':'Entre para continuar no seu universo.'}</p>${up?'<input id="ae" type="email" autocomplete="email" placeholder="E-mail" aria-label="E-mail"><input id="auu" autocomplete="username" autocapitalize="none" maxlength="20" placeholder="Nome de usuário" aria-label="Nome de usuário">':'<input id="ai" autocomplete="username" autocapitalize="none" placeholder="E-mail" aria-label="E-mail">'}<div class="pw"><input id="ap" type="password" autocomplete="${up?'new-password':'current-password'}" placeholder="Senha" aria-label="Senha"><button type="button" class="eye" data-a="eye">Mostrar</button></div>${up?'<div class="pbar"><i id="pb"></i></div><label class="mu">Data de nascimento<input id="ab" type="date"></label><label class="ck"><input id="at" type="checkbox"> Aceito os Termos de Uso e a Política de Privacidade</label>':''}${up?'':'<button class="lk" data-a="forgot">Esqueci minha senha</button>'}<p id="er" class="er" role="alert"></p><button class="bt" data-a="auth">${up?'Criar conta':'Entrar'}</button><button class="lk" data-a="mode">${up?'Já tenho conta':'Criar conta nova'}</button><p class="mu" style="font-size:.72rem;text-align:center">Conta online: use o mesmo login em qualquer aparelho. (v3)</p></div>`};
+const authHtml=()=>{if(window.REC||mode=='rec')return recHtml();const up=mode=='up';return `<div class="ab"><div class="logo" style="flex:none;justify-content:center;font-size:1.1rem">${LOGO}VELOVERSA</div><h1>${up?'Crie sua conta':'Bem-vindo de volta'}</h1><p class="mu">${up?'Compartilhe momentos, descubra tendências e crie comunidades.':'Entre para continuar no seu universo.'}</p>${up?'<input id="ae" type="email" autocomplete="email" placeholder="E-mail" aria-label="E-mail"><input id="auu" autocomplete="username" autocapitalize="none" maxlength="20" placeholder="Nome de usuário" aria-label="Nome de usuário">':'<input id="ai" autocomplete="username" autocapitalize="none" placeholder="E-mail" aria-label="E-mail">'}<div class="pw"><input id="ap" type="password" autocomplete="${up?'new-password':'current-password'}" placeholder="Senha" aria-label="Senha"><button type="button" class="eye" data-a="eye">Mostrar</button></div>${up?'<div class="pbar"><i id="pb"></i></div><label class="mu">Data de nascimento<input id="ab" type="date"></label><label class="ck"><input id="at" type="checkbox"> Aceito os Termos de Uso e a Política de Privacidade</label>':''}${up?'':'<button class="lk" data-a="forgot">Esqueci minha senha</button>'}<p id="er" class="er" role="alert"></p><button class="bt" data-a="auth">${up?'Criar conta':'Entrar'}</button><button class="lk" data-a="mode">${up?'Já tenho conta':'Criar conta nova'}</button><p class="mu" style="font-size:.72rem;text-align:center">Conta online: use o mesmo login em qualquer aparelho. (v${VER})</p></div>`};
 const recHtml=()=>{const n=window.REC;return `<div class="ab"><div class="logo" style="flex:none;justify-content:center;font-size:1.1rem">${LOGO}VELOVERSA</div><h1>${n?'Criar nova senha':'Recuperar senha'}</h1><p class="mu">${n?'Escolha uma senha forte: 8+ caracteres com maiúsculas, minúsculas e números.':'Informe o e-mail da sua conta e enviaremos um link para você criar uma nova senha.'}</p>${n?'<div class="pw"><input id="np" type="password" autocomplete="new-password" placeholder="Nova senha" aria-label="Nova senha"></div><div class="pw"><input id="np2" type="password" autocomplete="new-password" placeholder="Repita a nova senha" aria-label="Repita a nova senha"></div>':'<input id="ar" type="email" autocomplete="email" placeholder="E-mail" aria-label="E-mail">'}<p id="er" class="er" role="alert"></p><button class="bt" data-a="${n?'rset':'rsend'}">${n?'Salvar nova senha':'Enviar link'}</button>${n?'':'<button class="lk" data-a="back">Voltar para o login</button>'}</div>`};
 const authShow=()=>{const a=$('#au');a.hidden=false;a.innerHTML=authHtml()};
 document.addEventListener('input',e=>{if(e.target.id=='ap'&&mode=='up'){const n=pwScore(e.target.value),b=$('#pb');b.style.width=n*25+'%';b.style.background=['#e5484d','#e5484d','#f5a524','#3dd68c','#3dd68c'][n]}});
@@ -151,10 +152,10 @@ const LOGO=`<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 8l11 18L27 8
 function vidErr(v){const p=v.getAttribute('poster');v.outerHTML=(p?`<img src="${p}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`:'')+'<span style="position:absolute;left:8px;right:8px;bottom:8px;text-align:center;color:#fff;background:#000a;border-radius:8px;padding:6px;font-size:.8rem">Este aparelho não consegue reproduzir este vídeo</span>'}
 const moreHtml=()=>FD.done?'<div class="empty" style="padding:28px">Você viu tudo por enquanto ✦</div>':FD.err?'<button class="lk" data-a="more" style="display:block;margin:24px auto">Não carregou. Toque para tentar de novo</button>':'<div id="more" class="empty" style="padding:28px">Carregando mais…</div>';
 const media=p=>(p.img?`<img src="${p.img}" alt="Foto de ${esc(p.u)}">`:p.vid?`<video src="${p.vid}" ${p.cover?`poster="${p.cover}"`:''} playsinline controls preload="${p.cover?'none':'metadata'}" onerror="vidErr(this)"></video>`:`<i class="gl">✦</i>${p.v?'<span class="mu" style="position:relative;color:#fff">Vídeo disponível só na sessão em que foi enviado</span>':''}`);
-const card=p=>`<article class="pc"><div class="ph"><span data-a="prof" data-i="${esc(p.u)}" style="display:flex;align-items:center;gap:10px;cursor:pointer">${av(p.u,34)}<b>${esc(p.u)}</b></span><span class="mu">${ago(p.t)}</span>${p.u==S.me.u&&p.vid&&p.oid?`<button class="lk" data-a="cover" data-i="${p.id}">Capa</button>`:''}${p.u==S.me.u?`<button class="lk" data-a="delp" data-i="${p.id}">Apagar</button>`:''}${p.u!=S.me.u?`<button class="lk" data-a="fol" data-i="${esc(p.u)}">${S.fol[p.u]?'Seguindo':'Seguir'}</button>`:''}</div>
+const card=p=>`<article class="pc"><div class="ph"><span data-a="prof" data-i="${esc(p.u)}" style="display:flex;align-items:center;gap:10px;cursor:pointer">${av(p.u,34)}<b>${esc(p.u)}</b></span><span class="mu">${ago(p.t)}</span>${p.u!=S.me.u&&!S.fol[p.u]?`<button class="lk" data-a="fol" data-i="${esc(p.u)}">Seguir</button>`:''}<button data-a="pmore" data-i="${p.id}" aria-label="Mais opções" style="padding:0 6px;font-size:1.4rem;line-height:1">⋯</button></div>
 <div class="md" style="${p.img||p.vid?'':art(p.art||200)}" data-a="dbl" data-i="${p.id}">${media(p)}</div>
 <div class="ac"><button data-a="like" data-i="${p.id}" class="${p.liked?'on':''}${pop==p.id?' pop':''}" aria-label="Curtir">${ic('heart',p.liked)}</button><button data-a="cm" data-i="${p.id}" aria-label="Comentar">${ic('cm')}</button><button data-a="shr" data-i="${p.id}" aria-label="Compartilhar">${ic('send')}</button><button class="r ${p.saved?'on2':''}" data-a="sv" data-i="${p.id}" aria-label="Salvar">${ic('bm',p.saved)}</button></div>
-<div class="tx"><b>${p.l} curtidas</b><p><b>${esc(p.u)}</b> ${tags(p.cap)}</p><a data-a="cm" data-i="${p.id}" class="mu">${p.cm.length?`Ver ${p.cm.length} comentário(s)`:'Comentar'}</a></div></article>`;
+<div class="tx"><b>${p.l} curtidas</b><p><b>${esc(p.u)}</b> ${tags(p.cap)}</p><a data-a="cm" data-i="${p.id}" class="mu">${(p.cmn??p.cm.length)?`Ver ${p.cmn??p.cm.length} comentário(s)`:'Comentar'}</a></div></article>`;
 const tile=p=>`<div class="gt" data-a="open" data-i="${p.id}" style="${art(p.art||200)}" role="button" aria-label="Abrir publicação">${p.img||p.cover?`<img src="${p.img||p.cover}" alt="" onerror="this.remove()">`:''}${p.type=='reel'?'<i>▶ Reel</i>':p.vid?'<i>▶</i>':''}</div>`;
 const myStories=()=>S.my.filter(s=>Date.now()-s.t<864e5);
 function ring(u,l){const mine=u==S.me.u,n=mine?myStories().length:1;return `<button class="st" data-a="${mine?'story':'prof'}" data-i="${esc(u)}"><span class="rg ${mine&&!n?'n':seen[u]?'s':''}">${av(u,56)}</span>${esc(l||u).slice(0,10)}</button>`}
@@ -175,7 +176,7 @@ function res(){const t=q.trim().toLowerCase();
  return (us.length?`<div class="hd"><span>Perfis</span></div>`+us.map(u=>`<div class="li" data-a="prof" data-i="${u}">${av(u,44)}<div><b>${u}</b></div><button class="lk" data-a="fol" data-i="${u}">${S.fol[u]?'Seguindo':'Seguir'}</button></div>`).join(''):'')+(hs.length?`<div class="hd"><span>Hashtags</span></div><div class="row">${hs.map(h=>`<button class="lk" data-a="hash" data-i="${h}">${h}</button>`).join('')}</div>`:'')+(ps.length?`<div class="hd"><span>Publicações</span></div><div class="gr">${ps.map(tile).join('')}</div>`:'')+(us.length||hs.length||ps.length?'':`<div class="empty">Nada encontrado para “${esc(q)}”.</div>`)}
 const ICONS={home:'home',exp:'search',msg:'send',me:'user'};
 function render(){const m=$('#main');theme();if(!S.sess){authShow();return}$('#au').hidden=true;
- $('#hd').innerHTML=tab=='home'?`<div class="logo">${LOGO}VELOVERSA</div><button data-a="notif" aria-label="Notificações">${ic('heart')}</button><button data-a="reels" aria-label="Reels">${ic('reel')}</button>`:`<div class="logo">${LOGO}VELOVERSA</div>`;
+ $('#hd').innerHTML=tab=='home'?`<button data-a="create" aria-label="Criar">${ic('plus')}</button><div class="logo">${LOGO}VELOVERSA</div><button data-a="notif" aria-label="Notificações">${ic('heart')}</button><button data-a="reels" aria-label="Reels">${ic('reel')}</button><button data-a="tab" data-i="msg" aria-label="Mensagens">${ic('send')}</button>`:`<div class="logo">${LOGO}VELOVERSA</div>`;
  m.innerHTML=V[tab]();document.querySelectorAll('nav button').forEach(b=>{const i=b.dataset.i;b.classList.toggle('on',i==tab);b.innerHTML=b.classList.contains('cr')?ic('plus'):ic(ICONS[i])})}
 function draw(){const y=$('#sb').scrollTop;$('#sh').hidden=!shf;if(shf){$('#sb').innerHTML=shf();$('#sb').scrollTop=y}
  const o=$('#ov');o.hidden=!ovf;if(ovf){const l=o.querySelector('.rl'),ly=l?l.scrollTop:0;o.innerHTML=ovf();const l2=o.querySelector('.rl');if(l2)l2.scrollTop=ly;const mg=$('#msgs');if(mg){mg.scrollTop=1e9}
@@ -184,13 +185,13 @@ function R(){const m=$('#main'),y=m.scrollTop;render();m.scrollTop=y;draw()}
 const sheet=f=>{shf=f;draw()},ovl=f=>{ovf=f;draw()};
 const shut=()=>{shf=null;ovf=null;$('#sv').hidden=true;clearTimeout(tm);draw()};
 function cmHtml(p){return `<h3>Comentários</h3>${p.cm.length?p.cm.map(c=>`<div class="li" style="padding:6px 0">${av(c.u,32)}<div><b>${esc(c.u)}</b> ${esc(c.x)}</div></div>`).join(''):'<p class="mu">Seja o primeiro a comentar.</p>'}<div class="cb" style="padding:12px 0 0"><input id="ci" maxlength="300" placeholder="Adicionar comentário..." aria-label="Comentário"><button data-a="cms" data-i="${p.id}">Enviar</button></div>`}
-function reelsHtml(id){const L=S.posts.filter(p=>p.type=='reel'||p.vid);return `<div><div class="rl">${L.map(p=>`<section class="rs" id="r${p.id}" style="${p.vid?'':art(p.art||200)}">${p.vid?`<video src="${p.vid}" ${p.cover?`poster="${p.cover}"`:''} autoplay loop muted playsinline data-a="pp" onerror="vidErr(this)"></video>`:`<i class="gl" style="font-size:8rem">✦</i>`}<div class="rr"><button data-a="like" data-i="${p.id}" class="${p.liked?'on':''}" aria-label="Curtir">${ic('heart',p.liked)}</button>${p.l}<button data-a="cm" data-i="${p.id}" aria-label="Comentar">${ic('cm')}</button>${p.cm.length}<button data-a="sv" data-i="${p.id}" aria-label="Salvar">${ic('bm',p.saved)}</button><button data-a="shr" data-i="${p.id}" aria-label="Compartilhar">${ic('send')}</button></div><div class="rb"><b>${esc(p.u)}</b> ${p.u!=S.me.u?`<button class="lk" style="color:#fff;text-decoration:underline" data-a="fol" data-i="${esc(p.u)}">${S.fol[p.u]?'Seguindo':'Seguir'}</button>`:''}<br>${tags(p.cap)}${p.vid?'':'<br><small>Reel de demonstração</small>'}</div></section>`).join('')||'<div class="empty">Nenhum Reel ainda.</div>'}</div><div class="rtop"><button data-a="close" aria-label="Voltar">${ic('back')}</button>Reels</div></div>`}
+function reelsHtml(id){const L=S.posts.filter(p=>(p.type=='reel'||p.vid)&&(window.RT!='fr'||S.fol[p.u]||p.u==S.me.u));return `<div><div class="rl">${L.map(p=>`<section class="rs" id="r${p.id}" style="${p.vid?'':art(p.art||200)}">${p.vid?`<video src="${p.vid}" ${p.cover?`poster="${p.cover}"`:''} autoplay loop muted playsinline data-a="pp" onerror="vidErr(this)"></video>`:`<i class="gl" style="font-size:8rem">✦</i>`}<div class="rr"><button data-a="like" data-i="${p.id}" class="${p.liked?'on':''}" aria-label="Curtir">${ic('heart',p.liked)}</button>${p.l}<button data-a="cm" data-i="${p.id}" aria-label="Comentar">${ic('cm')}</button>${p.cm.length}<button data-a="sv" data-i="${p.id}" aria-label="Salvar">${ic('bm',p.saved)}</button><button data-a="shr" data-i="${p.id}" aria-label="Compartilhar">${ic('send')}</button></div><div class="rb"><b data-a="prof" data-i="${esc(p.u)}" style="cursor:pointer">${esc(p.u)}</b> ${p.u!=S.me.u?`<button class="lk" style="color:#fff;text-decoration:underline" data-a="fol" data-i="${esc(p.u)}">${S.fol[p.u]?'Seguindo':'Seguir'}</button>`:''}<br>${tags(p.cap)}${p.vid?'':'<br><small>Reel de demonstração</small>'}</div></section>`).join('')||'<div class="empty">Nenhum Reel ainda.</div>'}</div><div class="rtop"><button data-a="close" aria-label="Voltar">${ic('back')}</button><button data-a="rtab" data-i="all" style="opacity:${window.RT=='fr'?.6:1}">Reels</button><button data-a="rtab" data-i="fr" style="opacity:${window.RT=='fr'?1:.6}">Amigos</button></div></div>`}
 function story(u,i=0){const L=u==S.me.u?myStories():[{art:hh(u)+40,tx:(S.posts.find(p=>p.u==u)||{cap:''}).cap}];
  if(!L.length)return A.create();clearTimeout(tm);if(i>=L.length)return shut();const s=L[Math.max(i,0)];i=Math.max(i,0);seen[u]=1;
  const o=$('#sv');o.hidden=false;o.innerHTML=`<div class="stb" style="${s.img||s.vid?'':art(s.art||200)}">${s.img?`<img src="${s.img}" alt="">`:''}${s.vid?`<video src="${s.vid}" autoplay muted playsinline loop></video>`:''}<div class="pg">${L.map((_,k)=>`<i class="${k<i?'d':''}">${k==i?'<b></b>':''}</i>`).join('')}</div><div class="sh2">${av(u,32)}<b>${esc(u)}</b><span>${s.t?ago(s.t):'agora'}</span><button data-a="sx" aria-label="Fechar">${ic('x')}</button></div><p class="stx">${tags(s.tx||'')}</p><i class="l" data-a="sp"></i><i class="r" data-a="sn"></i></div>`;
  o._s=[u,i];tm=setTimeout(()=>story(u,i+1),5000);render()}
 const tg=(k,on,l)=>`<div class="tg2"><span>${l}</span><button class="sw ${on?'on':''}" role="switch" aria-checked="${!!on}" aria-label="${l}" data-a="tgl" data-i="${k}"></button></div>`;
-const setHtml=()=>`<h3>Configurações</h3>${tg('dark',S.theme=='dark','Tema escuro')}${tg('priv',S.priv,'Conta privada')}${tg('calm',S.calm,'Animações reduzidas')}${tg('big',S.big,'Texto maior')}<div class="tg2"><span class="mu">Contas, perfis, seguir, mensagens, posts e stories são online. Curtidas, comentários e notas ainda ficam só neste aparelho — em breve para todos.</span></div><button class="bt g" style="margin-top:12px" data-a="algo">Seu algoritmo</button><button class="bt g" style="margin-top:8px" data-a="out">Sair da conta</button><p class="mu" style="text-align:center;margin-top:12px">VELOVERSA · versão 3.0</p><button class="bt g" style="margin-top:8px" data-a="wipe">${S.wipe?'Toque de novo para confirmar':'Apagar dados deste aparelho'}</button>`;
+const setHtml=()=>`<h3>Configurações</h3>${tg('dark',S.theme=='dark','Tema escuro')}${tg('priv',S.priv,'Conta privada')}${tg('calm',S.calm,'Animações reduzidas')}${tg('big',S.big,'Texto maior')}<div class="tg2"><span class="mu">Contas, perfis, seguir, mensagens, posts e stories são online. Curtidas, comentários e notas ainda ficam só neste aparelho — em breve para todos.</span></div><button class="bt g" style="margin-top:12px" data-a="algo">Seu algoritmo</button><button class="bt g" style="margin-top:8px" data-a="out">Sair da conta</button><p class="mu" style="text-align:center;margin-top:12px">VELOVERSA · versão ${VER}</p><button class="bt g" style="margin-top:8px" data-a="wipe">${S.wipe?'Toque de novo para confirmar':'Apagar dados deste aparelho'}</button>`;
 const editHtml=()=>`<h3>Editar perfil</h3><p class="mu">Nome de usuário</p><input id="eu" value="${esc(S.me.u)}" maxlength="20" autocapitalize="none"><p class="mu">Nome</p><input id="en" value="${esc(S.me.n)}" maxlength="40"><p class="mu">Biografia</p><textarea id="eb" maxlength="150">${esc(S.me.b)}</textarea><p class="mu">Música em destaque (texto)</p><input id="em" maxlength="60" value="${esc(S.me.mu||'')}"><p class="mu">Links (até 4, um por linha, https://)</p><textarea id="el">${esc(S.links.join('\n'))}</textarea><button class="bt" style="margin-top:12px" data-a="esave">Salvar</button>`;
 const chatHtml=u=>`<div><div class="hd"><button data-a="close" aria-label="Voltar">${ic('back')}</button>${av(u,34)}<span>${esc(u)}</span></div><div id="msgs">${(S.chats[u]||[]).map(m=>`<div class="bb ${m.m?'me':''}">${m.img?`<img src="${m.img}" alt="Foto" style="max-width:100%;border-radius:10px;display:block">`:esc(m.x)}</div>`).join('')||'<p class="empty">Diga olá 👋</p>'}</div><div class="cb"><button data-a="mph" data-i="${esc(u)}" aria-label="Enviar foto">📷</button><input id="mf" type="file" accept="image/*" hidden><input id="mi" maxlength="500" placeholder="Mensagem..." aria-label="Mensagem"><button data-a="ms" data-i="${esc(u)}">Enviar</button></div></div>`;
 const A={
@@ -277,14 +278,14 @@ async function loadU(t){let r=sb.from('profiles').select('id,username,is_private
  (data||[]).forEach(p=>{U.push(p.username);ID[p.username]=p.id;PRIV[p.username]=p.is_private});const x=$('#res');if(x)x.innerHTML=res()}
 async function loadChats(){
  const{data:m}=await sb.from('conversation_members').select('conversation_id,user_id,profiles(username)').neq('user_id',ME.id);
- const{data:ms}=await sb.from('messages').select('conversation_id,sender,body,media_url').order('created_at',{ascending:false}).limit(300);
+ const{data:ms}=await sb.from('messages').select('conversation_id,sender,body,media_url,created_at').order('created_at',{ascending:false}).limit(300);
  S.chats={};CID={};const by={};
  (m||[]).forEach(r=>{const u=r.profiles.username;CID[u]=r.conversation_id;ID[u]=r.user_id;S.chats[u]=[];by[r.conversation_id]=u});
- (ms||[]).reverse().forEach(x=>{const u=by[x.conversation_id];u&&S.chats[u].push({m:x.sender==ME.id?1:0,x:x.body||'',img:x.media_url})});
+ (ms||[]).reverse().forEach(x=>{const u=by[x.conversation_id];u&&S.chats[u].push({m:x.sender==ME.id?1:0,x:x.body||'',img:x.media_url,t:+new Date(x.created_at)})});
  if(tab=='msg')R()}
 function watch(){if(chan)return;chan=sb.channel('msgs').on('postgres_changes',{event:'INSERT',schema:'public',table:'messages'},p=>{
  const x=p.new;if(x.sender==ME.id)return;const u=Object.keys(CID).find(k=>CID[k]==x.conversation_id);if(!u){loadChats();return}
- (S.chats[u]=S.chats[u]||[]).push({m:0,x:x.body||'',img:x.media_url});const i=$('#mi'),v=i?i.value:'';R();if(v&&$('#mi'))$('#mi').value=v}).subscribe()}
+ (S.chats[u]=S.chats[u]||[]).push({m:0,x:x.body||'',img:x.media_url,t:Date.now()});const i=$('#mi'),v=i?i.value:'';R();if(v&&$('#mi'))$('#mi').value=v}).subscribe()}
 A.auth=async()=>{if(!sb)return erx('Sem conexão com o servidor.');const pw=$('#ap').value;
  if(mode=='up'){const e=$('#ae').value.trim().toLowerCase(),u=$('#auu').value.trim().toLowerCase(),bd=$('#ab').value;
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e))return erx('Informe um e-mail válido.');
@@ -311,7 +312,7 @@ A.chat=async u=>{cur=u;if(!CID[u]){const{data,error}=await sb.rpc('start_dm',{ot
  S.chats[u]=S.chats[u]||[];shf=null;ovl(()=>chatHtml(u))};
 A.ms=async u=>{const i=$('#mi'),v=i.value.trim();if(!v)return;i.value='';
  const{error}=await sb.from('messages').insert({conversation_id:CID[u],body:v});if(error)return toast('Não foi possível enviar');
- (S.chats[u]=S.chats[u]||[]).push({m:1,x:v});draw();render();const n=$('#mi');n&&n.focus()};
+ (S.chats[u]=S.chats[u]||[]).push({m:1,x:v,t:Date.now()});draw();render();const n=$('#mi');n&&n.focus()};
 {const o=A.esave;A.esave=async()=>{const u=$('#eu').value.trim().toLowerCase();
  const{error}=await sb.from('profiles').update({username:u,name:$('#en').value.trim()||u,bio:$('#eb').value.trim()}).eq('id',ME.id);
  if(error)return toast(/duplicate|unique/i.test(error.message)?'Este nome de usuário já existe':'Usuário inválido');o()}}
@@ -542,6 +543,145 @@ const SOON={};const soon=(k,t)=>{if(!SOON[k]){SOON[k]=1;toast(t)}};
 {const o=A.like;A.like=id=>{o(id);soon('like','Curtidas ainda aparecem só para você. Em breve para todos!')}}
 {const o=A.cms;A.cms=id=>{o(id);soon('cms','Comentários ainda aparecem só para você. Em breve para todos!')}}
 {const o=A.nsave;A.nsave=()=>{o();soon('note','Notas para os amigos: em breve vai funcionar!')}}
+</script>
+
+<script>
+// ===== VERSÃO 3.1: perfil em tela cheia, stories com resposta, mensagens, editar perfil, curtidas e comentários =====
+{const st=document.createElement('style');st.textContent=`
+#sh.top{z-index:35}
+.srep{position:absolute;left:0;right:0;bottom:0;z-index:4;display:flex;gap:12px;align-items:center;padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,#000a)}
+.srep input{flex:1;background:#0005;border:1px solid #fff9;color:#fff;border-radius:24px;padding:10px 16px}.srep input::placeholder{color:#fffc}
+.srep button{color:#fff;font-size:1.6rem;line-height:1}
+.stb .l,.stb .r{bottom:76px}.hold .pg b{animation-play-state:paused}
+.pg2{display:flex;align-items:center;gap:20px;padding:12px 16px}.pg2 div{text-align:center}.pg2 b{display:block;font-size:1.1rem}
+.row2{display:flex;gap:8px;padding:0 16px 12px}.row2 .bt{flex:1;padding:9px 10px}
+.fl{display:block;position:relative;border:1px solid var(--ln);border-radius:14px;padding:8px 12px;margin:0 16px 12px;background:var(--sf)}.fl span{font-size:.72rem;color:var(--mu);display:flex;justify-content:space-between}
+.fl input,.fl textarea{border:0;padding:4px 0;background:none;border-radius:0}.fl textarea{min-height:64px}
+.mr{display:flex;align-items:center;gap:14px;padding:14px 16px;width:100%;text-align:left;border-top:1px solid var(--ln)}.mr span{flex:1}.mr i{font-style:normal;color:var(--mu)}
+#upd{position:fixed;top:0;left:0;right:0;z-index:70;background:var(--ac);color:#fff;text-align:center;padding:10px;font-weight:600;font-size:.9rem}
+`;document.head.appendChild(st)}
+A.soon=()=>toast('Em breve vai funcionar ✦');
+{const d0=draw;draw=function(){d0();const h=$('#sh');if(h)h.style.zIndex=ovf?'35':''}}
+
+// ---------- Perfil de outra pessoa (tela cheia) ----------
+const profPage=()=>{const u=PV.u,p=PV.p,fol=S.fol[u];
+ const top=`<div class="hd" style="gap:8px"><button data-a="close" aria-label="Voltar">${ic('back')}</button><span style="font-size:1.05rem">${esc(u)}${p&&p.is_private?' 🔒':''}</span><button data-a="soon" aria-label="Notificações do perfil">${ic('heart')}</button><button data-a="pmenu" data-i="${esc(u)}" aria-label="Mais opções" style="font-size:1.4rem">⋯</button></div>`;
+ let body;
+ if(PV.loading)body=`<div class="empty">Carregando perfil…</div>`;
+ else if(!p)body=`<div class="empty">Perfil não encontrado.</div>`;
+ else{const can=!p.is_private||PV.st=='ok'||fol&&PV.st=='ok',sub=PV.sub||'g',L=(PV.posts||[]).filter(x=>sub=='g'||x.type=='reel'||x.vid),hasS=ST[u]&&ST[u].length;
+  body=`<div class="pg2">${hasS?`<button data-a="story" data-i="${esc(u)}" class="rg" aria-label="Ver story" style="flex:none">${av(u,80)}</button>`:av(u,86)}<div><b>${PV.pc}</b><span class="mu">posts</span></div><div><b>${PV.fr}</b><span class="mu">seguidores</span></div><div><b>${PV.fg}</b><span class="mu">seguindo</span></div></div>
+  <div class="tx" style="padding-bottom:12px"><b>${esc(p.name||u)}</b><p style="white-space:pre-wrap">${tags(p.bio||'')}</p></div>
+  <div class="row2">${fol?`<button class="bt g" data-a="unf" data-i="${esc(u)}">${PV.st=='pending'?'Solicitado':'Seguindo'} ▾</button>`:`<button class="bt" data-a="fol" data-i="${esc(u)}">Seguir</button>`}<button class="bt g" data-a="chat" data-i="${esc(u)}">Mensagem</button></div>
+  <div class="tabs"><button data-a="psub" data-i="g" class="${sub=='g'?'on':''}">Posts</button><button data-a="psub" data-i="r" class="${sub=='r'?'on':''}">Reels</button></div>
+  ${can?(L.length?`<div class="gr">${L.map(tile).join('')}</div>`:'<div class="empty">Nenhuma publicação ainda.</div>'):'<div class="empty">🔒 Esta conta é privada.<br>Siga para ver as publicações.</div>'}`}
+ return `<div>${top}<div class="rl" style="scroll-snap-type:none;background:var(--bg)">${body}</div></div>`};
+A.psub=k=>{if(PV){PV.sub=k;draw()}};
+A.unf=u=>{if(confirm('Deixar de seguir '+u+'?'))A.fol(u)};
+A.pmenu=u=>sheet(()=>`<h3>${esc(u)}</h3><button class="mr" data-a="pcopy" data-i="${esc(u)}"><span>Copiar link do perfil</span></button><button class="mr" data-a="soon"><span>Bloquear</span><i>em breve</i></button><button class="mr" data-a="soon"><span>Denunciar</span><i>em breve</i></button>`);
+A.pcopy=u=>{shf=null;draw();const url=location.href.split('#')[0];navigator.clipboard?navigator.clipboard.writeText(url).then(()=>toast('Link copiado'),()=>toast('Em breve vai funcionar')):toast('Em breve vai funcionar')};
+A.prof=async u=>{if(!u)return;if(S.me.u&&u==S.me.u){shut();return A.tab('me')}
+ loadAvatars([u]);PV={u,loading:1,sub:'g'};shf=null;ovl(profPage);
+ try{const{data:p}=await sb.from('profiles').select('id,username,name,bio,is_private').eq('username',u).maybeSingle();
+  if(!p){PV={u,p:null};if(ovf===profPage)draw();return}
+  ID[u]=p.id;PRIV[u]=p.is_private;
+  const cnt=(c,v)=>sb.from('follows').select('*',{count:'exact',head:true}).eq(c,v).eq('status','ok');
+  const[a,b,st,ps]=await Promise.all([cnt('following',p.id),cnt('follower',p.id),
+   sb.from('follows').select('status').eq('follower',ME.id).eq('following',p.id).maybeSingle(),
+   sb.from('posts').select(SEL.replace('profiles(username)','profiles!inner(username)')).eq('profiles.username',u).order('created_at',{ascending:false}).limit(60)]);
+  const posts=(ps.data||[]).map(mapPost);posts.forEach(x=>{if(!find(x.id))S.posts.push(x)});
+  PV={u,p,fr:a.count||0,fg:b.count||0,st:st.data?st.data.status:(S.fol[u]?'ok':null),posts,pc:posts.length,sub:'g'};
+  loadReact(posts)}
+ catch(e){console.error(e);PV={u,p:null}}
+ if(ovf===profPage)draw()};
+
+// ---------- Menu ⋯ dos posts ----------
+A.pmore=id=>{const p=find(id);if(!p)return;const mine=p.u==S.me.u;
+ const it=(k,l,extra)=>`<button class="mr" data-a="pact" data-i="${k}:${id}"><span>${l}</span>${extra||''}</button>`;
+ sheet(()=>`<h3>Opções</h3>${it('shr','Compartilhar')}${mine?(p.vid&&p.oid?it('cover','Trocar capa do vídeo'):'')+it('delp','Apagar publicação'):it('prof'.replace('prof','gop'),'Ver perfil de '+esc(p.u))+(S.fol[p.u]?it('unf2','Deixar de seguir'):'')+it('soon2','Denunciar','<i>em breve</i>')}`)};
+A.pact=i=>{const[k,id]=i.split(':');const p=find(id);shf=null;draw();
+ if(k=='gop')return A.prof(p.u);if(k=='unf2')return A.unf(p.u);if(k=='soon2')return A.soon();A[k](id)};
+
+// ---------- Reels: abas ----------
+A.rtab=k=>{window.RT=k;draw()};
+
+// ---------- Stories: visualizador melhorado ----------
+async function dmTo(u,text){if(!ID[u]){toast('Não foi possível enviar');return}
+ try{if(!CID[u]){const{data,error}=await sb.rpc('start_dm',{other:ID[u]});if(error)throw error;CID[u]=data}
+  const{error}=await sb.from('messages').insert({conversation_id:CID[u],body:text});if(error)throw error;
+  (S.chats[u]=S.chats[u]||[]).push({m:1,x:text,t:Date.now()});toast('Mensagem enviada');return 1}
+ catch(e){console.error(e);toast('Não foi possível enviar agora')}}
+viewStory=function(u,i){clearTimeout(tm);const L=ST[u]||[];if(!L.length||i>=L.length)return A.sx();if(!(i>0))i=0;
+ const s=L[i],mine=u==S.me.u,D=s.vid?30000:5000;seen[u]=1;const o=$('#sv');o.hidden=false;
+ o.innerHTML=`<div class="stb" style="${art(hh(u))}">${s.img?`<img src="${esc(s.img)}" alt="" onerror="stErr(this)">`:''}${s.vid?`<video id="svv" src="${esc(s.vid)}" muted autoplay playsinline onerror="stErr(this)"></video>`:''}<div class="pg">${L.map((_,k)=>`<i class="${k<i?'d':''}">${k==i?`<b style="animation-duration:${D/1e3}s"></b>`:''}</i>`).join('')}</div><div class="sh2"><button data-a="sprof" data-i="${esc(u)}" style="display:flex;align-items:center;gap:8px;color:#fff">${av(u,32)}<b>${esc(u)}</b></button><span>${ago(s.t)}</span>${s.vid?'<button data-a="smute" id="smb" style="color:#fff" aria-label="Som">🔇</button>':''}${mine?`<button data-a="delst" data-i="${s.id}" aria-label="Apagar story" style="color:#fff">Apagar</button>`:''}<button data-a="sx" aria-label="Fechar" style="color:#fff">${ic('x')}</button></div><p class="stx">${tags(s.tx||'')}</p><i class="l" data-a="sp"></i><i class="r" data-a="sn"></i>${mine?'':`<div class="srep"><input id="sri" maxlength="300" placeholder="Enviar mensagem..." aria-label="Responder ao story" autocomplete="off"><button data-a="slike" aria-label="Curtir story">♡</button><button data-a="ssend" aria-label="Enviar">${ic('send')}</button></div>`}</div>`;
+ o._s=[u,i];o._D=D;o._t0=Date.now();o._rem=D;o._held=0;const v=$('#svv');
+ if(v){v.onended=()=>viewStory(u,i+1);v.onloadedmetadata=()=>{const b=$('#sv .pg b');if(b&&v.duration)b.style.animationDuration=v.duration+'s'};v.play().catch(()=>{})}
+ tm=setTimeout(()=>viewStory(u,i+1),D)};
+function pauseSt(){const o=$('#sv');if(o.hidden||!o.firstChild)return;clearTimeout(tm);o._rem=Math.max(300,o._D-(Date.now()-o._t0));o.firstChild.classList.add('hold');const v=$('#svv');v&&v.pause()}
+function resumeSt(){const o=$('#sv');if(o.hidden||!o._s||!o.firstChild)return;const[u,i]=o._s;o.firstChild.classList.remove('hold');const v=$('#svv');v&&v.play().catch(()=>{});o._D=o._rem;o._t0=Date.now();clearTimeout(tm);tm=setTimeout(()=>viewStory(u,i+1),o._rem);setTimeout(()=>{o._held=0},60)}
+document.addEventListener('pointerdown',e=>{const o=$('#sv');if(o.hidden||!e.target.closest('#sv .l,#sv .r'))return;o._held=0;clearTimeout(o._h);o._h=setTimeout(()=>{o._held=1;pauseSt()},220)});
+['pointerup','pointercancel'].forEach(t=>document.addEventListener(t,()=>{const o=$('#sv');if(o.hidden)return;clearTimeout(o._h);if(o._held)resumeSt()}));
+document.addEventListener('focusin',e=>{if(e.target.id=='sri')pauseSt()});document.addEventListener('focusout',e=>{if(e.target.id=='sri')resumeSt()});
+document.addEventListener('keydown',e=>{if(e.key=='Enter'&&e.target.id=='sri')A.ssend()});
+A.sn=()=>{const o=$('#sv');if(o._held)return;const[u,i]=o._s;viewStory(u,i+1)};
+A.sp=()=>{const o=$('#sv');if(o._held)return;const[u,i]=o._s;viewStory(u,i-1)};
+A.sx=()=>{$('#sv').hidden=true;clearTimeout(tm);R()};
+A.sprof=u=>{A.sx();A.prof(u)};
+A.smute=()=>{const v=$('#svv');if(!v)return;v.muted=!v.muted;$('#smb').textContent=v.muted?'🔇':'🔊'};
+A.ssend=async()=>{const o=$('#sv'),i=$('#sri');if(!i||!o._s)return;const v=i.value.trim();if(!v)return;i.value='';await dmTo(o._s[0],'↪ Resposta ao story: '+v)};
+A.slike=async()=>{const o=$('#sv');if(!o._s)return;const b=o.querySelector('.stb');b.insertAdjacentHTML('beforeend','<b class="bh" style="left:calc(50% - 3rem);top:40%">♥</b>');setTimeout(()=>{const h=b.querySelector('.bh');h&&h.remove()},800);await dmTo(o._s[0],'❤️')};
+
+// ---------- Mensagens: busca, prévia e horário ----------
+let MQ='';const lastT=u=>{const m=S.chats[u];return m&&m.length&&m[m.length-1].t||0};
+const chatList=()=>{const ks=Object.keys(S.chats).filter(u=>!MQ||u.toLowerCase().includes(MQ)).sort((a,b)=>lastT(b)-lastT(a));
+ return ks.length?ks.map(u=>{const m=S.chats[u],l=m[m.length-1];return `<div class="li" data-a="chat" data-i="${esc(u)}" role="button">${av(u,52)}<div><b>${esc(u)}</b><p class="mu">${l?(l.m?'Você: ':'')+(l.img&&!l.x?'📷 Foto':esc(l.x))+(l.t?' · '+ago(l.t):''):'Nova conversa'}</p></div></div>`}).join(''):`<div class="empty">${MQ?'Nenhuma conversa encontrada.':'Nenhuma conversa ainda.<br>Toque no lápis para começar uma.'}</div>`};
+V.msg=function(){return `<div class="hd"><span>${esc(S.me.u)} ▾</span><button data-a="newc" aria-label="Nova mensagem">${ic('edit')}</button></div><div style="padding:0 16px 8px"><input id="mq" type="search" placeholder="Pesquisar conversas" value="${esc(MQ)}" aria-label="Pesquisar conversas"></div><div class="row"><button class="st" data-a="note"><span class="nt">${S.note?esc(S.note):'+ Nota'}</span><span class="rg">${av(S.me.u,56)}</span>Sua nota</button></div><div class="hd" style="padding-bottom:2px"><span>Mensagens</span><button class="lk" data-a="soon">Pedidos</button></div><div id="cl">${chatList()}</div>`};
+document.addEventListener('input',e=>{if(e.target.id=='mq'){MQ=e.target.value.trim().toLowerCase();const c=$('#cl');if(c)c.innerHTML=chatList()}});
+
+// ---------- Editar perfil + foto ----------
+const editPage=()=>`<div><div class="hd" style="gap:8px"><button data-a="close" aria-label="Voltar">${ic('back')}</button><span>Editar perfil</span><button class="lk" data-a="esave">Concluído</button></div><div class="rl" style="scroll-snap-type:none;background:var(--bg)">
+<div style="text-align:center;padding:8px 0 16px"><button data-a="avatar" aria-label="Alterar foto">${av(S.me.u,96)}</button><br><button class="lk" data-a="avatar" style="margin-top:8px">Editar foto</button></div>
+<label class="fl"><span>Nome</span><input id="en" value="${esc(S.me.n)}" maxlength="40"></label>
+<label class="fl"><span>Nome de usuário</span><input id="eu" value="${esc(S.me.u)}" maxlength="20" autocapitalize="none"></label>
+<label class="fl"><span>Bio <em id="bc" style="font-style:normal">${(S.me.b||'').length} / 150</em></span><textarea id="eb" maxlength="150" oninput="document.getElementById('bc').textContent=this.value.length+' / 150'">${esc(S.me.b)}</textarea></label>
+<label class="fl"><span>Música em destaque</span><input id="em" maxlength="60" value="${esc(S.me.mu||'')}"></label>
+<label class="fl"><span>Links (até 4, um por linha, https://)</span><textarea id="el">${esc(S.links.join('\n'))}</textarea></label>
+${['Pronomes','Gênero','Banners','Reordenar grade'].map(l=>`<button class="mr" data-a="soon"><span>${l}</span><i>em breve ›</i></button>`).join('')}
+<div style="padding:0 16px 24px">${tg('priv',S.priv,'Conta privada')}</div></div></div>`;
+A.edit=()=>{shf=null;ovl(editPage)};
+const avHtml=()=>`<h3>Foto do perfil</h3><div style="text-align:center;margin-bottom:8px">${av(S.me.u,80)}</div><button class="mr" data-a="avlib"><span>Escolher da biblioteca</span></button><button class="mr" data-a="avcam"><span>Tirar foto</span></button><button class="mr" data-a="soon"><span>Importar do WhatsApp ou Facebook</span><i>em breve</i></button>${AVT[S.me.u]?'<button class="mr" data-a="avdel" style="color:#ff5a6a"><span>Remover foto atual</span></button>':''}`;
+A.avatar=()=>{if(!ME)return;sheet(avHtml)};
+A.avlib=()=>{const f=$('#fav');f.removeAttribute('capture');f.value='';f.click();shf=null;draw()};
+A.avcam=()=>{const f=$('#fav');f.setAttribute('capture','user');f.value='';f.click();shf=null;draw()};
+A.avdel=async()=>{shf=null;draw();if(!confirm('Remover sua foto de perfil?'))return;const old=AVT[S.me.u];
+ const{error}=await sb.from('profiles').update({avatar_url:null}).eq('id',ME.id);if(error)return toast('Não foi possível remover agora');
+ delete AVT[S.me.u];if(old&&old.includes('/media/'))sb.storage.from('media').remove([decodeURIComponent(old.split('/media/')[1].split('?')[0])]).catch(()=>{});R();toast('Foto removida')};
+
+// ---------- Curtidas e comentários para todos (precisa do SQL; sem ele fica local) ----------
+let LKOK=0,CMOK=0;
+async function loadReact(list){if(!ME||!sb)return;const ids=list.filter(p=>p.oid).map(p=>String(p.oid)).slice(0,80);if(!ids.length)return;
+ const[a,b]=await Promise.all([sb.from('likes').select('post_id,user_id').in('post_id',ids),sb.from('comments').select('post_id').in('post_id',ids)]);let ch=0;
+ if(!a.error){LKOK=1;const c={},me={};(a.data||[]).forEach(r=>{c[r.post_id]=(c[r.post_id]||0)+1;if(r.user_id==ME.id)me[r.post_id]=1});
+  list.forEach(p=>{if(p.oid){const n=c[String(p.oid)]||0,m=me[String(p.oid)]?1:0;if(p.l!=n||p.liked!=m){p.l=n;p.liked=m;ch=1}}})}
+ if(!b.error){CMOK=1;const c={};(b.data||[]).forEach(r=>c[r.post_id]=(c[r.post_id]||0)+1);
+  list.forEach(p=>{if(p.oid){const n=c[String(p.oid)]||0;if(p.cmn!==n){p.cmn=n;ch=1}}})}
+ if(ch)R()}
+{const lp=loadPosts;loadPosts=async m=>{await lp(m);loadReact(S.posts)}}
+{const o=A.like;A.like=async id=>{const p=find(id);if(!p||!p.oid||!LKOK)return o(id);
+ const was=p.liked;p.liked=was?0:1;p.l=Math.max(0,p.l+(was?-1:1));pop=p.liked?id:null;if(p.liked&&navigator.vibrate)navigator.vibrate(12);R();pop=null;
+ const q=was?sb.from('likes').delete().eq('post_id',String(p.oid)).eq('user_id',ME.id):sb.from('likes').insert({post_id:String(p.oid),user_id:ME.id});
+ const{error}=await q;if(error){p.liked=was;p.l=Math.max(0,p.l+(was?1:-1));R();toast('Não foi possível curtir agora')}}}
+{const oc=A.cm;A.cm=async id=>{oc(id);const p=find(id);if(!p||!p.oid||!CMOK)return;
+ const{data}=await sb.from('comments').select('body,created_at,profiles(username)').eq('post_id',String(p.oid)).order('created_at',{ascending:true});
+ if(data){p.cm=data.map(c=>({u:c.profiles?c.profiles.username:'?',x:c.body}));p.cmn=p.cm.length;draw()}}}
+{const o=A.cms;A.cms=async id=>{const p=find(id);if(!p||!p.oid||!CMOK)return o(id);const i=$('#ci'),v=i.value.trim();if(!v)return;i.value='';
+ const{error}=await sb.from('comments').insert({post_id:String(p.oid),user_id:ME.id,body:v});if(error)return toast('Não foi possível comentar agora');
+ p.cm.push({u:S.me.u,x:v});p.cmn=p.cm.length;R()}}
+
+// ---------- Aviso de nova versão (evita ficar preso na versão antiga em cache) ----------
+if(location.protocol.startsWith('http'))setTimeout(()=>{fetch(location.href.split('#')[0].split('?')[0],{cache:'no-store'}).then(r=>r.text()).then(t=>{
+ const m=t.match(/const VER='([^']+)'/);if(m&&m[1]!=VER){const b=document.createElement('button');b.id='upd';b.textContent='Nova versão disponível. Toque para atualizar';
+  b.onclick=()=>{location.href=location.pathname+'?v='+m[1]};document.body.appendChild(b)}}).catch(()=>{})},4000);
 </script>
 </body>
 </html>
