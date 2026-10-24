@@ -114,13 +114,13 @@ nav{position:fixed;left:0;top:0;bottom:0;width:84px;flex-direction:column;justif
 <input type="file" id="fav" accept="image/*" hidden>
 <input type="file" id="fcv" accept="image/*" hidden>
 <script>
-const VER='4.1';
+const VER='4.2';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const P={home:'M3 11l9-8 9 8v10h-6v-6H9v6H3z',search:'M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5',plus:'M12 5v14M5 12h14',send:'M22 3L9.5 13.5M22 3l-7 18-5.5-7.5L2 10z',user:'M12 3a4.5 4.5 0 100 9 4.5 4.5 0 000-9zM4 21c0-4.4 3.6-7 8-7s8 2.6 8 7',heart:'M12 21s-8-5-8-11a4.5 4.5 0 018-3 4.5 4.5 0 018 3c0 6-8 11-8 11z',cm:'M21 12a8 8 0 01-11.5 7.2L3 21l1.8-6A8 8 0 1121 12z',bm:'M6 3h12v18l-6-4-6 4z',reel:'M4 4h16v16H4zM10 9l5 3-5 3z',x:'M5 5l14 14M19 5L5 19',menu:'M4 6h16M4 12h16M4 18h16',back:'M15 5l-7 7 7 7',edit:'M4 20h4L19 9l-4-4L4 16zM14 6l4 4',feed:'M4 4h16v7H4zM4 14h16v6H4z',rep:'M17 2l4 4-4 4M3 11V9a3 3 0 013-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 01-3 3H3'};
 const ic=(n,f)=>`<svg viewBox="0 0 24 24" width="24" height="24" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${P[n]}"/></svg>`;
 const hh=u=>Math.abs([...String(u)].reduce((a,c)=>a*31+c.charCodeAt(0)|0,7))%360;
 const art=h=>`background:linear-gradient(145deg,hsl(${h} 70% 48%),hsl(${(h+70)%360} 75% 22%))`;
-const AVT={};let storyRow=()=>'';
+const AVT={};let storyRow=()=>'',RPM=new Set(),carHtml=()=>'',hlRow=()=>'';
 const av=(u,s=40)=>AVT[u]?`<img class="av" src="${esc(AVT[u])}" alt="" style="width:${s}px;height:${s}px;object-fit:cover">`:`<span class="av" style="width:${s}px;height:${s}px;${art(hh(u))}">${esc((u||'?')[0]).toUpperCase()}</span>`;
 const ago=t=>{const m=(Date.now()-t)/6e4|0;return m<1?'agora':m<60?m+' min':m<1440?(m/60|0)+' h':(m/1440|0)+' d'};
 const tags=s=>esc(s).replace(/#\w+/g,m=>`<span class="tg">${m}</span>`);
@@ -702,7 +702,7 @@ nav button{position:relative;padding:8px 10px}#hd button{position:relative}
 `;document.head.appendChild(st)}
 P.feed='M4 4h16v7H4zM4 14h16v6H4z';
 const sv8=()=>{try{localStorage.setItem('vvhp',JSON.stringify([...HP]))}catch(e){}};
-let BL=new Set(),RPM=new Set(),RP=[],NT=null,NTERR=0,NC=0,UC={},BLOK=1,SVOK=-1,RPOK=1;
+let BL=new Set(),RP=[],NT=null,NTERR=0,NC=0,UC={},BLOK=1,SVOK=-1,RPOK=1;
 let HP=new Set((()=>{try{return JSON.parse(localStorage.getItem('vvhp')||'[]')}catch(e){return[]}})());
 const vis=p=>!BL.has(p.u)&&!HP.has(p.id);
 const isFol=u=>u==S.me.u||S.fol[u];
@@ -742,7 +742,7 @@ async function loadUserReposts(uid){const{data,error}=await sb.from('reposts').s
  const ids=(data||[]).map(r=>String(r.post_id));await fetchMissing(ids);if(PV)PV.rps=ids.map(i=>find('o'+i)).filter(Boolean);if(ovf===profPage)draw()}
 
 // ---------- Carrossel + visualizações ----------
-const carHtml=p=>{const it=[{url:p.img||p.vid,v:!!p.vid}].concat(p.pm||[]);return `<div class="car" data-n="${it.length}">${it.map(m=>`<div class="cs">${m.v?`<video src="${esc(m.url)}" playsinline controls preload="metadata"></video>`:`<img src="${esc(m.url)}" alt="">`}</div>`).join('')}</div><span class="cn">1/${it.length}</span>`};
+carHtml=p=>{const it=[{url:p.img||p.vid,v:!!p.vid}].concat(p.pm||[]);return `<div class="car" data-n="${it.length}">${it.map(m=>`<div class="cs">${m.v?`<video src="${esc(m.url)}" playsinline controls preload="metadata"></video>`:`<img src="${esc(m.url)}" alt="">`}</div>`).join('')}</div><span class="cn">1/${it.length}</span>`};
 document.addEventListener('scroll',e=>{const t=e.target;if(t&&t.classList&&t.classList.contains('car')){const i=Math.round(t.scrollLeft/t.clientWidth)+1,c=t.parentNode.querySelector('.cn');if(c)c.textContent=i+'/'+t.dataset.n}},true);
 async function loadExtras(list){if(!ME||!sb)return;list.forEach(p=>{if(p.uid&&p.u&&!ID[p.u])ID[p.u]=p.uid});const ids=list.filter(p=>p.oid).map(p=>String(p.oid)).slice(0,80);if(!ids.length)return;let ch=0;
  const[a,b]=await Promise.all([sb.from('post_media').select('post_id,media_url,media_type,pos').in('post_id',ids).order('pos',{ascending:true}),sb.from('post_views').select('post_id').in('post_id',ids)]);
@@ -832,7 +832,7 @@ A.cfm=async()=>{shf=null;CFL=null;ovl(cfPage);await loadCF();CFL=await listFollo
 A.cftog=async id=>{const has=CF.has(id);const{error}=await(has?sb.from('close_friends').delete().eq('friend_id',id).eq('owner_id',ME.id):sb.from('close_friends').insert({friend_id:id}));if(error)return toast('Não foi possível atualizar');has?CF.delete(id):CF.add(id);draw()};
 // Destaques
 async function loadHL(uid,u){const{data,error}=await sb.from('story_highlights').select('id,title,created_at,highlight_items(id,media_url,media_type,caption,created_at)').eq('owner_id',uid).order('created_at',{ascending:true});if(error){HLOK=0;return}HLOK=1;HL[u]=data||[];R();if(ovf===profPage)draw()}
-const hlRow=(u,mine)=>{const L=HL[u]||[];if(!L.length&&!mine)return'';return `<div class="hlr">${L.map(h=>{const c=(h.highlight_items||[])[0];return `<button data-a="hl" data-i="${esc(u)}|${h.id}"><span class="hc">${c&&c.media_type!='video'?`<img src="${esc(c.media_url)}" alt="">`:'★'}</span>${esc(h.title).slice(0,10)}</button>`}).join('')}${mine?`<button data-a="hlmg"><span class="hc">+</span>Gerenciar</button>`:''}</div>`};
+hlRow=(u,mine)=>{const L=HL[u]||[];if(!L.length&&!mine)return'';return `<div class="hlr">${L.map(h=>{const c=(h.highlight_items||[])[0];return `<button data-a="hl" data-i="${esc(u)}|${h.id}"><span class="hc">${c&&c.media_type!='video'?`<img src="${esc(c.media_url)}" alt="">`:'★'}</span>${esc(h.title).slice(0,10)}</button>`}).join('')}${mine?`<button data-a="hlmg"><span class="hc">+</span>Gerenciar</button>`:''}</div>`};
 A.hl=i=>{const[u,id]=i.split('|');const h=(HL[u]||[]).find(x=>x.id==id);if(!h||!(h.highlight_items||[]).length)return toast('Destaque vazio');
  const key='★ '+h.title;ST[key]=h.highlight_items.map(it=>({id:'h'+it.id,img:it.media_type=='video'?undefined:it.media_url,vid:it.media_type=='video'?it.media_url:undefined,tx:it.caption||'',t:+new Date(it.created_at)}));viewStory(key,0)};
 const hlPick=()=>`<h3>Adicionar ao destaque</h3>${!HLOK?'<p class="mu">Falta rodar o SQL (etapa 2).</p>':''}${(HL[S.me.u]||[]).map(h=>`<button class="mr" data-a="hladd" data-i="${h.id}"><span>${esc(h.title)}</span><i>${(h.highlight_items||[]).length}</i></button>`).join('')}<div class="cb" style="padding:12px 0 0"><input id="hlt" maxlength="20" placeholder="Novo destaque (título)"><button data-a="hlnew">Criar</button></div>`;
