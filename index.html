@@ -114,7 +114,7 @@ nav{position:fixed;left:0;top:0;bottom:0;width:84px;flex-direction:column;justif
 <input type="file" id="fav" accept="image/*" hidden>
 <input type="file" id="fcv" accept="image/*" hidden>
 <script>
-const VER='4.0';
+const VER='4.1';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const P={home:'M3 11l9-8 9 8v10h-6v-6H9v6H3z',search:'M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5',plus:'M12 5v14M5 12h14',send:'M22 3L9.5 13.5M22 3l-7 18-5.5-7.5L2 10z',user:'M12 3a4.5 4.5 0 100 9 4.5 4.5 0 000-9zM4 21c0-4.4 3.6-7 8-7s8 2.6 8 7',heart:'M12 21s-8-5-8-11a4.5 4.5 0 018-3 4.5 4.5 0 018 3c0 6-8 11-8 11z',cm:'M21 12a8 8 0 01-11.5 7.2L3 21l1.8-6A8 8 0 1121 12z',bm:'M6 3h12v18l-6-4-6 4z',reel:'M4 4h16v16H4zM10 9l5 3-5 3z',x:'M5 5l14 14M19 5L5 19',menu:'M4 6h16M4 12h16M4 18h16',back:'M15 5l-7 7 7 7',edit:'M4 20h4L19 9l-4-4L4 16zM14 6l4 4',feed:'M4 4h16v7H4zM4 14h16v6H4z',rep:'M17 2l4 4-4 4M3 11V9a3 3 0 013-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 01-3 3H3'};
 const ic=(n,f)=>`<svg viewBox="0 0 24 24" width="24" height="24" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${P[n]}"/></svg>`;
@@ -924,7 +924,7 @@ const msgBody=m=>{const mm=(m.x||'').match(/^\[\[post:(\w+)\]\]$/);
  if(m.img)return /\.(mp4|mov|webm)(\?|$)/i.test(m.img)?`<video src="${esc(m.img)}" controls playsinline preload="metadata" style="max-width:100%;border-radius:10px;display:block"></video>`:`<img src="${esc(m.img)}" alt="Foto" style="max-width:100%;border-radius:10px;display:block">`;
  return esc(m.x)};
 const chat2=k=>{const L=S.chats[k]||[],g=isG(k);let lm=-1;L.forEach((m,i)=>{if(m.m)lm=i});
- return `<div><div class="hd"><button data-a="close" aria-label="Voltar">${ic('back')}</button>${g?'<span class="av" style="width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;background:var(--sf)">👥</span>':av(k,34)}<span ${g?'':`data-a="prof" data-i="${esc(k)}"`}>${esc(cname(k))}${g?`<br><small class="mu">${esc((GM[k]||[]).join(', '))}</small>`:''}</span><button data-a="cmenu" data-i="${esc(k)}" aria-label="Opções">⋯</button></div><div id="msgs">${L.map((m,i)=>`<div class="bb ${m.m?'me':''}">${g&&!m.m?`<small class="mu" style="display:block">${esc(m.su||'')}</small>`:''}${msgBody(m)}${m.m&&i==lm?`<small style="display:block;opacity:.7;text-align:right">${m.rd?'✓✓ Visto':'✓ Enviado'}</small>`:''}</div>`).join('')||'<p class="empty">Diga olá 👋</p>'}</div><div class="cb"><button data-a="mph" aria-label="Enviar foto ou vídeo">📷</button><input id="mf2" type="file" accept="image/*,video/*" hidden><input id="mi" maxlength="500" placeholder="Mensagem..." aria-label="Mensagem"><button data-a="ms" data-i="${esc(k)}">Enviar</button></div></div>`};
+ return `<div><div class="hd"><button data-a="close" aria-label="Voltar">${ic('back')}</button>${g?'<span class="av" style="width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;background:var(--sf)">👥</span>':av(k,34)}<span ${g?'':`data-a="prof" data-i="${esc(k)}"`}>${esc(cname(k))}${g?`<br><small class="mu">${esc((GM[k]||[]).join(', '))}</small>`:''}</span>${g?`<button data-a="soon" aria-label="Chamada em grupo: em breve">📞</button>`:`<button data-a="call" data-i="a|${esc(k)}" aria-label="Chamada de voz">📞</button><button data-a="call" data-i="v|${esc(k)}" aria-label="Chamada de vídeo">🎥</button>`}<button data-a="cmenu" data-i="${esc(k)}" aria-label="Opções">⋯</button></div><div id="msgs">${L.map((m,i)=>`<div class="bb ${m.m?'me':''}">${g&&!m.m?`<small class="mu" style="display:block">${esc(m.su||'')}</small>`:''}${msgBody(m)}${m.m&&i==lm?`<small style="display:block;opacity:.7;text-align:right">${m.rd?'✓✓ Visto':'✓ Enviado'}</small>`:''}</div>`).join('')||'<p class="empty">Diga olá 👋</p>'}</div><div class="cb"><button data-a="mph" aria-label="Enviar foto ou vídeo">📷</button><input id="mf2" type="file" accept="image/*,video/*" hidden><input id="mi" maxlength="500" placeholder="Mensagem..." aria-label="Mensagem"><button data-a="ms" data-i="${esc(k)}">Enviar</button></div></div>`};
 A.chat=async k=>{if(BL.has(k))return toast('Você bloqueou '+k);cur=k;
  if(!CID[k]&&!isG(k)){if(!ID[k])return toast('Não foi possível abrir a conversa');const{data,error}=await sb.rpc('start_dm',{other:ID[k]});if(error)return toast('Não foi possível abrir a conversa');CID[k]=data}
  S.chats[k]=S.chats[k]||[];shf=null;ovl(()=>chat2(k));scrollMsgs();markRead(k)};
@@ -1006,6 +1006,91 @@ A.delgo=async()=>{if(($('#dl').value||'').trim()!='EXCLUIR')return toast('Digite
  await Promise.allSettled([loadSaved(),loadReposts(),loadNotifs(),loadHL(ME.id,S.me.u),loadChats()]);R();
  const pm=location.search.match(/[?&]p=(\w+)/);if(pm&&!window.__dl){window.__dl=1;openPostById(pm[1])}}}
 
+// ===== MÓDULO F: chamadas de voz e vídeo (WebRTC, 1 para 1) =====
+// O Supabase Realtime só troca os avisos de conexão; áudio e vídeo vão direto entre os aparelhos.
+// Para redes mais restritas (4G de algumas operadoras), adicione abaixo um servidor TURN:
+// {urls:'turn:seu-servidor:3478',username:'usuario',credential:'senha'}
+const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']}]};
+let CALL=null,sigIn=null,sigOut={},AC=null,rinT=null;
+{const st=document.createElement('style');st.textContent=`
+#call{position:fixed;inset:0;z-index:90;background:#0b0b12;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#call #rv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+#call #rv.off{width:1px;height:1px;opacity:0}
+#call #lv{position:absolute;right:14px;top:calc(14px + env(safe-area-inset-top,0px));width:104px;height:150px;object-fit:cover;border-radius:14px;border:2px solid #fff6;background:#000;z-index:2;transform:scaleX(-1)}
+#call .cinfo{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;text-shadow:0 1px 8px #000a}#call .cinfo h2{margin:8px 0 0;font-size:1.5rem}#call .cinfo p{margin:0;opacity:.85}
+#call .cinfo.top{position:absolute;top:calc(18px + env(safe-area-inset-top,0px));left:16px;align-items:flex-start}#call .cinfo.top h2{font-size:1.1rem;margin:0}
+#call .cctl{position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;gap:22px;z-index:2}
+#call .cb2{width:64px;height:64px;border-radius:50%;background:#fff2;color:#fff;font-size:1.6rem;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+#call .cb2.red{background:#ff3b4e}#call .cb2.green{background:#1fbf5b}#call .cb2.off{background:#fff;color:#111}
+`;document.head.appendChild(st)}
+const fmtDur=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+function beep(f,d){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.value=.15;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(e){}}
+function ringStart(){ringStop();const go=()=>{beep(440,.4);setTimeout(()=>beep(520,.4),450);if(navigator.vibrate)navigator.vibrate([300,150,300])};go();rinT=setInterval(go,2500)}
+function ringStop(){clearInterval(rinT);rinT=null;if(navigator.vibrate)navigator.vibrate(0)}
+const getMedia=video=>navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true},video:video?{facingMode:'user',width:{ideal:640},height:{ideal:480}}:false});
+const mediaErr=e=>e&&e.name=='NotAllowedError'?'Permita o microfone'+(CALL&&CALL.video?' e a câmera':'')+' nas configurações do navegador':e&&e.name=='NotFoundError'?'Microfone ou câmera não encontrados':'Não foi possível acessar o microfone/câmera';
+// ---- aviso entre os dois aparelhos ----
+function sendSig(peerId,payload){const msg=Object.assign({},payload,{from:ME.id,name:S.me.u});let ch=sigOut[peerId];
+ if(!ch){ch=sigOut[peerId]=sb.channel('call:'+peerId);ch.__q=[];ch.subscribe(st=>{if(st=='SUBSCRIBED'){ch.__ok=1;ch.__q.splice(0).forEach(m=>ch.send({type:'broadcast',event:'sig',payload:m}))}})}
+ if(ch.__ok)ch.send({type:'broadcast',event:'sig',payload:msg});else ch.__q.push(msg)}
+function initCalls(){if(sigIn||!sb||!ME)return;sigIn=sb.channel('call:'+ME.id,{config:{broadcast:{self:false}}}).on('broadcast',{event:'sig'},({payload})=>onSig(payload)).subscribe()}
+const nameOf=id=>Object.keys(ID).find(u=>ID[u]==id);
+async function onSig(m){if(!m||!m.from||m.from==ME.id)return;
+ if(m.t=='offer'){let nm=nameOf(m.from)||m.name;if(!nm||BL.has(nm))return;
+  if(!CID[nm]&&!S.fol[nm]){await loadChats();nm=nameOf(m.from)||nm;if(!CID[nm]&&!S.fol[nm])return}
+  if(CALL){sendSig(m.from,{t:'busy'});return}
+  ID[nm]=m.from;CALL={role:'in',peer:m.from,key:nm,video:!!m.video,offer:m.sdp,ice:[],state:'ringing'};ringStart();callUI();return}
+ if(!CALL||CALL.peer!=m.from)return;
+ if(m.t=='answer'&&CALL.pc&&!CALL.pc.remoteDescription){await CALL.pc.setRemoteDescription({type:'answer',sdp:m.sdp});flushIce()}
+ else if(m.t=='ice'){if(CALL.pc&&CALL.pc.remoteDescription)CALL.pc.addIceCandidate(m.c).catch(()=>{});else CALL.ice.push(m.c)}
+ else if(m.t=='decline')endCall('Chamada recusada');
+ else if(m.t=='busy')endCall(CALL.key+' está em outra chamada');
+ else if(m.t=='end')endCall(CALL.state=='ringing'?'Chamada perdida':'Chamada encerrada')}
+function flushIce(){if(!CALL||!CALL.pc)return;CALL.ice.splice(0).forEach(c=>CALL.pc.addIceCandidate(c).catch(()=>{}))}
+function mkPC(){const pc=new RTCPeerConnection(ICE);CALL.pc=pc;
+ pc.onicecandidate=e=>{if(e.candidate&&CALL)sendSig(CALL.peer,{t:'ice',c:e.candidate.toJSON()})};
+ pc.ontrack=e=>{if(!CALL)return;CALL.remote=e.streams[0];attachMedia()};
+ pc.onconnectionstatechange=()=>{if(!CALL)return;const s=pc.connectionState;
+  if(s=='connected'&&CALL.state!='connected'){CALL.state='connected';CALL.started=Date.now();ringStop();clearTimeout(CALL.tm);callUI();CALL.tick=setInterval(()=>{const e=$('#ctm');if(e&&CALL)e.textContent=fmtDur(Math.round((Date.now()-CALL.started)/1000))},1000)}
+  else if(s=='failed'){endCall('A conexão falhou. A rede pode bloquear chamadas diretas.')}
+  else if(s=='disconnected'){clearTimeout(CALL.dc);CALL.dc=setTimeout(()=>{if(CALL&&pc.connectionState=='disconnected')endCall('Conexão perdida')},6000)}};
+ return pc}
+// ---- ligar ----
+A.call=async i=>{const[kind,k]=i.split('|');if(CALL)return toast('Você já está em uma chamada');
+ if(isG(k))return toast('Chamadas em grupo: em breve');const peer=ID[k];if(!peer)return toast('Não foi possível ligar agora');if(BL.has(k))return toast('Você bloqueou '+k);
+ if(!navigator.mediaDevices||!window.RTCPeerConnection)return toast('Este navegador não suporta chamadas');if(!window.isSecureContext)return toast('Chamadas exigem conexão segura (https)');
+ CALL={role:'out',peer,key:k,video:kind=='v',ice:[],state:'calling'};callUI();
+ try{CALL.stream=await getMedia(CALL.video)}catch(e){return endCall(mediaErr(e))}
+ if(!CALL)return CALL&&0;
+ try{const pc=mkPC();CALL.stream.getTracks().forEach(t=>pc.addTrack(t,CALL.stream));attachMedia();
+  const off=await pc.createOffer();await pc.setLocalDescription(off);sendSig(peer,{t:'offer',video:CALL.video,sdp:off.sdp});
+  CALL.tm=setTimeout(()=>{if(CALL&&CALL.state=='calling'){sendSig(CALL.peer,{t:'end'});endCall('Sem resposta')}},45000)}catch(e){console.error(e);endCall('Não foi possível iniciar a chamada')}};
+A.callacc=async()=>{if(!CALL||CALL.role!='in'||CALL.state!='ringing')return;ringStop();CALL.state='connecting';callUI();
+ try{CALL.stream=await getMedia(CALL.video)}catch(e){sendSig(CALL.peer,{t:'decline'});return endCall(mediaErr(e))}
+ if(!CALL)return;
+ try{const pc=mkPC();CALL.stream.getTracks().forEach(t=>pc.addTrack(t,CALL.stream));attachMedia();
+  await pc.setRemoteDescription({type:'offer',sdp:CALL.offer});flushIce();const an=await pc.createAnswer();await pc.setLocalDescription(an);sendSig(CALL.peer,{t:'answer',sdp:an.sdp});
+  CALL.tm=setTimeout(()=>{if(CALL&&CALL.state!='connected')endCall('Não foi possível conectar')},20000)}catch(e){console.error(e);sendSig(CALL.peer,{t:'end'});endCall('Não foi possível conectar')}};
+A.calldec=()=>{if(!CALL)return;sendSig(CALL.peer,{t:'decline'});endCall('')};
+A.callend=()=>{if(!CALL)return;sendSig(CALL.peer,{t:'end'});endCall('')};
+A.callmic=()=>{if(!CALL||!CALL.stream)return;const t=CALL.stream.getAudioTracks();const on=!(t[0]&&t[0].enabled);t.forEach(x=>x.enabled=on);CALL.mute=!on;callUI()};
+A.callcam=()=>{if(!CALL||!CALL.stream)return;const t=CALL.stream.getVideoTracks();const on=!(t[0]&&t[0].enabled);t.forEach(x=>x.enabled=on);CALL.camoff=!on;callUI()};
+function endCall(msg){if(!CALL)return;const c=CALL;CALL=null;clearTimeout(c.tm);clearInterval(c.tick);clearTimeout(c.dc);ringStop();
+ try{c.pc&&c.pc.close()}catch(e){}c.stream&&c.stream.getTracks().forEach(t=>t.stop());
+ const dur=c.started?Math.round((Date.now()-c.started)/1000):0,el=$('#call');if(el)el.remove();if(msg)toast(msg);
+ if(c.role=='out'){sendMsg(c.key,dur?`📞 Chamada de ${c.video?'vídeo':'voz'} · ${fmtDur(dur)}`:'📞 Chamada não atendida').then(()=>{if(tab=='msg'||cur===c.key)R()})}}
+// ---- tela da chamada ----
+function attachMedia(){const r=$('#rv'),l=$('#lv');if(r&&CALL&&CALL.remote&&r.srcObject!==CALL.remote){r.srcObject=CALL.remote;r.play().catch(()=>{})}if(l&&CALL&&CALL.stream&&l.srcObject!==CALL.stream)l.srcObject=CALL.stream}
+function callUI(){let el=$('#call');if(!CALL){el&&el.remove();return}if(!el){el=document.createElement('div');el.id='call';el.setAttribute('role','dialog');el.setAttribute('aria-label','Chamada');document.body.appendChild(el)}
+ const c=CALL,st=c.state,vv=c.video&&st=='connected'&&!c.camoffRemote;
+ const status=st=='ringing'?(c.video?'Chamada de vídeo recebida':'Chamada de voz recebida'):st=='calling'?'Chamando…':st=='connecting'?'Conectando…':`<span id="ctm">${fmtDur(Math.round((Date.now()-c.started)/1000))}</span>`;
+ const ctl=st=='ringing'?`<button class="cb2 red" data-a="calldec" aria-label="Recusar">✕</button><button class="cb2 green" data-a="callacc" aria-label="Atender">${c.video?'🎥':'📞'}</button>`
+  :`${st=='connected'?`<button class="cb2 ${c.mute?'off':''}" data-a="callmic" aria-label="Microfone">${c.mute?'🔇':'🎤'}</button>${c.video?`<button class="cb2 ${c.camoff?'off':''}" data-a="callcam" aria-label="Câmera">${c.camoff?'🚫':'📷'}</button>`:''}`:''}<button class="cb2 red" data-a="callend" aria-label="Desligar">✕</button>`;
+ el.innerHTML=`<video id="rv" autoplay playsinline class="${vv?'':'off'}"></video>${c.video&&st!='ringing'?'<video id="lv" autoplay playsinline muted></video>':''}<div class="cinfo ${vv?'top':''}">${vv?'':av(c.key,110)}<h2>${esc(c.key)}</h2><p>${status}</p></div><div class="cctl">${ctl}</div>`;attachMedia()}
+// ---- ligações com o app ----
+{const o=A.out;A.out=()=>{try{if(CALL)A.callend();if(sigIn){sb.removeChannel(sigIn);sigIn=null}}catch(e){}o()}}
+{const ob=boot;boot=async s=>{await ob(s);if(ME)initCalls()}}
+window.addEventListener('pagehide',()=>{if(CALL)sendSig(CALL.peer,{type:'end',t:'end'})});
 </script>
 </body>
 </html>
