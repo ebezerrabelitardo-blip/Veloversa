@@ -1,0 +1,85 @@
+<!-- Cole este bloco inteiro no seu index.html, logo antes de </body> -->
+<script>
+// ===== MÓDULO: tela "Adicionar ao story" igual à do Instagram (galeria em miniaturas) =====
+// O navegador não lê a galeria sozinho: o seletor do iPhone/Android abre a galeria e o que você escolher aparece aqui em miniaturas.
+const SG={files:[],sel:[],multi:0,aud:0,q:[],tm:0};
+Object.assign(P,{sgcog:'M12 15a3 3 0 100-6 3 3 0 000 6zM19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z'});
+{const s=document.createElement('style');s.textContent=`
+#tt{z-index:120}
+#sg{position:fixed;inset:0;z-index:80;background:#000;color:#fff;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}#sg[hidden]{display:none}
+#sg button{color:#fff}
+#sg .sgw{max-width:520px;margin:auto;min-height:100%}
+.sgh{position:sticky;top:0;z-index:5;background:#000;display:flex;align-items:center;justify-content:space-between;height:calc(56px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) 12px 0}
+.sgh button{width:44px;height:44px;display:flex;align-items:center;justify-content:center}.sgh svg{width:26px;height:26px}
+.sgh b{font-size:1.06rem;font-weight:600}
+.sgtl{display:flex;gap:10px;padding:8px 16px 20px;overflow-x:auto;scrollbar-width:none}.sgtl::-webkit-scrollbar{display:none}
+.sgtl button{flex:none;width:104px;height:100px;border-radius:16px;background:#ffffff14;border:1px solid #ffffff1c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-weight:600;font-size:.95rem}
+.sgtl button svg{width:34px;height:34px}.sgtl button.on{background:var(--ac);border-color:var(--ac)}
+.sgaa{font-size:1.7rem;font-weight:700;line-height:34px;height:34px}
+.sgbar{position:sticky;top:calc(56px + env(safe-area-inset-top,0px));z-index:4;background:#000;display:flex;justify-content:space-between;align-items:center;padding:6px 16px 12px}
+.sgal{display:inline-flex;align-items:center;gap:6px;font-size:1.2rem;font-weight:700}.sgal svg{width:18px;height:18px}
+.sgsel{display:inline-flex;align-items:center;gap:8px;background:#262626;border-radius:22px;padding:10px 18px;font-weight:500;font-size:.95rem}.sgsel svg{width:20px;height:20px}.sgsel.on{background:var(--ac)}
+.sgg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;padding-bottom:110px}
+.sgt{position:relative;aspect-ratio:9/16;background:#1c1c1e;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:0}
+.sgt>svg{width:38px;height:38px}
+.sgt img,.sgt video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sgt.on::after{content:"";position:absolute;inset:0;background:#ffffff40}
+.sgck{position:absolute;top:7px;right:7px;width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:#0004;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;z-index:2}
+.sgt.on .sgck{background:var(--ac);border-color:var(--ac)}
+.sgdu{position:absolute;right:7px;bottom:6px;z-index:2;font-size:.95rem;font-weight:700;text-shadow:0 1px 4px #000a}
+.sghint{grid-column:1/-1;color:#9a9aa8;font-size:.85rem;text-align:center;padding:18px 24px}
+.sgchip{position:fixed;right:14px;top:calc(56px + env(safe-area-inset-top,0px) + 62px);z-index:6;background:#fff;color:#000;border-radius:20px;padding:8px 16px;font-weight:600;font-size:.95rem;opacity:0;transition:opacity .25s;pointer-events:none}.sgchip.on{opacity:1}
+.sgfoot{position:fixed;left:0;right:0;bottom:0;max-width:520px;margin:auto;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,#000 45%);z-index:6}
+`;document.head.appendChild(s)}
+const sgDay=t=>{const d=new Date(t),n=new Date(),z=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()),df=Math.round((z(n)-z(d))/864e5);if(df<=0)return'Hoje';if(df==1)return'Ontem';if(df<7)return d.toLocaleDateString('pt-BR',{weekday:'long'});return d.toLocaleDateString('pt-BR',{day:'numeric',month:'short'}).replace('.','')};
+function sgDur(v){const s=Math.round(v.duration||0),b=v.parentNode&&v.parentNode.querySelector('.sgdu');if(b&&isFinite(s))b.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+const sgHtml=()=>{const n=SG.sel.length;return `<div class="sgw"><div class="sgh"><button data-a="sgx" aria-label="Fechar">${ic('x')}</button><b>Adicionar ao story</b><button data-a="sgcfg" aria-label="Configurações do story">${ic('sgcog')}</button></div>
+<div class="sgtl"><button data-a="sgtxt"><span class="sgaa">Aa</span>Texto</button><button data-a="sgaud" class="${SG.aud?'on':''}">${ic('star',SG.aud)}Amigos próximos</button><button data-a="sgarq">${ic('clock')}Arquivo</button></div>
+<div class="sgbar"><button class="sgal" data-a="sgmore">Recentes ${ic('chevd')}</button><button class="sgsel ${SG.multi?'on':''}" data-a="sgmulti">${ic('stack')}${SG.multi?'Cancelar':'Selecionar'}</button></div>
+<div class="sgg"><button class="sgt" data-a="sgcam" aria-label="Câmera">${ic('camera')}</button><button class="sgt" data-a="sgmore" aria-label="Escolher fotos e vídeos">${ic('plus')}</button>${SG.files.map((x,i)=>{const k=SG.sel.indexOf(x);return `<button class="sgt ${k>-1?'on':''}" data-a="sgpick" data-i="${i}" data-d="${esc(sgDay(x.f.lastModified||Date.now()))}" aria-label="${x.v?'Vídeo':'Foto'} ${i+1}">${x.v?`<video src="${x.u}#t=0.1" muted playsinline preload="metadata" onloadedmetadata="sgDur(this)"></video><span class="sgdu"></span>`:`<img src="${x.u}" alt="">`}${SG.multi?`<span class="sgck">${k>-1?k+1:''}</span>`:''}</button>`}).join('')}${SG.files.length?'':'<p class="sghint">Toque em + ou em “Recentes” para escolher fotos e vídeos da galeria. Eles aparecem aqui em miniatura.</p>'}</div>
+<div class="sgchip" id="sgchip"></div>${SG.multi&&n?`<div class="sgfoot"><button class="bt" data-a="sgnext">Avançar (${n})</button></div>`:''}</div>`};
+const sgDraw=()=>{const e=$('#sg');if(!e||e.hidden)return;const y=e.scrollTop;e.innerHTML=sgHtml();e.scrollTop=y};
+const sgHide=()=>{const e=$('#sg');if(e)e.hidden=true};
+function sgInputs(){if($('#sgg'))return;
+ const g=document.createElement('input');g.type='file';g.id='sgg';g.hidden=true;g.multiple=true;g.accept='image/*,video/*';
+ const c=document.createElement('input');c.type='file';c.id='sgc';c.hidden=true;c.accept='image/*,video/*';c.setAttribute('capture','environment');
+ document.body.append(g,c);
+ g.onchange=e=>{const all=[...e.target.files],fs=all.filter(f=>/^(image|video)\//.test(f.type));e.target.value='';
+  if(!fs.length){if(all.length)toast('Escolha fotos ou vídeos');return}
+  fs.forEach(f=>SG.files.push({f,u:URL.createObjectURL(f),v:f.type.startsWith('video/')}));
+  SG.files.sort((a,b)=>(b.f.lastModified||0)-(a.f.lastModified||0));
+  while(SG.files.length>60){const x=SG.files.pop();URL.revokeObjectURL(x.u);SG.sel=SG.sel.filter(s=>s!==x)}
+  sgDraw()};
+ c.onchange=e=>{const f=e.target.files[0];e.target.value='';if(f)sgOpenEditor([f])}}
+function sgOpen(){sgInputs();shf=null;draw();let e=$('#sg');
+ if(!e){e=document.createElement('div');e.id='sg';e.setAttribute('role','dialog');e.setAttribute('aria-label','Adicionar ao story');document.body.appendChild(e);
+  e.addEventListener('scroll',()=>{const c=$('#sgchip');if(!c)return;const top=56+parseFloat(getComputedStyle(document.documentElement).paddingTop||0)+56;let d='';
+   for(const t of e.querySelectorAll('.sgt[data-d]')){if(t.getBoundingClientRect().bottom>top){d=t.dataset.d;break}}
+   if(!d||e.scrollTop<20)return;const br=e.querySelector('.sgbar');c.style.top=(br?br.getBoundingClientRect().bottom+10:140)+'px';c.textContent=d;c.classList.add('on');clearTimeout(SG.tm);SG.tm=setTimeout(()=>{const k=$('#sgchip');k&&k.classList.remove('on')},900)},{passive:true})}
+ e.hidden=false;e.scrollTop=0;sgDraw();
+ if(!SG.files.length)setTimeout(()=>{try{$('#sgg').click()}catch(_){}},0)}
+// abre o editor de story existente com o arquivo escolhido (reaproveita HEVC, compressão, editor e publicação)
+function sgOpenEditor(fs,keepQ){if(!fs.length)return;if(!keepQ)SG.q=fs.slice(1);sgHide();
+ const f=fs[0];pend={kind:'story',close:SG.aud?1:0};const inp=$('#fi');inp.multiple=false;
+ try{const dt=new DataTransfer();dt.items.add(f);inp.files=dt.files;inp.dispatchEvent(new Event('change'))}catch(_){inp.onchange({target:{files:[f]}})}}
+{const o=A.pick;A.pick=(k,b)=>{if(k=='story'){sgOpen();return}o(k,b)}}
+{const d0=draw;draw=function(){d0();const h=$('#sh'),g=$('#sg');if(h&&g&&!g.hidden)h.style.zIndex='100'}}
+Object.assign(A,{
+ sgx(){sgHide()},
+ sgaud(){SG.aud=SG.aud?0:1;sgDraw()},
+ sgmore(){$('#sgg').click()},
+ sgcam(){$('#sgc').click()},
+ sgmulti(){SG.multi=SG.multi?0:1;SG.sel=[];sgDraw()},
+ sgpick(i){const x=SG.files[+i];if(!x)return;
+  if(!SG.multi){sgOpenEditor([x.f]);return}
+  const k=SG.sel.indexOf(x);if(k>-1)SG.sel.splice(k,1);else if(SG.sel.length>=10)return toast('Máximo de 10 por vez');else SG.sel.push(x);sgDraw()},
+ sgnext(){if(!SG.sel.length)return;const fs=SG.sel.map(x=>x.f);SG.sel=[];SG.multi=0;if(fs.length>1)toast('Story 1 de '+fs.length);sgOpenEditor(fs)},
+ sgtxt(){sgHide();pend={kind:'story',close:SG.aud?1:0};shf=null;draw();openEditor('text')},
+ sgcfg(){sheet(()=>`<h3>Configurações do story</h3><button class="mr" data-a="sgcfm"><span>Gerenciar amigos próximos</span><i>›</i></button><button class="mr" data-a="sgarq"><span>Arquivo de stories</span><i>›</i></button>`)},
+ sgcfm(){shf=null;draw();sgHide();A.cfm()},
+ sgarq(){shf=null;draw();sgHide();A.arq()}
+});
+// vários stories em fila: depois de publicar um, abre o próximo; ao descartar, limpa a fila
+{const o=A.sepub;A.sepub=async(...a)=>{await o(...a);if(!SE&&SG.q.length){const f=SG.q.shift();toast('Próximo story ('+SG.q.length+' na fila)');setTimeout(()=>sgOpenEditor([f],1),400)}}}
+{const o=A.seclose;A.seclose=()=>{o();if(!SE)SG.q=[]}}
+</script>
