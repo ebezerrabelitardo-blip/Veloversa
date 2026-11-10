@@ -114,7 +114,7 @@ nav .cr{background:linear-gradient(135deg,var(--ac),#3d8bff);box-shadow:0 6px 18
 <input type="file" id="fcv" accept="image/*" hidden>
 <input type="file" id="cpf" multiple accept="image/*,video/*" hidden>
 <script>
-const VER='7.4';
+const VER='7.6';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const P={home:'M3 11l9-8 9 8v10h-6v-6H9v6H3z',search:'M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5',plus:'M12 5v14M5 12h14',send:'M22 3L9.5 13.5M22 3l-7 18-5.5-7.5L2 10z',user:'M12 3a4.5 4.5 0 100 9 4.5 4.5 0 000-9zM4 21c0-4.4 3.6-7 8-7s8 2.6 8 7',heart:'M12 21s-8-5-8-11a4.5 4.5 0 018-3 4.5 4.5 0 018 3c0 6-8 11-8 11z',cm:'M21 12a8 8 0 01-11.5 7.2L3 21l1.8-6A8 8 0 1121 12z',bm:'M6 3h12v18l-6-4-6 4z',reel:'M4 4h16v16H4zM10 9l5 3-5 3z',x:'M5 5l14 14M19 5L5 19',menu:'M4 6h16M4 12h16M4 18h16',back:'M15 5l-7 7 7 7',edit:'M4 20h4L19 9l-4-4L4 16zM14 6l4 4',feed:'M4 4h16v7H4zM4 14h16v6H4z',rep:'M17 2l4 4-4 4M3 11V9a3 3 0 013-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 01-3 3H3'};
 const ic=(n,f)=>`<svg viewBox="0 0 24 24" width="24" height="24" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${P[n]}"/></svg>`;
@@ -393,7 +393,7 @@ const profHtml=()=>{if(!PV)return '';const u=PV.u,p=PV.p,fol=S.fol[u],can=p&&(!p
 // Abre o perfil de um usuário: busca dados, contagens, status de seguir e posts
 A.prof=async u=>{if(!u)return;if(S.me.u&&u==S.me.u){return A.tab('me')}
  PV={u,loading:1};sheet(profHtml);
- try{const{data:p}=await sb.from('profiles').select('id,username,name,bio,is_private,location').eq('username',u).maybeSingle();
+ try{const{data:p}=await sb.from('profiles').select(PCOLS()).eq('username',u).maybeSingle();
   if(!p){PV={u,p:null};draw();return}
   ID[u]=p.id;PRIV[u]=p.is_private;
   const cnt=(t,c,v,x)=>{let r=sb.from(t).select('*',{count:'exact',head:true}).eq(c,v);return x?r.eq('status',x):r};
@@ -586,7 +586,7 @@ A.pmenu=u=>sheet(()=>`<h3>${esc(u)}</h3><button class="mr" data-a="pcopy" data-i
 A.pcopy=u=>{shf=null;draw();const url=location.href.split('#')[0];navigator.clipboard?navigator.clipboard.writeText(url).then(()=>toast('Link copiado'),()=>toast('Em breve vai funcionar')):toast('Em breve vai funcionar')};
 A.prof=async u=>{if(!u)return;if(S.me.u&&u==S.me.u){shut();return A.tab('me')}
  loadAvatars([u]);PV={u,loading:1,sub:'g'};shf=null;ovl(profPage);
- try{const{data:p}=await sb.from('profiles').select('id,username,name,bio,is_private,location').eq('username',u).maybeSingle();
+ try{const{data:p}=await sb.from('profiles').select(PCOLS()).eq('username',u).maybeSingle();
   if(!p){PV={u,p:null};if(ovf===profPage)draw();return}
   ID[u]=p.id;PRIV[u]=p.is_private;
   const cnt=(c,v)=>sb.from('follows').select('*',{count:'exact',head:true}).eq(c,v).eq('status','ok');
@@ -2273,9 +2273,99 @@ A.mfopen=async p=>{const m=(S.chats[cur]||[]).find(x=>x.f&&x.f.path==p),nm=m?m.f
  if(!u){shf=null;draw();return toast('Não foi possível abrir o arquivo')}
  sheet(()=>`<h3>${esc(nm)}</h3><p class="mu">${fmtSize(sz||0)}</p>${/\.pdf$/i.test(nm)?`<iframe src="${esc(u)}" title="${esc(nm)}" style="width:100%;height:48vh;border:0;border-radius:12px;background:#fff"></iframe>`:''}<a class="bt" href="${esc(u)}" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;margin-top:12px">Abrir</a><a class="bt g" href="${esc(u)}" download="${esc(nm)}" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;margin-top:8px">Baixar</a>`)};
 
+/* ===== VERSÃO 7.5 · BANNER DO PERFIL (imagem de capa individual, Storage + banco) ===== */
+Object.assign(P,{bnpen:'M17 3a2.8 2.8 0 114 4L7.5 20.5 2 22l1.5-5.5z'});
+let BNOK=false;
+const clampN=(v,a,b,d)=>{v=parseFloat(v);return isFinite(v)?Math.min(b,Math.max(a,v)):d};
+const PCOLS=()=>'id,username,name,bio,is_private,location'+(BNOK?',banner_url,banner_x,banner_y,banner_zoom':'');
+const bnOf=r=>r&&r.banner_url&&String(r.banner_url).startsWith(SB_URL+'/storage/')?{url:r.banner_url,x:clampN(r.banner_x,0,100,50),y:clampN(r.banner_y,0,100,50),z:clampN(r.banner_zoom,1,3,1)}:null;
+const bnStyle=b=>{const z=b.z||1,x=b.x==null?50:b.x,y=b.y==null?50:b.y;return `width:${z*100}%;height:${z*100}%;left:${-(z-1)*x}%;top:${-(z-1)*y}%;object-position:${x}% ${y}%`};
+const bnImg=b=>b&&b.url?`<img class="bn-img" src="${esc(b.url)}" alt="" draggable="false" style="${bnStyle(b)}" onerror="this.remove()">`:'';
+const bnDef=()=>`<div class="bn bn-def" data-bn="0"><i class="bn-aur"></i><i class="bn-shade"></i></div>`;
+const bnTop=(top,b)=>top.replace('class="ig-top"','class="ig-top glass"')+(b&&b.url?`<div class="bn" data-bn="1">${bnImg(b)}<i class="bn-shade"></i></div>`:bnDef());
+async function bnProbe(){try{const r=await sb.from('profiles').select('banner_url,banner_x,banner_y,banner_zoom').limit(1);BNOK=!r.error}catch(e){BNOK=false}}
+{const st=document.createElement('style');st.textContent=`
+.bn{position:relative;width:100%;height:clamp(170px,50vw,300px);overflow:hidden;background:#0a0b1a;flex:none}
+.bn-img{position:absolute;max-width:none;object-fit:cover;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;pointer-events:none}
+.bn-def{background:radial-gradient(120% 95% at 80% 6%,rgba(139,108,255,.78),transparent 58%),radial-gradient(90% 85% at 10% 34%,rgba(25,227,255,.34),transparent 62%),radial-gradient(110% 70% at 50% 112%,rgba(79,141,255,.4),transparent 62%),linear-gradient(180deg,#0c0a2e 0%,#06071a 100%)}
+.bn-aur{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1.4px 1.4px at 14% 24%,#fffc,transparent),radial-gradient(1px 1px at 31% 12%,#fff9,transparent),radial-gradient(1.6px 1.6px at 47% 30%,#cfd6ffcc,transparent),radial-gradient(1px 1px at 63% 16%,#fff9,transparent),radial-gradient(1.3px 1.3px at 78% 28%,#fffc,transparent),radial-gradient(1px 1px at 90% 12%,#fff9,transparent),radial-gradient(1px 1px at 22% 46%,#fff7,transparent),radial-gradient(1.2px 1.2px at 70% 48%,#fff8,transparent)}
+.bn-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(2,3,12,.5) 0%,rgba(2,3,12,0) 30%,rgba(5,6,14,0) 44%,rgba(5,6,14,.72) 80%,var(--bg) 100%)}
+.bne-prev.none{background:transparent;border:1.5px dashed #3a3f58;display:flex;align-items:center;justify-content:center;color:var(--mu);font-size:.95rem}
+.ig-top.glass{position:sticky;top:0;z-index:20;box-sizing:border-box;height:58px;padding:8px 12px;margin-bottom:-58px;align-items:center;background:none}
+.ig-top.glass .ib,.ig-top.glass .ig-un{background:rgba(12,14,36,.34);-webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:999px;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.ig-top.glass .ib{width:42px;height:42px;flex:none}.ig-top.glass .ib svg{width:24px;height:24px;color:#fff;stroke:#fff}
+.ig-top.glass .ig-un{flex:0 1 auto;margin-right:auto;margin-left:4px;height:42px;padding:0 14px;font-size:1.12rem;max-width:62%}
+.ig-top.glass .ig-un svg{color:#fff;stroke:#fff}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.ig-top.glass .ib,.ig-top.glass .ig-un{background:rgba(12,14,36,.62)}}
+.bn~.ig-head{margin-top:-46px;position:relative;z-index:2}
+.bn~.ig-head .ig-side h2,.bn~.ig-head .ig-stats{text-shadow:0 1px 10px rgba(0,0,0,.65)}
+.bne-sec{margin:6px 16px 14px}.bne-h{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}.bne-h b{font-size:1rem}.bne-h small{color:var(--mu)}
+.bne-prev{border-radius:16px;border:1px solid var(--ln);height:auto;aspect-ratio:2/1;max-height:none}
+.bne-pen{position:absolute;right:10px;bottom:10px;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:3;background:rgba(12,14,36,.4);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.25);color:#fff}.bne-pen svg{width:20px;height:20px;stroke:#fff}
+#bne{position:fixed;inset:0;z-index:90;background:#05060e;color:#fff;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}#bne[hidden]{display:none}
+#bne .bnh{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}#bne .bnh button{color:#fff;font-size:1rem;padding:8px 4px}#bne .bnh .lk{color:#9b86ff;font-weight:700}#bne .bnh b{font-size:1.05rem}
+#bne .bnst{flex:1;overflow:auto;padding:8px 16px 24px;max-width:560px;width:100%;margin:0 auto;box-sizing:border-box}
+#bne .bnfr{height:auto;aspect-ratio:2/1;border-radius:16px;border:1px solid #ffffff2e;touch-action:none;cursor:grab}
+#bne .bnfr:active{cursor:grabbing}
+#bne .bnhint{display:flex;align-items:center;justify-content:center;gap:8px;color:#b8bdd9;font-size:.9rem;margin:12px 0}
+#bne .bnz{display:flex;align-items:center;gap:12px;margin:10px 0 4px}#bne .bnz input{flex:1;accent-color:#8b6cff}#bne .bnz span{opacity:.8;font-weight:700;width:18px;text-align:center}
+#bne .bnb{display:flex;gap:10px;margin-top:14px}#bne .bnb button{flex:1;height:44px;border-radius:12px;border:1px solid #ffffff30;color:#fff;font-weight:600}
+`;document.head.appendChild(st)}
+/* perfil próprio: banner atrás do topo, foto sobreposta */
+{const o=V.me;V.me=function(){const h=o(),m=h.match(/^(<div class="ig-top">[\s\S]*?<\/div>)/);return m?h.replace(m[1],bnTop(m[1],S.me.bn)):h}}
+/* perfil de outra pessoa */
+{const o=profPage;profPage=function(){const h=o(),m=h.match(/^<div>(<div class="ig-top">[\s\S]*?<\/div>)(<div class="rl"[^>]*>)/);if(!m)return h;return '<div>'+m[2]+bnTop(m[1],PV&&PV.p?bnOf(PV.p):null)+h.slice(m[0].length)}}
+/* leitura: perfil de outras pessoas e o meu (colunas só são pedidas se o SQL já foi rodado) */
+{const b=boot;boot=async function(s){await bnProbe();await b(s);if(ME){S.me.bn=bnOf(ME);save();R()}}}
+/* Editar perfil: seção "Banner do perfil" com lápis (substitui o antigo "Banners · em breve") */
+const bnSection=()=>{const b=S.me.bn;return `<div class="bne-sec"><div class="bne-h"><b>Banner do perfil</b><small>${b?'Toque no lápis para trocar, reposicionar ou remover.':'Você está usando o banner padrão. Toque no lápis para escolher uma imagem sua.'}</small></div><div class="bn bne-prev ${b?'':'bn-def'}" data-a="bnmenu" role="button" aria-label="Editar banner">${b?bnImg(b):'<i class="bn-aur"></i>'}<i class="bn-shade"></i><button class="bne-pen" data-a="bnmenu" aria-label="Editar banner">${ic('bnpen')}</button></div></div>`};
+{const o=editPage;editPage=()=>{let h=o();const re=/<button class="mr" data-a="soon"><span>Banners<\/span><i>[^<]*<\/i><\/button>/;h=h.replace(re,'');return h.replace(/(<div class="rl"[^>]*>)/,'$1'+bnSection())}}
+const bnKeep=()=>{const ids=['en','eu','eb','em','el','eloc'],v={};ids.forEach(i=>{const e=$('#'+i);if(e)v[i]=e.value});return()=>{for(const i in v){const e=$('#'+i);if(e)e.value=v[i]}}};
+const bnErr=e=>{const m=String((e&&e.message)||e||'');return /banner_|column|schema cache/i.test(m)?'Falta rodar o SQL do banner (sql-7.5.sql)':/bucket/i.test(m)?'O bucket "banners" não existe. Rode o sql-7.5.sql':/row-level|policy|violates|permission|not allowed/i.test(m)?'Sem permissão. Rode o sql-7.5.sql':/size|exceed|large|payload/i.test(m)?'Imagem grande demais':/fetch|network/i.test(m)?'Sem conexão':'Não foi possível salvar o banner'};
+A.bnmenu=()=>{if(!ME)return;sheet(()=>{const b=S.me.bn;return `<h3>Banner do perfil</h3><button class="mr" data-a="bnpick"><span>${b?'Substituir por outra imagem':'Escolher da galeria'}</span><i>${ic('image')}</i></button>${b?`<button class="mr" data-a="bnpos"><span>Reposicionar e ajustar enquadramento</span><i>${ic('bnpen')}</i></button><button class="mr" data-a="bndel" style="color:#ff5a6a"><span>Remover banner</span><i>${ic('trash')}</i></button>`:''}`})};
+function bnInput(){let e=$('#bnf');if(!e){e=document.createElement('input');e.type='file';e.id='bnf';e.hidden=true;e.accept='image/*';document.body.appendChild(e);e.addEventListener('change',async()=>{const f=e.files[0];e.value='';if(!f||!ME)return;if(!/^image\//.test(f.type))return toast('Escolha uma imagem');if(f.size>25e6)return toast('Imagem grande demais (máx. 25 MB)');
+ const url=URL.createObjectURL(f);try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=url});bnOpen({img:im,src:url,file:f,x:50,y:50,z:1,nw:im.naturalWidth,nh:im.naturalHeight})}catch(_){URL.revokeObjectURL(url);toast('Não foi possível abrir essa imagem')}})}return e}
+A.bnpick=()=>{shf=null;draw();bnInput().click()};
+A.bnpos=async()=>{shf=null;draw();const b=S.me.bn;if(!b)return;try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=b.url});bnOpen({img:im,src:b.url,file:null,x:b.x,y:b.y,z:b.z,nw:im.naturalWidth,nh:im.naturalHeight})}catch(_){toast('Não foi possível carregar o banner')}};
+let BNE=null;
+function bnApply(){if(!BNE)return;const i=$('#bne-img');if(i)i.style.cssText=bnStyle({x:BNE.x,y:BNE.y,z:BNE.z});const z=$('#bne-z');if(z&&+z.value!==BNE.z)z.value=BNE.z}
+function bnOpen(o){BNE=Object.assign({busy:0},o);let e=$('#bne');if(!e){e=document.createElement('div');e.id='bne';e.setAttribute('role','dialog');e.setAttribute('aria-label','Ajustar banner');document.body.appendChild(e)}
+ e.innerHTML=`<div class="bnh"><button data-a="bnx">Cancelar</button><b>Ajustar banner</b><button class="lk" data-a="bnsave" id="bne-sv">Salvar</button></div><div class="bnst"><div class="bn bnfr" id="bne-fr"><img id="bne-img" class="bn-img" src="${esc(o.src)}" alt="" draggable="false" style="${bnStyle(o)}"><i class="bn-shade"></i></div><div class="bnhint">${ic('bnpen')}<span>Arraste a imagem para reposicionar</span></div><div class="bnz"><span>−</span><input id="bne-z" type="range" min="1" max="3" step="0.01" value="${o.z}" aria-label="Zoom"><span>+</span></div><div class="bnb"><button data-a="bncenter">Centralizar</button></div><p class="mu" style="text-align:center;margin-top:14px;font-size:.85rem">É assim que o banner aparece no seu perfil. A parte de baixo escurece para o nome e os números ficarem legíveis.</p></div>`;
+ e.hidden=false;const fr=$('#bne-fr');let d=null;
+ fr.onpointerdown=ev=>{d={x:ev.clientX,y:ev.clientY};try{fr.setPointerCapture(ev.pointerId)}catch(_){}};
+ fr.onpointermove=ev=>{if(!d||!BNE)return;const r=fr.getBoundingClientRect(),fw=r.width,fh=r.height,cw=Math.max(fw,fh*BNE.nw/BNE.nh),ch=Math.max(fh,fw*BNE.nh/BNE.nw),ox=BNE.z*cw-fw,oy=BNE.z*ch-fh;
+  if(ox>.5)BNE.x=clampN(BNE.x-(ev.clientX-d.x)/ox*100,0,100,50);if(oy>.5)BNE.y=clampN(BNE.y-(ev.clientY-d.y)/oy*100,0,100,50);d={x:ev.clientX,y:ev.clientY};bnApply()};
+ fr.onpointerup=fr.onpointercancel=()=>{d=null};
+ $('#bne-z').oninput=ev=>{if(BNE){BNE.z=clampN(ev.target.value,1,3,1);bnApply()}}}
+function bnClose(){const e=$('#bne');if(e){e.hidden=true;e.innerHTML=''}if(BNE&&BNE.file&&BNE.src)URL.revokeObjectURL(BNE.src);BNE=null}
+A.bnx=()=>bnClose();
+A.bncenter=()=>{if(!BNE)return;BNE.x=50;BNE.y=50;BNE.z=1;bnApply()};
+const bnPathOf=u=>{try{const i=String(u).indexOf('/banners/');return i<0?null:decodeURIComponent(String(u).slice(i+9).split('?')[0])}catch(_){return null}};
+A.bnsave=async()=>{const E=BNE;if(!E||E.busy||!ME)return;E.busy=1;const sv=$('#bne-sv');if(sv)sv.textContent='Salvando…';
+ const B=sb.storage.from('banners'),old=S.me.bn&&S.me.bn.url;let newPath=null;
+ try{let url=old;
+  if(E.file){const c=document.createElement('canvas'),sc=Math.min(1,1600/E.nw);c.width=Math.max(1,Math.round(E.nw*sc));c.height=Math.max(1,Math.round(E.nh*sc));c.getContext('2d').drawImage(E.img,0,0,c.width,c.height);
+   const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.86));if(!blob)throw new Error('falha ao preparar a imagem');
+   newPath=ME.id+'/banner-'+Date.now()+'.jpg';const up=await B.upload(newPath,blob,{contentType:'image/jpeg',upsert:false});if(up.error)throw up.error;url=B.getPublicUrl(newPath).data.publicUrl}
+  if(!url)throw new Error('sem imagem');
+  const row={banner_url:url,banner_x:+E.x.toFixed(2),banner_y:+E.y.toFixed(2),banner_zoom:+E.z.toFixed(2)},r=await sb.from('profiles').update(row).eq('id',ME.id);
+  if(r.error){if(newPath)await B.remove([newPath]).catch(()=>{});throw r.error}
+  if(E.file&&old){const p=bnPathOf(old);if(p&&p!==newPath)B.remove([p]).catch(()=>{})}
+  Object.assign(ME,row);S.me.bn=bnOf(row);save();const back=bnKeep();bnClose();R();draw();back();toast('Banner salvo!')}
+ catch(err){console.error(err);E.busy=0;if(sv)sv.textContent='Salvar';toast(bnErr(err))}};
+A.bndel=async()=>{shf=null;draw();if(!ME||!S.me.bn)return;if(!confirm('Remover o banner do seu perfil?'))return;const old=S.me.bn.url,row={banner_url:null,banner_x:50,banner_y:50,banner_zoom:1};
+ const r=await sb.from('profiles').update(row).eq('id',ME.id);if(r.error)return toast(bnErr(r.error));
+ const p=bnPathOf(old);if(p)sb.storage.from('banners').remove([p]).catch(()=>{});Object.assign(ME,row);S.me.bn=null;save();const back=bnKeep();R();draw();back();toast('Banner removido')};
+/* perfis de outras pessoas: pedir também as colunas do banner (com o SQL rodado) */
+/* diagnóstico real do Supabase (Configurações › Diagnóstico) */
+{const o=diagRun;diagRun=async function(){const out=await o();const T=async(n,f)=>{try{const r=await f();out.push({n,ok:r.ok!==false,d:r.d||''})}catch(e){out.push({n,ok:false,d:bnErr(e)+' · '+String((e&&e.message)||e).slice(0,90)})}};
+ for(const c of['banner_url','banner_x','banner_y','banner_zoom'])await T('Coluna profiles.'+c,async()=>{const r=await sb.from('profiles').select(c).limit(1);if(r.error)throw r.error;return{d:'ok'}});
+ await T('Banner: enviar e apagar no bucket "banners"',async()=>{const p=ME.id+'/diag-'+Date.now()+'.jpg',B=sb.storage.from('banners'),up=await B.upload(p,new Blob(['ok'],{type:'image/jpeg'}),{contentType:'image/jpeg'});if(up.error)throw up.error;const u=B.getPublicUrl(p).data.publicUrl;let pub='?';try{const f=await fetch(u,{cache:'no-store'});pub=f.ok?'leitura pública ok':'HTTP '+f.status}catch(_){pub='não consegui testar a leitura'}await B.remove([p]);return{ok:/ok$/.test(pub),d:pub}});
+ return out}}
+
 /* Reels: aviso de versão e render */
 try{render()}catch(e){console.error(e)}
-setTimeout(()=>{try{toast('VELOVERSA v7.4 carregado')}catch(e){}},1200);
+setTimeout(()=>{try{toast('VELOVERSA v7.6 carregado')}catch(e){}},1200);
 
 </script>
 <script>/* Rede de segurança: se após 10 s nada apareceu, mostra aviso em vez de tela branca */
