@@ -114,7 +114,7 @@ nav .cr{background:linear-gradient(135deg,var(--ac),#3d8bff);box-shadow:0 6px 18
 <input type="file" id="fcv" accept="image/*" hidden>
 <input type="file" id="cpf" multiple accept="image/*,video/*" hidden>
 <script>
-const VER='7.6';
+const VER='7.7';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const P={home:'M3 11l9-8 9 8v10h-6v-6H9v6H3z',search:'M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5',plus:'M12 5v14M5 12h14',send:'M22 3L9.5 13.5M22 3l-7 18-5.5-7.5L2 10z',user:'M12 3a4.5 4.5 0 100 9 4.5 4.5 0 000-9zM4 21c0-4.4 3.6-7 8-7s8 2.6 8 7',heart:'M12 21s-8-5-8-11a4.5 4.5 0 018-3 4.5 4.5 0 018 3c0 6-8 11-8 11z',cm:'M21 12a8 8 0 01-11.5 7.2L3 21l1.8-6A8 8 0 1121 12z',bm:'M6 3h12v18l-6-4-6 4z',reel:'M4 4h16v16H4zM10 9l5 3-5 3z',x:'M5 5l14 14M19 5L5 19',menu:'M4 6h16M4 12h16M4 18h16',back:'M15 5l-7 7 7 7',edit:'M4 20h4L19 9l-4-4L4 16zM14 6l4 4',feed:'M4 4h16v7H4zM4 14h16v6H4z',rep:'M17 2l4 4-4 4M3 11V9a3 3 0 013-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 01-3 3H3'};
 const ic=(n,f)=>`<svg viewBox="0 0 24 24" width="24" height="24" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${P[n]}"/></svg>`;
@@ -239,7 +239,7 @@ tgl(k){if(k=='dark')S.theme=S.theme=='dark'?'light':'dark';else S[k]=S[k]?0:1;sa
 wipe(){if(!S.wipe){S.wipe=1;draw();return}try{localStorage.removeItem('vv1')}catch(e){}location.reload()},
 edit(){sheet(editHtml)},
 esave(){const u=$('#eu').value.trim().toLowerCase();if(!/^[a-z0-9._]{3,20}$/.test(u))return toast('Usuário: 3 a 20 letras, números, . ou _');if(U.includes(u))return toast('Este nome de usuário já existe');
- const o=S.me.u;S.posts.forEach(p=>{if(p.u==o)p.u=u;p.cm.forEach(c=>{if(c.u==o)c.u=u})});{const ls=$('#el').value.split('\n').map(x=>x.trim()).filter(Boolean).slice(0,4);for(const l of ls){try{if(new URL(l).protocol!='https:')throw 0}catch(e){return toast('Links devem começar com https://')}}S.links=ls}S.me={u,n:$('#en').value.trim()||u,b:$('#eb').value.trim(),mu:$('#em').value.trim()};save();shut();R();toast('Perfil atualizado')},
+ const o=S.me.u;S.posts.forEach(p=>{if(p.u==o)p.u=u;p.cm.forEach(c=>{if(c.u==o)c.u=u})});{const ls=$('#el').value.split('\n').map(x=>x.trim()).filter(Boolean).slice(0,4);for(const l of ls){try{if(new URL(l).protocol!='https:')throw 0}catch(e){return toast('Links devem começar com https://')}}S.links=ls}S.me=Object.assign({},S.me,{u,n:$('#en').value.trim()||u,b:$('#eb').value.trim(),mu:$('#em').value.trim()});save();shut();R();toast('Perfil atualizado')},
 create(){sheet(()=>`<h3>Criar</h3>${[['foto','Foto'],['video','Vídeo'],['story','Story'],['reel','Reel']].map(([k,l])=>`<div class="li" data-a="pick" data-i="${k}" role="button">${ic(k=='foto'?'user':k=='video'||k=='reel'?'reel':'plus')}<div><b>${l}</b></div></div>`).join('')}`)},
 pick(k){pend={kind:k};const f=$('#fi');f.accept=k=='foto'?'image/*':k=='story'?'image/*,video/*':'video/*';f.value='';f.click()},
 compose(){sheet(()=>`<h3>Nova publicação · ${pend.kind}</h3><div class="md" style="aspect-ratio:1;border-radius:12px;margin-bottom:12px">${pend.img?`<img src="${pend.img}" alt="Pré-visualização">`:`<video src="${pend.vid}" playsinline muted controls></video>`}</div><textarea id="cap" maxlength="500" placeholder="Legenda... use #hashtags"></textarea><button class="bt" style="margin-top:12px" data-a="pub">Publicar</button>`)},
@@ -1965,7 +1965,7 @@ V.me=function(){const mine=S.posts.filter(p=>p.u==S.me.u).sort((a,b)=>(b.t||0)-(
  <div class="itabs">${[['g','grid','Publicações'],['r','reel','Reels'],['rp','rep','Republicações'],['s','bm','Salvos'],['t','tag','Marcações']].map(([k,i,l])=>`<button data-a="sub" data-i="${k}" class="${sub==k?'on':''}" aria-label="${l}">${ic(i)}</button>`).join('')}</div>
  ${L.length?`<div class="gr">${L.map(tile).join('')}</div>`:`<div class="empty">${empty}</div>`}`};
 /* envio de mídia: avisa que recebeu o arquivo e mostra o erro real, em vez de falhar calado */
-document.addEventListener('change',e=>{const t=e.target;if(!t||t.type!='file'||!t.files||!t.files[0])return;const f=t.files[0];try{toast('Arquivo recebido: '+(f.size/1048576).toFixed(1)+' MB')}catch(x){}},true);
+document.addEventListener('change',e=>{const t=e.target;if(!t||t.type!='file'||!t.files||!t.files[0])return;const f=t.files[0];try{toast('Arquivo recebido: '+(f.size<1048576?Math.max(1,Math.round(f.size/1024))+' KB':(f.size/1048576).toFixed(1)+' MB'))}catch(x){}},true);
 window.addEventListener('unhandledrejection',e=>{const r=e.reason,m=(r&&(r.message||r.error_description))||String(r);try{toast('Erro: '+String(m).slice(0,90))}catch(x){}});
 try{render()}catch(e){console.error(e)}
 
@@ -2287,6 +2287,7 @@ async function bnProbe(){try{const r=await sb.from('profiles').select('banner_ur
 {const st=document.createElement('style');st.textContent=`
 .bn{position:relative;width:100%;height:clamp(170px,50vw,300px);overflow:hidden;background:#0a0b1a;flex:none}
 .bn-img{position:absolute;max-width:none;object-fit:cover;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;pointer-events:none}
+.bne-prev:not(.bn-def){background:#0a0b1a}
 .bn-def{background:radial-gradient(120% 95% at 80% 6%,rgba(139,108,255,.78),transparent 58%),radial-gradient(90% 85% at 10% 34%,rgba(25,227,255,.34),transparent 62%),radial-gradient(110% 70% at 50% 112%,rgba(79,141,255,.4),transparent 62%),linear-gradient(180deg,#0c0a2e 0%,#06071a 100%)}
 .bn-aur{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1.4px 1.4px at 14% 24%,#fffc,transparent),radial-gradient(1px 1px at 31% 12%,#fff9,transparent),radial-gradient(1.6px 1.6px at 47% 30%,#cfd6ffcc,transparent),radial-gradient(1px 1px at 63% 16%,#fff9,transparent),radial-gradient(1.3px 1.3px at 78% 28%,#fffc,transparent),radial-gradient(1px 1px at 90% 12%,#fff9,transparent),radial-gradient(1px 1px at 22% 46%,#fff7,transparent),radial-gradient(1.2px 1.2px at 70% 48%,#fff8,transparent)}
 .bn-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(2,3,12,.5) 0%,rgba(2,3,12,0) 30%,rgba(5,6,14,0) 44%,rgba(5,6,14,.72) 80%,var(--bg) 100%)}
@@ -2318,15 +2319,18 @@ async function bnProbe(){try{const r=await sb.from('profiles').select('banner_ur
 /* leitura: perfil de outras pessoas e o meu (colunas só são pedidas se o SQL já foi rodado) */
 {const b=boot;boot=async function(s){await bnProbe();await b(s);if(ME){S.me.bn=bnOf(ME);save();R()}}}
 /* Editar perfil: seção "Banner do perfil" com lápis (substitui o antigo "Banners · em breve") */
-const bnSection=()=>{const b=S.me.bn;return `<div class="bne-sec"><div class="bne-h"><b>Banner do perfil</b><small>${b?'Toque no lápis para trocar, reposicionar ou remover.':'Você está usando o banner padrão. Toque no lápis para escolher uma imagem sua.'}</small></div><div class="bn bne-prev ${b?'':'bn-def'}" data-a="bnmenu" role="button" aria-label="Editar banner">${b?bnImg(b):'<i class="bn-aur"></i>'}<i class="bn-shade"></i><button class="bne-pen" data-a="bnmenu" aria-label="Editar banner">${ic('bnpen')}</button></div></div>`};
+const bnSync=()=>{try{if(ME&&S.me&&!S.me.bn){const b=bnOf(ME);if(b)S.me.bn=b}}catch(e){}};
+{const o=V.me;V.me=function(){bnSync();return o.apply(this,arguments)}}
+{const o=editPage;editPage=function(){bnSync();return o.apply(this,arguments)}}
+const bnSection=()=>{bnSync();const b=S.me.bn;return `<div class="bne-sec"><div class="bne-h"><b>Banner do perfil</b><small>${b?'Toque no lápis para trocar, reposicionar ou remover.':'Você está usando o banner padrão. Toque no lápis para escolher uma imagem sua.'}</small></div><div class="bn bne-prev ${b?'':'bn-def'}" data-a="bnmenu" role="button" aria-label="Editar banner">${b?bnImg(b):'<i class="bn-aur"></i>'}<i class="bn-shade"></i><button class="bne-pen" data-a="bnmenu" aria-label="Editar banner">${ic('bnpen')}</button></div></div>`};
 {const o=editPage;editPage=()=>{let h=o();const re=/<button class="mr" data-a="soon"><span>Banners<\/span><i>[^<]*<\/i><\/button>/;h=h.replace(re,'');return h.replace(/(<div class="rl"[^>]*>)/,'$1'+bnSection())}}
 const bnKeep=()=>{const ids=['en','eu','eb','em','el','eloc'],v={};ids.forEach(i=>{const e=$('#'+i);if(e)v[i]=e.value});return()=>{for(const i in v){const e=$('#'+i);if(e)e.value=v[i]}}};
 const bnErr=e=>{const m=String((e&&e.message)||e||'');return /banner_|column|schema cache/i.test(m)?'Falta rodar o SQL do banner (sql-7.5.sql)':/bucket/i.test(m)?'O bucket "banners" não existe. Rode o sql-7.5.sql':/row-level|policy|violates|permission|not allowed/i.test(m)?'Sem permissão. Rode o sql-7.5.sql':/size|exceed|large|payload/i.test(m)?'Imagem grande demais':/fetch|network/i.test(m)?'Sem conexão':'Não foi possível salvar o banner'};
-A.bnmenu=()=>{if(!ME)return;sheet(()=>{const b=S.me.bn;return `<h3>Banner do perfil</h3><button class="mr" data-a="bnpick"><span>${b?'Substituir por outra imagem':'Escolher da galeria'}</span><i>${ic('image')}</i></button>${b?`<button class="mr" data-a="bnpos"><span>Reposicionar e ajustar enquadramento</span><i>${ic('bnpen')}</i></button><button class="mr" data-a="bndel" style="color:#ff5a6a"><span>Remover banner</span><i>${ic('trash')}</i></button>`:''}`})};
+A.bnmenu=()=>{if(!ME)return;bnSync();sheet(()=>{const b=S.me.bn;return `<h3>Banner do perfil</h3><button class="mr" data-a="bnpick"><span>${b?'Substituir por outra imagem':'Escolher da galeria'}</span><i>${ic('image')}</i></button>${b?`<button class="mr" data-a="bnpos"><span>Reposicionar e ajustar enquadramento</span><i>${ic('bnpen')}</i></button><button class="mr" data-a="bndel" style="color:#ff5a6a"><span>Remover banner</span><i>${ic('trash')}</i></button>`:''}`})};
 function bnInput(){let e=$('#bnf');if(!e){e=document.createElement('input');e.type='file';e.id='bnf';e.hidden=true;e.accept='image/*';document.body.appendChild(e);e.addEventListener('change',async()=>{const f=e.files[0];e.value='';if(!f||!ME)return;if(!/^image\//.test(f.type))return toast('Escolha uma imagem');if(f.size>25e6)return toast('Imagem grande demais (máx. 25 MB)');
  const url=URL.createObjectURL(f);try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=url});bnOpen({img:im,src:url,file:f,x:50,y:50,z:1,nw:im.naturalWidth,nh:im.naturalHeight})}catch(_){URL.revokeObjectURL(url);toast('Não foi possível abrir essa imagem')}})}return e}
 A.bnpick=()=>{shf=null;draw();bnInput().click()};
-A.bnpos=async()=>{shf=null;draw();const b=S.me.bn;if(!b)return;try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=b.url});bnOpen({img:im,src:b.url,file:null,x:b.x,y:b.y,z:b.z,nw:im.naturalWidth,nh:im.naturalHeight})}catch(_){toast('Não foi possível carregar o banner')}};
+A.bnpos=async()=>{bnSync();shf=null;draw();const b=S.me.bn;if(!b)return;try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=b.url});bnOpen({img:im,src:b.url,file:null,x:b.x,y:b.y,z:b.z,nw:im.naturalWidth,nh:im.naturalHeight})}catch(_){toast('Não foi possível carregar o banner')}};
 let BNE=null;
 function bnApply(){if(!BNE)return;const i=$('#bne-img');if(i)i.style.cssText=bnStyle({x:BNE.x,y:BNE.y,z:BNE.z});const z=$('#bne-z');if(z&&+z.value!==BNE.z)z.value=BNE.z}
 function bnOpen(o){BNE=Object.assign({busy:0},o);let e=$('#bne');if(!e){e=document.createElement('div');e.id='bne';e.setAttribute('role','dialog');e.setAttribute('aria-label','Ajustar banner');document.body.appendChild(e)}
@@ -2342,7 +2346,7 @@ A.bnx=()=>bnClose();
 A.bncenter=()=>{if(!BNE)return;BNE.x=50;BNE.y=50;BNE.z=1;bnApply()};
 const bnPathOf=u=>{try{const i=String(u).indexOf('/banners/');return i<0?null:decodeURIComponent(String(u).slice(i+9).split('?')[0])}catch(_){return null}};
 A.bnsave=async()=>{const E=BNE;if(!E||E.busy||!ME)return;E.busy=1;const sv=$('#bne-sv');if(sv)sv.textContent='Salvando…';
- const B=sb.storage.from('banners'),old=S.me.bn&&S.me.bn.url;let newPath=null;
+ bnSync();const B=sb.storage.from('banners'),old=S.me.bn&&S.me.bn.url;let newPath=null;
  try{let url=old;
   if(E.file){const c=document.createElement('canvas'),sc=Math.min(1,1600/E.nw);c.width=Math.max(1,Math.round(E.nw*sc));c.height=Math.max(1,Math.round(E.nh*sc));c.getContext('2d').drawImage(E.img,0,0,c.width,c.height);
    const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.86));if(!blob)throw new Error('falha ao preparar a imagem');
@@ -2353,7 +2357,7 @@ A.bnsave=async()=>{const E=BNE;if(!E||E.busy||!ME)return;E.busy=1;const sv=$('#b
   if(E.file&&old){const p=bnPathOf(old);if(p&&p!==newPath)B.remove([p]).catch(()=>{})}
   Object.assign(ME,row);S.me.bn=bnOf(row);save();const back=bnKeep();bnClose();R();draw();back();toast('Banner salvo!')}
  catch(err){console.error(err);E.busy=0;if(sv)sv.textContent='Salvar';toast(bnErr(err))}};
-A.bndel=async()=>{shf=null;draw();if(!ME||!S.me.bn)return;if(!confirm('Remover o banner do seu perfil?'))return;const old=S.me.bn.url,row={banner_url:null,banner_x:50,banner_y:50,banner_zoom:1};
+A.bndel=async()=>{bnSync();shf=null;draw();if(!ME||!S.me.bn)return;if(!confirm('Remover o banner do seu perfil?'))return;const old=S.me.bn.url,row={banner_url:null,banner_x:50,banner_y:50,banner_zoom:1};
  const r=await sb.from('profiles').update(row).eq('id',ME.id);if(r.error)return toast(bnErr(r.error));
  const p=bnPathOf(old);if(p)sb.storage.from('banners').remove([p]).catch(()=>{});Object.assign(ME,row);S.me.bn=null;save();const back=bnKeep();R();draw();back();toast('Banner removido')};
 /* perfis de outras pessoas: pedir também as colunas do banner (com o SQL rodado) */
@@ -2365,7 +2369,7 @@ A.bndel=async()=>{shf=null;draw();if(!ME||!S.me.bn)return;if(!confirm('Remover o
 
 /* Reels: aviso de versão e render */
 try{render()}catch(e){console.error(e)}
-setTimeout(()=>{try{toast('VELOVERSA v7.6 carregado')}catch(e){}},1200);
+setTimeout(()=>{try{toast('VELOVERSA v7.7 carregado')}catch(e){}},1200);
 
 </script>
 <script>/* Rede de segurança: se após 10 s nada apareceu, mostra aviso em vez de tela branca */
