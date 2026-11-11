@@ -114,7 +114,7 @@ nav .cr{background:linear-gradient(135deg,var(--ac),#3d8bff);box-shadow:0 6px 18
 <input type="file" id="fcv" accept="image/*" hidden>
 <input type="file" id="cpf" multiple accept="image/*,video/*" hidden>
 <script>
-const VER='7.7';
+const VER='7.8';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const P={home:'M3 11l9-8 9 8v10h-6v-6H9v6H3z',search:'M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5',plus:'M12 5v14M5 12h14',send:'M22 3L9.5 13.5M22 3l-7 18-5.5-7.5L2 10z',user:'M12 3a4.5 4.5 0 100 9 4.5 4.5 0 000-9zM4 21c0-4.4 3.6-7 8-7s8 2.6 8 7',heart:'M12 21s-8-5-8-11a4.5 4.5 0 018-3 4.5 4.5 0 018 3c0 6-8 11-8 11z',cm:'M21 12a8 8 0 01-11.5 7.2L3 21l1.8-6A8 8 0 1121 12z',bm:'M6 3h12v18l-6-4-6 4z',reel:'M4 4h16v16H4zM10 9l5 3-5 3z',x:'M5 5l14 14M19 5L5 19',menu:'M4 6h16M4 12h16M4 18h16',back:'M15 5l-7 7 7 7',edit:'M4 20h4L19 9l-4-4L4 16zM14 6l4 4',feed:'M4 4h16v7H4zM4 14h16v6H4z',rep:'M17 2l4 4-4 4M3 11V9a3 3 0 013-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 01-3 3H3'};
 const ic=(n,f)=>`<svg viewBox="0 0 24 24" width="24" height="24" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${P[n]}"/></svg>`;
@@ -986,7 +986,7 @@ const setPage=()=>`<div><div class="hd"><button data-a="close" aria-label="Volta
 <div class="hd"><span>Segurança</span></div><button class="mr" data-a="chpw"><span>Alterar senha</span><i>›</i></button><button class="mr" data-a="outothers"><span>Sair de outros aparelhos</span><i>›</i></button>
 <div class="hd"><span>Acessibilidade</span></div><div style="padding:0 16px">${tg('dark',S.theme=='dark','Tema escuro')}${tg('calm',S.calm,'Animações reduzidas')}${tg('big',S.big,'Texto maior')}</div>
 <div class="hd"><span>Seus dados</span></div><button class="mr" data-a="expd"><span>Baixar meus dados</span><i>›</i></button><button class="mr" data-a="delacc" style="color:#ff5a6a"><span>Excluir minha conta</span><i>›</i></button>
-<div class="hd"><span>Mais</span></div><button class="mr" data-a="diag"><span>Diagnóstico do app</span><i>›</i></button><button class="mr" data-a="algo"><span>Seu algoritmo</span><i>›</i></button><button class="mr" data-a="out"><span>Sair da conta</span></button><p class="mu" style="text-align:center;margin-top:12px">VELOVERSA · versão ${VER}</p></div></div>`;
+<div class="hd"><span>Mais</span></div><button class="mr" data-a="diag"><span>Diagnóstico do app · v${VER}</span><i>›</i></button><button class="mr" data-a="algo"><span>Seu algoritmo</span><i>›</i></button><button class="mr" data-a="out"><span>Sair da conta</span></button><p class="mu" style="text-align:center;margin-top:12px">VELOVERSA · versão ${VER}</p></div></div>`;
 A.set=()=>{shf=null;ovl(setPage)};
 A.chpw=()=>sheet(()=>`<h3>Alterar senha</h3><input id="pw1" type="password" placeholder="Nova senha" autocomplete="new-password"><input id="pw2" type="password" placeholder="Repita a nova senha" autocomplete="new-password" style="margin-top:8px"><button class="bt" style="margin-top:12px" data-a="chpwgo">Salvar</button>`);
 A.chpwgo=async()=>{const a=$('#pw1').value,b=$('#pw2').value;if(a.length<8||pwScore(a)<3)return toast('Senha fraca: 8+ caracteres com maiúsculas, minúsculas e números');if(a!=b)return toast('As senhas não coincidem');
@@ -2280,7 +2280,10 @@ const clampN=(v,a,b,d)=>{v=parseFloat(v);return isFinite(v)?Math.min(b,Math.max(
 const PCOLS=()=>'id,username,name,bio,is_private,location'+(BNOK?',banner_url,banner_x,banner_y,banner_zoom':'');
 const bnOf=r=>r&&r.banner_url&&String(r.banner_url).startsWith(SB_URL+'/storage/')?{url:r.banner_url,x:clampN(r.banner_x,0,100,50),y:clampN(r.banner_y,0,100,50),z:clampN(r.banner_zoom,1,3,1)}:null;
 const bnStyle=b=>{const z=b.z||1,x=b.x==null?50:b.x,y=b.y==null?50:b.y;return `width:${z*100}%;height:${z*100}%;left:${-(z-1)*x}%;top:${-(z-1)*y}%;object-position:${x}% ${y}%`};
-const bnImg=b=>b&&b.url?`<img class="bn-img" src="${esc(b.url)}" alt="" draggable="false" style="${bnStyle(b)}" onerror="this.remove()">`:'';
+const BN_MAX=20e6,BN_SEC=15;
+const bnIsVid=u=>/\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(String(u||''));
+const bnPoster=u=>String(u).replace(/\.(mp4|webm|mov|m4v)(\?.*)?$/i,'.jpg');
+const bnImg=b=>b&&b.url?(bnIsVid(b.url)?`<video class="bn-img bn-vid" src="${esc(b.url)}" poster="${esc(bnPoster(b.url))}" muted loop autoplay playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback draggable="false" style="${bnStyle(b)}" onerror="this.remove()"></video>`:`<img class="bn-img" src="${esc(b.url)}" alt="" draggable="false" style="${bnStyle(b)}" onerror="this.remove()">`):'';
 const bnDef=()=>`<div class="bn bn-def" data-bn="0"><i class="bn-aur"></i><i class="bn-shade"></i></div>`;
 const bnTop=(top,b)=>top.replace('class="ig-top"','class="ig-top glass"')+(b&&b.url?`<div class="bn" data-bn="1">${bnImg(b)}<i class="bn-shade"></i></div>`:bnDef());
 async function bnProbe(){try{const r=await sb.from('profiles').select('banner_url,banner_x,banner_y,banner_zoom').limit(1);BNOK=!r.error}catch(e){BNOK=false}}
@@ -2322,19 +2325,25 @@ async function bnProbe(){try{const r=await sb.from('profiles').select('banner_ur
 const bnSync=()=>{try{if(ME&&S.me&&!S.me.bn){const b=bnOf(ME);if(b)S.me.bn=b}}catch(e){}};
 {const o=V.me;V.me=function(){bnSync();return o.apply(this,arguments)}}
 {const o=editPage;editPage=function(){bnSync();return o.apply(this,arguments)}}
-const bnSection=()=>{bnSync();const b=S.me.bn;return `<div class="bne-sec"><div class="bne-h"><b>Banner do perfil</b><small>${b?'Toque no lápis para trocar, reposicionar ou remover.':'Você está usando o banner padrão. Toque no lápis para escolher uma imagem sua.'}</small></div><div class="bn bne-prev ${b?'':'bn-def'}" data-a="bnmenu" role="button" aria-label="Editar banner">${b?bnImg(b):'<i class="bn-aur"></i>'}<i class="bn-shade"></i><button class="bne-pen" data-a="bnmenu" aria-label="Editar banner">${ic('bnpen')}</button></div></div>`};
+const bnSection=()=>{bnSync();const b=S.me.bn;return `<div class="bne-sec"><div class="bne-h"><b>Banner do perfil</b><small>${b?'Toque no lápis para trocar, reposicionar ou remover.':'Você está usando o banner padrão. Toque no lápis para escolher uma imagem ou vídeo seu.'}</small></div><div class="bn bne-prev ${b?'':'bn-def'}" data-a="bnmenu" role="button" aria-label="Editar banner">${b?bnImg(b):'<i class="bn-aur"></i>'}<i class="bn-shade"></i><button class="bne-pen" data-a="bnmenu" aria-label="Editar banner">${ic('bnpen')}</button></div></div>`};
 {const o=editPage;editPage=()=>{let h=o();const re=/<button class="mr" data-a="soon"><span>Banners<\/span><i>[^<]*<\/i><\/button>/;h=h.replace(re,'');return h.replace(/(<div class="rl"[^>]*>)/,'$1'+bnSection())}}
 const bnKeep=()=>{const ids=['en','eu','eb','em','el','eloc'],v={};ids.forEach(i=>{const e=$('#'+i);if(e)v[i]=e.value});return()=>{for(const i in v){const e=$('#'+i);if(e)e.value=v[i]}}};
-const bnErr=e=>{const m=String((e&&e.message)||e||'');return /banner_|column|schema cache/i.test(m)?'Falta rodar o SQL do banner (sql-7.5.sql)':/bucket/i.test(m)?'O bucket "banners" não existe. Rode o sql-7.5.sql':/row-level|policy|violates|permission|not allowed/i.test(m)?'Sem permissão. Rode o sql-7.5.sql':/size|exceed|large|payload/i.test(m)?'Imagem grande demais':/fetch|network/i.test(m)?'Sem conexão':'Não foi possível salvar o banner'};
-A.bnmenu=()=>{if(!ME)return;bnSync();sheet(()=>{const b=S.me.bn;return `<h3>Banner do perfil</h3><button class="mr" data-a="bnpick"><span>${b?'Substituir por outra imagem':'Escolher da galeria'}</span><i>${ic('image')}</i></button>${b?`<button class="mr" data-a="bnpos"><span>Reposicionar e ajustar enquadramento</span><i>${ic('bnpen')}</i></button><button class="mr" data-a="bndel" style="color:#ff5a6a"><span>Remover banner</span><i>${ic('trash')}</i></button>`:''}`})};
-function bnInput(){let e=$('#bnf');if(!e){e=document.createElement('input');e.type='file';e.id='bnf';e.hidden=true;e.accept='image/*';document.body.appendChild(e);e.addEventListener('change',async()=>{const f=e.files[0];e.value='';if(!f||!ME)return;if(!/^image\//.test(f.type))return toast('Escolha uma imagem');if(f.size>25e6)return toast('Imagem grande demais (máx. 25 MB)');
+const bnErr=e=>{const m=String((e&&e.message)||e||'');if(/^Vídeo grande/.test(m))return m;return /mime|content.?type|not supported/i.test(m)?'Formato não aceito. Use MP4, MOV, WebM ou imagem':/size|exceed|large|payload|too big/i.test(m)?'Arquivo grande demais (máx. 20 MB)':/banner_|column|schema cache/i.test(m)?'Falta rodar o SQL do banner (sql-7.5.sql)':/bucket/i.test(m)?'O bucket "banners" não existe. Rode o sql-7.5.sql':/row-level|policy|violates|permission|not allowed/i.test(m)?'Sem permissão. Rode o sql-7.5.sql':/fetch|network/i.test(m)?'Sem conexão':'Não foi possível salvar o banner'};
+A.bnmenu=()=>{if(!ME)return;bnSync();sheet(()=>{const b=S.me.bn;return `<h3>Banner do perfil</h3><button class="mr" data-a="bnpick"><span>${b?'Substituir por outra imagem ou vídeo':'Escolher da galeria (foto ou vídeo)'}</span><i>${ic('image')}</i></button>${b?`<button class="mr" data-a="bnpos"><span>Reposicionar e ajustar enquadramento</span><i>${ic('bnpen')}</i></button><button class="mr" data-a="bndel" style="color:#ff5a6a"><span>Remover banner</span><i>${ic('trash')}</i></button>`:''}`})};
+const bnVidMeta=src=>new Promise((ok,no)=>{const v=document.createElement('video');v.muted=true;v.defaultMuted=true;v.playsInline=true;v.setAttribute('playsinline','');v.preload='auto';const t=setTimeout(()=>no(new Error('timeout')),12000),fin=()=>{if(v.videoWidth){clearTimeout(t);ok(v)}};v.onloadedmetadata=fin;v.onloadeddata=fin;v.onerror=()=>{clearTimeout(t);no(new Error('decode'))};v.src=src});
+function bnInput(){let e=$('#bnf');if(!e){e=document.createElement('input');e.type='file';e.id='bnf';e.hidden=true;e.accept='image/*,video/*';document.body.appendChild(e);e.addEventListener('change',async()=>{const f=e.files[0];e.value='';if(!f||!ME)return;
+ const isV=/^video\//.test(f.type)||(!f.type&&/\.(mp4|mov|m4v|webm)$/i.test(f.name||''));
+ if(isV){if(f.size>400e6)return toast('Vídeo grande demais (máx. 400 MB)');const u=URL.createObjectURL(f);try{const v=await bnVidMeta(u);bnOpen({vid:1,img:v,src:u,file:f,x:50,y:50,z:1,nw:v.videoWidth,nh:v.videoHeight,dur:v.duration})}catch(_){URL.revokeObjectURL(u);toast('Não consegui abrir esse vídeo neste aparelho')}return}
+ if(!/^image\//.test(f.type))return toast('Escolha uma imagem ou um vídeo');if(f.size>25e6)return toast('Imagem grande demais (máx. 25 MB)');
  const url=URL.createObjectURL(f);try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=url});bnOpen({img:im,src:url,file:f,x:50,y:50,z:1,nw:im.naturalWidth,nh:im.naturalHeight})}catch(_){URL.revokeObjectURL(url);toast('Não foi possível abrir essa imagem')}})}return e}
 A.bnpick=()=>{shf=null;draw();bnInput().click()};
-A.bnpos=async()=>{bnSync();shf=null;draw();const b=S.me.bn;if(!b)return;try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=b.url});bnOpen({img:im,src:b.url,file:null,x:b.x,y:b.y,z:b.z,nw:im.naturalWidth,nh:im.naturalHeight})}catch(_){toast('Não foi possível carregar o banner')}};
+A.bnpos=async()=>{bnSync();shf=null;draw();const b=S.me.bn;if(!b)return;try{
+ if(bnIsVid(b.url)){const v=await bnVidMeta(b.url);bnOpen({vid:1,img:v,src:b.url,file:null,x:b.x,y:b.y,z:b.z,nw:v.videoWidth,nh:v.videoHeight,dur:v.duration});return}
+ const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=b.url});bnOpen({img:im,src:b.url,file:null,x:b.x,y:b.y,z:b.z,nw:im.naturalWidth,nh:im.naturalHeight})}catch(_){toast('Não foi possível carregar o banner')}};
 let BNE=null;
 function bnApply(){if(!BNE)return;const i=$('#bne-img');if(i)i.style.cssText=bnStyle({x:BNE.x,y:BNE.y,z:BNE.z});const z=$('#bne-z');if(z&&+z.value!==BNE.z)z.value=BNE.z}
 function bnOpen(o){BNE=Object.assign({busy:0},o);let e=$('#bne');if(!e){e=document.createElement('div');e.id='bne';e.setAttribute('role','dialog');e.setAttribute('aria-label','Ajustar banner');document.body.appendChild(e)}
- e.innerHTML=`<div class="bnh"><button data-a="bnx">Cancelar</button><b>Ajustar banner</b><button class="lk" data-a="bnsave" id="bne-sv">Salvar</button></div><div class="bnst"><div class="bn bnfr" id="bne-fr"><img id="bne-img" class="bn-img" src="${esc(o.src)}" alt="" draggable="false" style="${bnStyle(o)}"><i class="bn-shade"></i></div><div class="bnhint">${ic('bnpen')}<span>Arraste a imagem para reposicionar</span></div><div class="bnz"><span>−</span><input id="bne-z" type="range" min="1" max="3" step="0.01" value="${o.z}" aria-label="Zoom"><span>+</span></div><div class="bnb"><button data-a="bncenter">Centralizar</button></div><p class="mu" style="text-align:center;margin-top:14px;font-size:.85rem">É assim que o banner aparece no seu perfil. A parte de baixo escurece para o nome e os números ficarem legíveis.</p></div>`;
+ e.innerHTML=`<div class="bnh"><button data-a="bnx">Cancelar</button><b>Ajustar banner</b><button class="lk" data-a="bnsave" id="bne-sv">Salvar</button></div><div class="bnst"><div class="bn bnfr" id="bne-fr">${o.vid?`<video id="bne-img" class="bn-img bn-vid" src="${esc(o.src)}" muted loop autoplay playsinline webkit-playsinline preload="auto" disablepictureinpicture draggable="false" style="${bnStyle(o)}"></video>`:`<img id="bne-img" class="bn-img" src="${esc(o.src)}" alt="" draggable="false" style="${bnStyle(o)}">`}<i class="bn-shade"></i></div><div class="bnhint">${ic('bnpen')}<span>Arraste ${o.vid?'o vídeo':'a imagem'} para reposicionar</span></div><div class="bnz"><span>−</span><input id="bne-z" type="range" min="1" max="3" step="0.01" value="${o.z}" aria-label="Zoom"><span>+</span></div><div class="bnb"><button data-a="bncenter">Centralizar</button></div><p class="mu" style="text-align:center;margin-top:14px;font-size:.85rem">${o.vid?'O vídeo toca em loop e sem som, com até 15 segundos. ':''}É assim que o banner aparece no seu perfil. A parte de baixo escurece para o nome e os números ficarem legíveis.</p></div>`;
  e.hidden=false;const fr=$('#bne-fr');let d=null;
  fr.onpointerdown=ev=>{d={x:ev.clientX,y:ev.clientY};try{fr.setPointerCapture(ev.pointerId)}catch(_){}};
  fr.onpointermove=ev=>{if(!d||!BNE)return;const r=fr.getBoundingClientRect(),fw=r.width,fh=r.height,cw=Math.max(fw,fh*BNE.nw/BNE.nh),ch=Math.max(fh,fw*BNE.nh/BNE.nw),ox=BNE.z*cw-fw,oy=BNE.z*ch-fh;
@@ -2345,31 +2354,61 @@ function bnClose(){const e=$('#bne');if(e){e.hidden=true;e.innerHTML=''}if(BNE&&
 A.bnx=()=>bnClose();
 A.bncenter=()=>{if(!BNE)return;BNE.x=50;BNE.y=50;BNE.z=1;bnApply()};
 const bnPathOf=u=>{try{const i=String(u).indexOf('/banners/');return i<0?null:decodeURIComponent(String(u).slice(i+9).split('?')[0])}catch(_){return null}};
-A.bnsave=async()=>{const E=BNE;if(!E||E.busy||!ME)return;E.busy=1;const sv=$('#bne-sv');if(sv)sv.textContent='Salvando…';
- bnSync();const B=sb.storage.from('banners'),old=S.me.bn&&S.me.bn.url;let newPath=null;
+const bnRmList=u=>{const p=bnPathOf(u);if(!p)return[];return bnIsVid(u)?[p,bnPathOf(bnPoster(u))].filter(Boolean):[p]};
+async function bnPosterBlob(v){try{const t=Math.min(.4,(v.duration||1)/2);await new Promise(r=>{let d=0;const f=()=>{if(!d){d=1;r()}};v.onseeked=f;try{v.currentTime=t}catch(_){f()}setTimeout(f,2500)});const k=Math.min(1,960/Math.max(v.videoWidth,v.videoHeight)),c=document.createElement('canvas');c.width=Math.max(2,Math.round(v.videoWidth*k));c.height=Math.max(2,Math.round(v.videoHeight*k));c.getContext('2d').drawImage(v,0,0,c.width,c.height);return await new Promise(r=>c.toBlob(r,'image/jpeg',.8))}catch(_){return null}}
+/* otimiza o vídeo do banner: até 15 s, máx. 1280 px, sem áudio (grava a reprodução; leva o tempo do clipe) */
+async function bnTranscode(file,maxSec,onp){const url=URL.createObjectURL(file),v=document.createElement('video');v.muted=true;v.defaultMuted=true;v.playsInline=true;v.setAttribute('playsinline','');v.preload='auto';v.src=url;
+ try{await new Promise((ok,no)=>{v.onloadeddata=ok;v.onerror=()=>no(new Error('decode'));setTimeout(()=>no(new Error('timeout')),15000)});
+  const k=Math.min(1,1280/Math.max(v.videoWidth,v.videoHeight)),W=Math.max(2,Math.round(v.videoWidth*k/2)*2),H=Math.max(2,Math.round(v.videoHeight*k/2)*2),c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  const mime=['video/mp4;codecs=avc1.42E01E','video/mp4','video/webm;codecs=vp8','video/webm'].find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported(m));if(!mime||!c.captureStream)throw new Error('nosupport');
+  const rec=new MediaRecorder(c.captureStream(30),{mimeType:mime,videoBitsPerSecond:2200000}),chunks=[];rec.ondataavailable=e=>e.data&&e.data.size&&chunks.push(e.data);const done=new Promise(r=>rec.onstop=r);
+  const dur=Math.min(v.duration||maxSec,maxSec);v.currentTime=0;await v.play();rec.start(500);let run=1;
+  const frame=()=>{if(!run)return;x.drawImage(v,0,0,W,H);try{onp&&onp(Math.min(99,Math.round(v.currentTime/dur*100)))}catch(_){}(v.requestVideoFrameCallback?v.requestVideoFrameCallback.bind(v):requestAnimationFrame)(frame)};frame();
+  await new Promise(r=>{const t=setInterval(()=>{if(v.currentTime>=dur||v.ended){clearInterval(t);r()}},100);setTimeout(()=>{clearInterval(t);r()},dur*1000+8000)});
+  run=0;v.pause();rec.stop();await done;return new Blob(chunks,{type:mime.split(';')[0]})}
+ finally{URL.revokeObjectURL(url)}}
+A.bnsave=async()=>{const E=BNE;if(!E||E.busy||!ME)return;E.busy=1;const say=t=>{const s=$('#bne-sv');if(s)s.textContent=t};say('Salvando…');
+ bnSync();const B=sb.storage.from('banners'),old=S.me.bn&&S.me.bn.url;let newPath=null,posterPath=null;
  try{let url=old;
-  if(E.file){const c=document.createElement('canvas'),sc=Math.min(1,1600/E.nw);c.width=Math.max(1,Math.round(E.nw*sc));c.height=Math.max(1,Math.round(E.nh*sc));c.getContext('2d').drawImage(E.img,0,0,c.width,c.height);
+  if(E.file&&E.vid){
+   let blob=E.file,mime=E.file.type||'video/mp4',ext=/quicktime/.test(mime)||/\.mov$/i.test(E.file.name||'')?'mov':/webm/.test(mime)?'webm':'mp4';
+   const big=E.file.size>BN_MAX,long=(E.dur||0)>BN_SEC+.3,hevc=(await codecOf(E.file))=='hevc';
+   if(big||long||hevc){try{say('Otimizando 0%');blob=await bnTranscode(E.file,BN_SEC,p=>say('Otimizando '+p+'%'));mime=String(blob.type||'video/mp4').split(';')[0];ext=/webm/.test(mime)?'webm':'mp4'}catch(er){console.error('transcode',er);if(big||long)throw new Error('Vídeo grande demais para enviar. Use um clipe de até 15 segundos.')}}
+   if(blob.size>BN_MAX)throw new Error('Vídeo grande demais (máx. 20 MB)');
+   say('Enviando…');const base=ME.id+'/banner-'+Date.now();newPath=base+'.'+ext;
+   const up=await B.upload(newPath,blob,{contentType:mime,upsert:false});if(up.error)throw up.error;url=B.getPublicUrl(newPath).data.publicUrl;
+   const pb=await bnPosterBlob(E.img);if(pb){posterPath=base+'.jpg';const pu=await B.upload(posterPath,pb,{contentType:'image/jpeg',upsert:false});if(pu.error)posterPath=null}
+  }else if(E.file){const c=document.createElement('canvas'),sc=Math.min(1,1600/E.nw);c.width=Math.max(1,Math.round(E.nw*sc));c.height=Math.max(1,Math.round(E.nh*sc));c.getContext('2d').drawImage(E.img,0,0,c.width,c.height);
    const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.86));if(!blob)throw new Error('falha ao preparar a imagem');
    newPath=ME.id+'/banner-'+Date.now()+'.jpg';const up=await B.upload(newPath,blob,{contentType:'image/jpeg',upsert:false});if(up.error)throw up.error;url=B.getPublicUrl(newPath).data.publicUrl}
   if(!url)throw new Error('sem imagem');
   const row={banner_url:url,banner_x:+E.x.toFixed(2),banner_y:+E.y.toFixed(2),banner_zoom:+E.z.toFixed(2)},r=await sb.from('profiles').update(row).eq('id',ME.id);
-  if(r.error){if(newPath)await B.remove([newPath]).catch(()=>{});throw r.error}
-  if(E.file&&old){const p=bnPathOf(old);if(p&&p!==newPath)B.remove([p]).catch(()=>{})}
-  Object.assign(ME,row);S.me.bn=bnOf(row);save();const back=bnKeep();bnClose();R();draw();back();toast('Banner salvo!')}
- catch(err){console.error(err);E.busy=0;if(sv)sv.textContent='Salvar';toast(bnErr(err))}};
+  if(r.error){const rm=[newPath,posterPath].filter(Boolean);if(rm.length)await B.remove(rm).catch(()=>{});throw r.error}
+  if(E.file&&old){const keep=[newPath,posterPath],l=bnRmList(old).filter(x=>!keep.includes(x));if(l.length)B.remove(l).catch(()=>{})}
+  Object.assign(ME,row);S.me.bn=bnOf(row);save();const back=bnKeep();bnClose();R();draw();back();toast(E.vid?'Banner em vídeo salvo!':'Banner salvo!')}
+ catch(err){console.error(err);E.busy=0;say('Salvar');toast(bnErr(err))}};
 A.bndel=async()=>{bnSync();shf=null;draw();if(!ME||!S.me.bn)return;if(!confirm('Remover o banner do seu perfil?'))return;const old=S.me.bn.url,row={banner_url:null,banner_x:50,banner_y:50,banner_zoom:1};
  const r=await sb.from('profiles').update(row).eq('id',ME.id);if(r.error)return toast(bnErr(r.error));
- const p=bnPathOf(old);if(p)sb.storage.from('banners').remove([p]).catch(()=>{});Object.assign(ME,row);S.me.bn=null;save();const back=bnKeep();R();draw();back();toast('Banner removido')};
+ const rl=bnRmList(old);if(rl.length)sb.storage.from('banners').remove(rl).catch(()=>{});Object.assign(ME,row);S.me.bn=null;save();const back=bnKeep();R();draw();back();toast('Banner removido')};
 /* perfis de outras pessoas: pedir também as colunas do banner (com o SQL rodado) */
 /* diagnóstico real do Supabase (Configurações › Diagnóstico) */
 {const o=diagRun;diagRun=async function(){const out=await o();const T=async(n,f)=>{try{const r=await f();out.push({n,ok:r.ok!==false,d:r.d||''})}catch(e){out.push({n,ok:false,d:bnErr(e)+' · '+String((e&&e.message)||e).slice(0,90)})}};
  for(const c of['banner_url','banner_x','banner_y','banner_zoom'])await T('Coluna profiles.'+c,async()=>{const r=await sb.from('profiles').select(c).limit(1);if(r.error)throw r.error;return{d:'ok'}});
  await T('Banner: enviar e apagar no bucket "banners"',async()=>{const p=ME.id+'/diag-'+Date.now()+'.jpg',B=sb.storage.from('banners'),up=await B.upload(p,new Blob(['ok'],{type:'image/jpeg'}),{contentType:'image/jpeg'});if(up.error)throw up.error;const u=B.getPublicUrl(p).data.publicUrl;let pub='?';try{const f=await fetch(u,{cache:'no-store'});pub=f.ok?'leitura pública ok':'HTTP '+f.status}catch(_){pub='não consegui testar a leitura'}await B.remove([p]);return{ok:/ok$/.test(pub),d:pub}});
+ await T('Banner em vídeo: bucket aceita MP4',async()=>{const p=ME.id+'/diag-'+Date.now()+'.mp4',B=sb.storage.from('banners'),up=await B.upload(p,new Blob(['ok'],{type:'video/mp4'}),{contentType:'video/mp4'});if(up.error)throw up.error;await B.remove([p]);return{d:'ok'}});
  return out}}
+
+/* vídeo do banner: toca em loop, mudo, só quando está visível (economiza bateria) */
+{const RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;v.__vis=e.isIntersecting;if(e.isIntersecting)v.__go&&v.__go();else v.pause()}),{threshold:.01}):null;
+ const arm=v=>{if(v.__bn)return;v.__bn=1;v.muted=true;v.defaultMuted=true;v.loop=true;v.playsInline=true;v.__vis=1;const go=()=>{if(!RM&&v.__vis&&v.isConnected&&v.paused)v.play().catch(()=>{})};v.__go=go;v.addEventListener('canplay',go);v.addEventListener('loadeddata',go);if(io)io.observe(v);go()};
+ const scan=r=>{(r.querySelectorAll?r.querySelectorAll('video.bn-vid'):[]).forEach(arm);if(r.matches&&r.matches('video.bn-vid'))arm(r)};
+ new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(n=>n.nodeType==1&&scan(n)))).observe(document.body,{childList:true,subtree:true});scan(document.body);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)document.querySelectorAll('video.bn-vid').forEach(v=>v.__go&&v.__go())})}
 
 /* Reels: aviso de versão e render */
 try{render()}catch(e){console.error(e)}
-setTimeout(()=>{try{toast('VELOVERSA v7.7 carregado')}catch(e){}},1200);
+setTimeout(()=>{try{toast('VELOVERSA v7.8 carregado')}catch(e){}},1200);
 
 </script>
 <script>/* Rede de segurança: se após 10 s nada apareceu, mostra aviso em vez de tela branca */
