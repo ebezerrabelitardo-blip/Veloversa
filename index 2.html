@@ -114,7 +114,7 @@ nav .cr{background:linear-gradient(135deg,var(--ac),#3d8bff);box-shadow:0 6px 18
 <input type="file" id="fcv" accept="image/*" hidden>
 <input type="file" id="cpf" multiple accept="image/*,video/*" hidden>
 <script>
-const VER='7.8';
+const VER='8.0';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const P={home:'M3 11l9-8 9 8v10h-6v-6H9v6H3z',search:'M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5',plus:'M12 5v14M5 12h14',send:'M22 3L9.5 13.5M22 3l-7 18-5.5-7.5L2 10z',user:'M12 3a4.5 4.5 0 100 9 4.5 4.5 0 000-9zM4 21c0-4.4 3.6-7 8-7s8 2.6 8 7',heart:'M12 21s-8-5-8-11a4.5 4.5 0 018-3 4.5 4.5 0 018 3c0 6-8 11-8 11z',cm:'M21 12a8 8 0 01-11.5 7.2L3 21l1.8-6A8 8 0 1121 12z',bm:'M6 3h12v18l-6-4-6 4z',reel:'M4 4h16v16H4zM10 9l5 3-5 3z',x:'M5 5l14 14M19 5L5 19',menu:'M4 6h16M4 12h16M4 18h16',back:'M15 5l-7 7 7 7',edit:'M4 20h4L19 9l-4-4L4 16zM14 6l4 4',feed:'M4 4h16v7H4zM4 14h16v6H4z',rep:'M17 2l4 4-4 4M3 11V9a3 3 0 013-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 01-3 3H3'};
 const ic=(n,f)=>`<svg viewBox="0 0 24 24" width="24" height="24" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${P[n]}"/></svg>`;
@@ -155,7 +155,7 @@ const moreHtml=()=>FD.done?'<div class="empty" style="padding:28px">Você viu tu
 const media=p=>(p.pm&&p.pm.length?carHtml(p):p.img?`<img src="${p.img}" alt="Foto de ${esc(p.u)}">`:p.vid?`<video src="${p.vid}#t=0.1" ${p.cover?`poster="${p.cover}"`:''} playsinline controls preload="${p.cover?'none':'metadata'}" onerror="vidErr(this)"></video>`:`<i class="gl">✦</i>${p.v?'<span class="mu" style="position:relative;color:#fff">Vídeo disponível só na sessão em que foi enviado</span>':''}`);
 const fmt=n=>{n=+n||0;if(n<1000)return String(n);if(n<1e6)return(n/1000).toFixed(n<1e4?1:0).replace('.',',').replace(',0','')+' mil';return(n/1e6).toFixed(1).replace('.',',').replace(',0','')+' mi'};
 const agoH=t=>{const a=ago(t);return a=='agora'?'agora':'há '+a};
-const card=p=>`<article class="pc"><div class="ph"><span class="pwho" data-a="prof" data-i="${esc(p.u)}">${hasStory(p.u)?`<span class="rg">${av(p.u,38)}</span>`:av(p.u,42)}<span><b>${esc(p.u)}</b><small>${agoH(p.t)}</small></span></span>${p.u!=S.me.u&&!S.fol[p.u]?`<button class="lk" data-a="fol" data-i="${esc(p.u)}">Seguir</button>`:''}<button data-a="pmore" data-i="${p.id}" aria-label="Mais opções" class="ib" style="width:34px;height:34px;background:none;border:0">${ic('more')}</button></div>
+const card=p=>`<article class="pc"><div class="ph"><span class="pwho" data-a="prof" data-i="${esc(p.u)}">${hasStory(p.u)?`<span class="rg">${av(p.u,38)}</span>`:av(p.u,42)}<span><b>${esc(p.u)}</b><small>${agoH(p.t)}${p.mu?` · ♪ ${esc(p.mu)}`:''}</small></span></span>${p.u!=S.me.u&&!S.fol[p.u]?`<button class="lk" data-a="fol" data-i="${esc(p.u)}">Seguir</button>`:''}<button data-a="pmore" data-i="${p.id}" aria-label="Mais opções" class="ib" style="width:34px;height:34px;background:none;border:0">${ic('more')}</button></div>
 <div class="md" style="${p.img||p.vid?'':art(p.art||200)}" data-a="dbl" data-i="${p.id}">${media(p)}</div>
 <div class="ac"><button data-a="like" data-i="${p.id}" class="${p.liked?'on':''}${pop==p.id?' pop':''}" aria-label="Curtir">${ic('heart',p.liked)}<em>${fmt(p.l)}</em></button><button data-a="cm" data-i="${p.id}" aria-label="Comentar">${ic('cm')}<em>${fmt(p.cmn??p.cm.length)}</em></button><button data-a="rp" data-i="${p.id}" class="${RPM.has(p.id)?'on2':''}" aria-label="Republicar">${ic('rep')}<em>${fmt(repC(p.id))}</em></button><button data-a="shr" data-i="${p.id}" aria-label="Compartilhar">${ic('send')}</button><button class="r ${p.saved?'on2':''}" data-a="sv" data-i="${p.id}" aria-label="Salvar">${ic('bm',p.saved)}</button></div>
 <div class="tx">${p.cap?`<p><b>${esc(p.u)}</b> ${tags(p.cap)}</p>`:''}<a data-a="cm" data-i="${p.id}" class="mu">${(p.cmn??p.cm.length)?'Ver todos os comentários':'Comentar'}</a></div></article>`;
@@ -168,9 +168,9 @@ home(){const reels=S.posts.filter(p=>p.type=='reel'||p.vid);const L=S.posts.filt
  return `<span class="chip">🔥 ${S.str.n} dia(s) seguidos</span><button class="chip" style="margin-left:8px;color:var(--ac)" data-a="algo">Seu algoritmo ✦</button><div class="row">${storyRow()}</div>${storyHint()}`+L.map((p,i)=>card(p)+(i==1?strip:'')).join('')+moreHtml()},
 exp(){return `<div style="padding:12px 16px"><input id="q" type="search" placeholder="Pesquisar perfis, #hashtags e publicações" value="${esc(q)}" aria-label="Pesquisar"></div><div id="res">${res()}</div>`},
 msg(){const ks=Object.keys(S.chats);return `<div class="hd"><span>${esc(S.me.u)}</span><button data-a="newc" aria-label="Nova mensagem">${ic('edit')}</button></div><div class="row"><button class="st" data-a="note"><span class="nt">${S.note?esc(S.note):'+ Nota'}</span><span class="rg">${av(S.me.u,56)}</span>Sua nota</button></div><div class="demo">Conversas online em tempo real</div>`+(ks.length?ks.map(u=>{const m=S.chats[u],l=m[m.length-1];return `<div class="li" data-a="chat" data-i="${esc(u)}" role="button">${av(u,48)}<div><b>${esc(u)}</b><p class="mu">${l?(l.m?'Você: ':'')+esc(l.x):'Nova conversa'}</p></div></div>`}).join(''):`<div class="empty">Nenhuma conversa ainda.<br>Toque no lápis para começar uma.</div>`)},
-me(){const mine=S.posts.filter(p=>p.u==S.me.u),sub=S.sub||'g';const L=sub=='g'?mine:sub=='r'?mine.filter(p=>p.type=='reel'||p.vid):sub=='rp'?S.posts.filter(p=>RPM.has(p.id)):sub=='t'?((window.TGD||{})[S.me.u]||[]):S.posts.filter(p=>p.saved);
+me(){const mine=S.posts.filter(p=>p.u==S.me.u),sub=S.sub||'g';const L=sub=='g'?pinSort(mine):sub=='r'?mine.filter(p=>p.type=='reel'||p.vid):sub=='rp'?S.posts.filter(p=>RPM.has(p.id)):sub=='t'?((window.TGD||{})[S.me.u]||[]):S.posts.filter(p=>p.saved);
  return `<div class="hd"><span>${esc(S.me.u)}${S.priv?' 🔒':''}</span><button data-a="set" aria-label="Configurações">${ic('menu')}</button></div><div class="pf"><button data-a="avatar" aria-label="Alterar foto de perfil" style="position:relative;flex:none">${av(S.me.u,76)}<span style="position:absolute;right:-2px;bottom:-2px;background:var(--ac);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid var(--bg)">+</span></button><div><b>${mine.length}</b><span class="mu">posts</span></div><div data-a="flist" data-i="followers:${esc(S.me.u)}" style="cursor:pointer"><b>${window.MYF||0}</b><span class="mu">seguidores</span></div><div data-a="flist" data-i="following:${esc(S.me.u)}" style="cursor:pointer"><b>${Object.values(S.fol).filter(Boolean).length}</b><span class="mu">seguindo</span></div></div><div class="tx"><b>${esc(S.me.n)}</b><p>${tags(S.me.b)}</p></div><span class="chip">🔥 ${S.str.n} dia(s) seguidos</span>${S.me.mu?`<span class="chip">♪ ${esc(S.me.mu)}</span>`:''}${S.links.length?`<div class="row" style="padding:8px 16px">${S.links.map(l=>{let h='';try{h=new URL(l).hostname}catch(e){}return `<a class="chip" style="margin:0;color:var(--ac);text-decoration:none" href="${esc(l)}" target="_blank" rel="noopener noreferrer nofollow">${esc(h)} ↗</a>`}).join('')}</div>`:''}<div class="cb"><button class="bt g" data-a="edit">Editar perfil</button><button class="bt g" data-a="avatar">Foto</button><button class="bt g" data-a="shp">Compartilhar</button></div>${hlRow(S.me.u,1)}
- <div class="tabs"><button data-a="sub" data-i="g" class="${sub=='g'?'on':''}">Posts</button><button data-a="sub" data-i="r" class="${sub=='r'?'on':''}">Reels</button><button data-a="sub" data-i="rp" class="${sub=='rp'?'on':''}">Republicações</button><button data-a="sub" data-i="s" class="${sub=='s'?'on':''}">Salvos</button><button data-a="sub" data-i="t" class="${sub=='t'?'on':''}">Marcações</button></div>`+(L.length?`<div class="gr">${L.map(tile).join('')}</div>`:`<div class="empty">${sub=='t'?'Marcações de outras pessoas: em breve.':sub=='rp'?'Você ainda não republicou nada.':sub=='s'?'Nada salvo ainda. Toque no marcador de uma publicação.':'Nada por aqui ainda.<br>Toque em + para publicar.'}</div>`)}
+ <div class="tabs"><button data-a="sub" data-i="g" class="${sub=='g'?'on':''}">Posts</button><button data-a="sub" data-i="r" class="${sub=='r'?'on':''}">Reels</button><button data-a="sub" data-i="rp" class="${sub=='rp'?'on':''}">Republicações</button><button data-a="sub" data-i="s" class="${sub=='s'?'on':''}">Salvos</button><button data-a="sub" data-i="t" class="${sub=='t'?'on':''}">Marcações</button></div>`+(L.length?`<div class="gr">${L.map(tile).join('')}</div>`:`<div class="empty">${sub=='t'?'Quando alguém marcar você, aparece aqui.':sub=='rp'?'Você ainda não republicou nada.':sub=='s'?'Nada salvo ainda. Toque no marcador de uma publicação.':'Nada por aqui ainda.<br>Toque em + para publicar.'}</div>`)}
 };
 function res(){const t=q.trim().toLowerCase();
  if(!t)return `<div class="hd"><span>Perfis sugeridos</span></div><div class="row">${U.map(u=>`<div class="st" style="gap:6px;cursor:pointer" data-a="prof" data-i="${u}">${av(u,56)}${esc(u).slice(0,10)}<button class="lk" data-a="fol" data-i="${u}">${S.fol[u]?'Seguindo':'Seguir'}</button></div>`).join('')}</div><div class="gr">${S.posts.map(tile).join('')}</div>`;
@@ -194,7 +194,7 @@ function story(u,i=0){const L=u==S.me.u?myStories():[{art:hh(u)+40,tx:(S.posts.f
  const o=$('#sv');o.hidden=false;o.innerHTML=`<div class="stb" style="${s.img||s.vid?'':art(s.art||200)}">${s.img?`<img src="${s.img}" alt="">`:''}${s.vid?`<video src="${s.vid}" autoplay muted playsinline loop></video>`:''}<div class="pg">${L.map((_,k)=>`<i class="${k<i?'d':''}">${k==i?'<b></b>':''}</i>`).join('')}</div><div class="sh2">${av(u,32)}<b>${esc(u)}</b><span>${s.t?ago(s.t):'agora'}</span><button data-a="sx" aria-label="Fechar">${ic('x')}</button></div><p class="stx">${tags(s.tx||'')}</p><i class="l" data-a="sp"></i><i class="r" data-a="sn"></i></div>`;
  o._s=[u,i];tm=setTimeout(()=>story(u,i+1),5000);render()}
 const tg=(k,on,l)=>`<div class="tg2"><span>${l}</span><button class="sw ${on?'on':''}" role="switch" aria-checked="${!!on}" aria-label="${l}" data-a="tgl" data-i="${k}"></button></div>`;
-const setHtml=()=>`<h3>Configurações</h3>${tg('dark',S.theme=='dark','Tema escuro')}${tg('priv',S.priv,'Conta privada')}${tg('calm',S.calm,'Animações reduzidas')}${tg('big',S.big,'Texto maior')}<div class="tg2"><span class="mu">Contas, perfis, seguir, mensagens, posts e stories são online. Curtidas, comentários e notas ainda ficam só neste aparelho — em breve para todos.</span></div><button class="bt g" style="margin-top:12px" data-a="algo">Seu algoritmo</button><button class="bt g" style="margin-top:8px" data-a="out">Sair da conta</button><p class="mu" style="text-align:center;margin-top:12px">VELOVERSA · versão ${VER}</p><button class="bt g" style="margin-top:8px" data-a="wipe">${S.wipe?'Toque de novo para confirmar':'Apagar dados deste aparelho'}</button>`;
+const setHtml=()=>`<h3>Configurações</h3>${tg('dark',S.theme=='dark','Tema escuro')}${tg('priv',S.priv,'Conta privada')}${tg('calm',S.calm,'Animações reduzidas')}${tg('big',S.big,'Texto maior')}<div class="tg2"><span class="mu">Contas, perfis, seguir, mensagens, posts e stories são online. Curtidas, comentários e notas ainda ficam só neste aparelho — falta rodar o SQL do Supabase para compartilhar.</span></div><button class="bt g" style="margin-top:12px" data-a="algo">Seu algoritmo</button><button class="bt g" style="margin-top:8px" data-a="out">Sair da conta</button><p class="mu" style="text-align:center;margin-top:12px">VELOVERSA · versão ${VER}</p><button class="bt g" style="margin-top:8px" data-a="wipe">${S.wipe?'Toque de novo para confirmar':'Apagar dados deste aparelho'}</button>`;
 const editHtml=()=>`<h3>Editar perfil</h3><p class="mu">Nome de usuário</p><input id="eu" value="${esc(S.me.u)}" maxlength="20" autocapitalize="none"><p class="mu">Nome</p><input id="en" value="${esc(S.me.n)}" maxlength="40"><p class="mu">Biografia</p><textarea id="eb" maxlength="150">${esc(S.me.b)}</textarea><p class="mu">Música em destaque (texto)</p><input id="em" maxlength="60" value="${esc(S.me.mu||'')}"><p class="mu">Links (até 4, um por linha, https://)</p><textarea id="el">${esc(S.links.join('\n'))}</textarea><button class="bt" style="margin-top:12px" data-a="esave">Salvar</button>`;
 const chatHtml=u=>`<div><div class="hd"><button data-a="close" aria-label="Voltar">${ic('back')}</button>${av(u,34)}<span>${esc(u)}</span></div><div id="msgs">${(S.chats[u]||[]).map(m=>`<div class="bb ${m.m?'me':''}">${m.img?`<img src="${m.img}" alt="Foto" style="max-width:100%;border-radius:10px;display:block">`:esc(m.x)}</div>`).join('')||'<p class="empty">Diga olá 👋</p>'}</div><div class="cb"><button data-a="mph" data-i="${esc(u)}" aria-label="Enviar foto">📷</button><input id="mf" type="file" accept="image/*" hidden><input id="mi" maxlength="500" placeholder="Mensagem..." aria-label="Mensagem"><button data-a="ms" data-i="${esc(u)}">Enviar</button></div></div>`;
 const A={
@@ -204,7 +204,7 @@ awipe(){if(!aw){aw=1;authShow();return}try{localStorage.removeItem('vv1')}catch(
 out(){S.sess=0;save();shut();render()},
 algo(){sheet(algoHtml)},
 topic(h){const v=(S.top[h]||0)+1;S.top[h]=v>1?-1:v;save();R()},
-note(){sheet(()=>`<h3>Sua nota</h3><input id="nt" maxlength="64" value="${esc(S.note)}" placeholder="Um pensamento em até 64 caracteres"><button class="bt" style="margin-top:12px" data-a="nsave">Compartilhar nota</button>`)},
+note(){sheet(()=>`<h3>Sua nota</h3><input id="nt" maxlength="60" value="${esc(S.note)}" placeholder="Um pensamento em até 64 caracteres"><button class="bt" style="margin-top:12px" data-a="nsave">Compartilhar nota</button>`)},
 nsave(){S.note=$('#nt').value.trim();save();shut();R()},
 async auth(){const er=t=>{$('#er').textContent=t};if(!window.crypto||!crypto.subtle)return er('Seu navegador não suporta criptografia segura.');if(Date.now()<lock)return er('Muitas tentativas. Aguarde '+Math.ceil((lock-Date.now())/1e3)+' s.');const pw=$('#ap').value;
  if(mode=='up'){const e=$('#ae').value.trim().toLowerCase(),u=$('#auu').value.trim().toLowerCase(),bd=$('#ab').value;
@@ -227,11 +227,11 @@ cm(id){sheet(()=>cmHtml(find(id)))},
 cms(id){const v=$('#ci').value.trim();if(!v)return;find(id).cm.push({u:S.me.u,x:v});save();R()},
 open(id){sheet(()=>card(find(id)))},
 shr(id){const p=find(id),d={title:'VELOVERSA',text:p.cap,url:location.href};if(navigator.share)navigator.share(d).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(location.href).then(()=>toast('Link copiado'),()=>toast('Não foi possível copiar'));else toast('Compartilhamento indisponível')},
-shp(){const d={title:'VELOVERSA',text:'Veja meu perfil no VELOVERSA: @'+S.me.u,url:location.href.split('#')[0]};if(navigator.share)navigator.share(d).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(d.url).then(()=>toast('Link copiado'),()=>toast('Em breve vai funcionar'));else toast('Em breve vai funcionar')},
+shp(){const d={title:'VELOVERSA',text:'Veja meu perfil no VELOVERSA: @'+S.me.u,url:location.href.split('#')[0]};if(navigator.share)navigator.share(d).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(d.url).then(()=>toast('Link copiado'),()=>toast('Tente de novo em instantes'));else toast('Tente de novo em instantes')},
 story,sx:shut,sn(){const[u,i]=$('#sv')._s;story(u,i+1)},sp(){const[u,i]=$('#sv')._s;story(u,i-1)},
 reels(id){ovl(()=>reelsHtml());if(id)setTimeout(()=>{const e=$('#r'+id);e&&e.scrollIntoView()},50)},
 pp(id,b){b.paused?b.play():b.pause()},
-notif(){sheet(()=>`<h3>Notificações</h3><div class="empty">Nenhuma notificação.<br>Em breve vai funcionar: avisos de curtidas, comentários e novos seguidores.</div>`)},
+notif(){sheet(()=>`<h3>Notificações</h3><div class="empty">Nenhuma notificação.<br>Avisos de curtidas e comentários aparecem dentro do app: os e novos seguidores.</div>`)},
 hash(h){q=h;tab='exp';render();const i=$('#q');i&&(i.value=h)},
 sub(k){S.sub=k;save();R()},
 set(){S.wipe=0;sheet(setHtml)},
@@ -251,7 +251,7 @@ newc(){sheet(()=>`<h3>Nova mensagem</h3>${U.map(u=>`<div class="li" data-a="chat
 chat(u){cur=u;S.chats[u]=S.chats[u]||[];shf=null;ovl(()=>chatHtml(u))},
 ms(u){const i=$('#mi'),v=i.value.trim();if(!v)return;S.chats[u].push({m:1,x:v});save();draw();$('#mi').focus();render()}
 };
-document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.dataset.a=='dbl')return;if(b.dataset.a=='close'&&e.target!==b&&!b.classList.contains('bk')&&!e.target.closest('button'))return;const f=A[b.dataset.a];if(!f){toast('Em breve vai funcionar ✦');return}try{const r=f(b.dataset.i,b);if(r&&r.catch)r.catch(er=>{console.error(er);toast('Isso não funcionou agora. Em breve vai funcionar.')})}catch(er){console.error(er);toast('Isso não funcionou agora. Em breve vai funcionar.')}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.dataset.a=='dbl')return;if(b.dataset.a=='close'&&e.target!==b&&!b.classList.contains('bk')&&!e.target.closest('button'))return;const f=A[b.dataset.a];if(!f){toast('Este recurso não está disponível agora');return}try{const r=f(b.dataset.i,b);if(r&&r.catch)r.catch(er=>{console.error(er);toast('Isso não funcionou agora. Tente de novo.')})}catch(er){console.error(er);toast('Isso não funcionou agora. Tente de novo.')}});
 document.addEventListener('dblclick',e=>{const b=e.target.closest('[data-a=dbl]');b&&A.dbl(b.dataset.i)});
 document.addEventListener('keydown',e=>{if(e.key!='Enter')return;if(e.target.id=='mi')A.ms(cur);if(e.target.id=='ci'){const b=document.querySelector('[data-a=cms]');b&&A.cms(b.dataset.i)}});
 document.addEventListener('input',e=>{if(e.target.id=='q'){q=e.target.value;$('#res').innerHTML=res()}});
@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded',async()=>{if(!sb){S.sess=0;render()
  try{if(!localStorage.getItem('vvacct'))mode='up'}catch(e){}try{render()}catch(e){console.error('render',e);S.sess=0;try{authShow()}catch(_){}}});
 </script>
 <script>
-const SEL='id,kind,caption,media_url,media_path,media_type,created_at,profiles(id,username)',PG=8;
+let SEL='id,kind,caption,media_url,media_path,media_type,created_at,profiles(id,username)',PG=8;
 // Carrega posts de 8 em 8 (rolagem infinita). more=true busca a próxima página.
 async function loadPosts(more){if(!ME||FD.busy)return;FD.busy=1;FD.err=0;const from=more?FD.from:0;let ok=0;
  try{const{data,error}=await sb.from('posts').select(SEL).order('created_at',{ascending:false}).range(from,from+PG-1);
@@ -380,7 +380,7 @@ if(window.REC)setTimeout(()=>{S.sess=0;authShow()},800);
 // PV guarda o perfil que está aberto na tela
 let PV=null;
 // Converte uma publicação do servidor para o formato usado no app
-const mapPost=r=>{const v=r.media_type=='video';return{id:'o'+r.id,oid:r.id,path:r.media_path,uid:r.profiles.id,u:r.profiles.username,cap:r.caption||'',t:+new Date(r.created_at),l:0,liked:0,saved:0,art:200,type:r.kind,img:v?undefined:r.media_url,vid:v?r.media_url:undefined,cover:v?r.media_url.replace(/\.[^./?]+$/,'.cover.jpg'):undefined,v:v?1:0,cm:[]}};
+const mapPost=r=>{const v=r.media_type=='video';return{pin:r.pinned_at?+new Date(r.pinned_at):0,mu:r.music||'',id:'o'+r.id,oid:r.id,path:r.media_path,uid:r.profiles.id,u:r.profiles.username,cap:r.caption||'',t:+new Date(r.created_at),l:0,liked:0,saved:0,art:200,type:r.kind,img:v?undefined:r.media_url,vid:v?r.media_url:undefined,cover:v?r.media_url.replace(/\.[^./?]+$/,'.cover.jpg'):undefined,v:v?1:0,cm:[]}};
 // Monta o HTML da tela de perfil (carregando, não encontrado ou completo)
 const profHtml=()=>{if(!PV)return '';const u=PV.u,p=PV.p,fol=S.fol[u],can=p&&(!p.is_private||PV.st=='ok');
  if(PV.loading)return `<div class="empty">Carregando perfil…</div>`;
@@ -399,7 +399,7 @@ A.prof=async u=>{if(!u)return;if(S.me.u&&u==S.me.u){return A.tab('me')}
   const cnt=(t,c,v,x)=>{let r=sb.from(t).select('*',{count:'exact',head:true}).eq(c,v);return x?r.eq('status',x):r};
   const [a,b,st,ps]=await Promise.all([cnt('follows','following',p.id,'ok'),cnt('follows','follower',p.id,'ok'),
    sb.from('follows').select('status').eq('follower',ME.id).eq('following',p.id).maybeSingle(),
-   sb.from('posts').select('id,kind,caption,media_url,media_path,media_type,created_at,profiles!inner(username)').eq('profiles.username',u).order('created_at',{ascending:false}).limit(60)]);
+   sb.from('posts').select('id,kind,caption,media_url,media_path,media_type,created_at'+(typeof X8!='undefined'&&X8.pin?',pinned_at,music':'')+',profiles!inner(username)').eq('profiles.username',u).order('created_at',{ascending:false}).limit(60)]);
   const posts=(ps.data||[]).map(mapPost);posts.forEach(x=>{if(!find(x.id))S.posts.push(x)});
   PV={u,p,fr:a.count||0,fg:b.count||0,st:st.data?st.data.status:null,posts,pc:posts.length};
  }catch(e){console.error(e);PV={u,p:null}}
@@ -544,9 +544,9 @@ $('#fcv').onchange=async e=>{const f=e.target.files[0];if(!f)return;if(!f.type.s
 
 // --- Funções que ainda ficam só no aparelho: aviso "em breve" (uma vez por sessão) ---
 const SOON={};const soon=(k,t)=>{if(!SOON[k]){SOON[k]=1;toast(t)}};
-{const o=A.like;A.like=id=>{o(id);soon('like','Curtidas ainda aparecem só para você. Em breve para todos!')}}
-{const o=A.cms;A.cms=id=>{o(id);soon('cms','Comentários ainda aparecem só para você. Em breve para todos!')}}
-{const o=A.nsave;A.nsave=()=>{o();soon('note','Notas para os amigos: em breve vai funcionar!')}}
+{const o=A.like;A.like=id=>{o(id);soon('like','Curtidas só neste aparelho: falta rodar o SQL do Supabase.')}}
+{const o=A.cms;A.cms=id=>{o(id);soon('cms','Comentários só neste aparelho: falta rodar o SQL do Supabase.')}}
+{const o=A.nsave;A.nsave=()=>{o();soon('note','Nota salva neste aparelho')}}
 </script>
 
 <script>
@@ -564,7 +564,7 @@ const SOON={};const soon=(k,t)=>{if(!SOON[k]){SOON[k]=1;toast(t)}};
 .mr{display:flex;align-items:center;gap:14px;padding:14px 16px;width:100%;text-align:left;border-top:1px solid var(--ln)}.mr span{flex:1}.mr i{font-style:normal;color:var(--mu)}
 #upd{position:fixed;bottom:92px;left:12px;right:12px;border-radius:14px;z-index:70;background:var(--ac);color:#fff;text-align:center;padding:10px;font-weight:600;font-size:.9rem}
 `;document.head.appendChild(st)}
-A.soon=()=>toast('Em breve vai funcionar ✦');
+A.soon=()=>toast('Este recurso não está disponível agora');
 {const d0=draw;draw=function(){d0();const h=$('#sh');if(h)h.style.zIndex=ovf?'35':''}}
 
 // ---------- Perfil de outra pessoa (tela cheia) ----------
@@ -573,17 +573,17 @@ let profPage=()=>{const u=PV.u,p=PV.p,fol=S.fol[u];
  let body;
  if(PV.loading)body=`<div class="empty">Carregando perfil…</div>`;
  else if(!p)body=`<div class="empty">Perfil não encontrado.</div>`;
- else{const can=!p.is_private||PV.st=='ok'||fol&&PV.st=='ok',sub=PV.sub||'g',L=sub=='rp'?(PV.rps||[]):sub=='t'?((window.TGD||{})[PV.u]||[]):(PV.posts||[]).filter(x=>sub=='g'||x.type=='reel'||x.vid),hasS=ST[u]&&ST[u].length;
+ else{const can=!p.is_private||PV.st=='ok'||fol&&PV.st=='ok',sub=PV.sub||'g',L=sub=='rp'?(PV.rps||[]):sub=='t'?((window.TGD||{})[PV.u]||[]):(sub=='g'?pinSort(PV.posts||[]):(PV.posts||[])).filter(x=>sub=='g'||x.type=='reel'||x.vid),hasS=ST[u]&&ST[u].length;
   body=`<div class="pg2">${hasS?`<button data-a="story" data-i="${esc(u)}" class="rg" aria-label="Ver story" style="flex:none">${av(u,80)}</button>`:av(u,86)}<div><b>${PV.pc}</b><span class="mu">posts</span></div><div data-a="flist" data-i="followers:${esc(u)}" style="cursor:pointer"><b>${PV.fr}</b><span class="mu">seguidores</span></div><div data-a="flist" data-i="following:${esc(u)}" style="cursor:pointer"><b>${PV.fg}</b><span class="mu">seguindo</span></div></div>
   <div class="tx" style="padding-bottom:12px"><b>${esc(p.name||u)}</b><p style="white-space:pre-wrap">${tags(p.bio||'')}</p></div>
   <div class="row2">${fol?`<button class="bt g" data-a="unf" data-i="${esc(u)}">${PV.st=='pending'?'Solicitado':'Seguindo'} ▾</button>`:`<button class="bt" data-a="fol" data-i="${esc(u)}">Seguir</button>`}<button class="bt g" data-a="chat" data-i="${esc(u)}">Mensagem</button></div>${hlRow(u)}
   <div class="tabs"><button data-a="psub" data-i="g" class="${sub=='g'?'on':''}">Posts</button><button data-a="psub" data-i="r" class="${sub=='r'?'on':''}">Reels</button><button data-a="psub" data-i="rp" class="${sub=='rp'?'on':''}">Republicações</button><button data-a="psub" data-i="t" class="${sub=='t'?'on':''}">Marcações</button></div>
-  ${can?(L.length?`<div class="gr">${L.map(tile).join('')}</div>`:'<div class="empty">'+(sub=='t'?'Marcações de outras pessoas: em breve.':'Nenhuma publicação ainda.')+'</div>'):'<div class="empty">🔒 Esta conta é privada.<br>Siga para ver as publicações.</div>'}`}
+  ${can?(L.length?`<div class="gr">${L.map(tile).join('')}</div>`:'<div class="empty">'+(sub=='t'?'Quando alguém marcar você, aparece aqui.':'Nenhuma publicação ainda.')+'</div>'):'<div class="empty">🔒 Esta conta é privada.<br>Siga para ver as publicações.</div>'}`}
  return `<div>${top}<div class="rl" style="scroll-snap-type:none;background:var(--bg)">${body}</div></div>`};
 A.psub=k=>{if(PV){PV.sub=k;draw()}};
 A.unf=u=>{if(confirm('Deixar de seguir '+u+'?'))A.fol(u)};
 A.pmenu=u=>sheet(()=>`<h3>${esc(u)}</h3><button class="mr" data-a="pcopy" data-i="${esc(u)}"><span>Copiar link do perfil</span></button><button class="mr" data-a="blk" data-i="${esc(u)}"><span>Bloquear</span></button><button class="mr" data-a="rpt" data-i="user:${esc(u)}"><span>Denunciar</span></button>`);
-A.pcopy=u=>{shf=null;draw();const url=location.href.split('#')[0];navigator.clipboard?navigator.clipboard.writeText(url).then(()=>toast('Link copiado'),()=>toast('Em breve vai funcionar')):toast('Em breve vai funcionar')};
+A.pcopy=u=>{shf=null;draw();const url=location.href.split('#')[0];navigator.clipboard?navigator.clipboard.writeText(url).then(()=>toast('Link copiado'),()=>toast('Tente de novo em instantes')):toast('Tente de novo em instantes')};
 A.prof=async u=>{if(!u)return;if(S.me.u&&u==S.me.u){shut();return A.tab('me')}
  loadAvatars([u]);PV={u,loading:1,sub:'g'};shf=null;ovl(profPage);
  try{const{data:p}=await sb.from('profiles').select(PCOLS()).eq('username',u).maybeSingle();
@@ -650,10 +650,10 @@ let editPage=()=>`<div><div class="hd" style="gap:8px"><button data-a="close" ar
 <label class="fl"><span>Bio <em id="bc" style="font-style:normal">${(S.me.b||'').length} / 150</em></span><textarea id="eb" maxlength="150" oninput="document.getElementById('bc').textContent=this.value.length+' / 150'">${esc(S.me.b)}</textarea></label>
 <label class="fl"><span>Música em destaque</span><input id="em" maxlength="60" value="${esc(S.me.mu||'')}"></label>
 <label class="fl"><span>Links (até 4, um por linha, https://)</span><textarea id="el">${esc(S.links.join('\n'))}</textarea></label>
-${['Pronomes','Gênero','Banners','Reordenar grade'].map(l=>`<button class="mr" data-a="soon"><span>${l}</span><i>em breve ›</i></button>`).join('')}
+${x8EditRows()}
 <div style="padding:0 16px 24px">${tg('priv',S.priv,'Conta privada')}</div></div></div>`;
 A.edit=()=>{shf=null;ovl(editPage)};
-const avHtml=()=>`<h3>Foto do perfil</h3><div style="text-align:center;margin-bottom:8px">${av(S.me.u,80)}</div><button class="mr" data-a="avlib"><span>Escolher da biblioteca</span></button><button class="mr" data-a="avcam"><span>Tirar foto</span></button><button class="mr" data-a="soon"><span>Importar do WhatsApp ou Facebook</span><i>em breve</i></button>${AVT[S.me.u]?'<button class="mr" data-a="avdel" style="color:#ff5a6a"><span>Remover foto atual</span></button>':''}`;
+const avHtml=()=>`<h3>Foto do perfil</h3><div style="text-align:center;margin-bottom:8px">${av(S.me.u,80)}</div><button class="mr" data-a="avlib"><span>Escolher da biblioteca</span></button><button class="mr" data-a="avcam"><span>Tirar foto</span></button>${AVT[S.me.u]?'<button class="mr" data-a="avdel" style="color:#ff5a6a"><span>Remover foto atual</span></button>':''}`;
 A.avatar=()=>{if(!ME)return;sheet(avHtml)};
 A.avlib=()=>{const f=$('#fav');f.removeAttribute('capture');f.value='';f.click();shf=null;draw()};
 A.avcam=()=>{const f=$('#fav');f.setAttribute('capture','user');f.value='';f.click();shf=null;draw()};
@@ -790,7 +790,7 @@ let PREF={follow:true,like:true,comment:true,message:true},SETOK=0;
 const prefOn=t=>{const k={follow:'follow',follow_request:'follow',like:'like',repost:'like',comment:'comment'}[t];return!k||PREF[k]!==false};
 async function loadNotifs(){const{data,error}=await sb.from('notifications').select('id,type,post_id,actor_id,created_at,read_at,actor:profiles!notifications_actor_id_fkey(username)').order('created_at',{ascending:false}).limit(60);
  if(error){NT=null;NTERR=1;return}NTERR=0;NT=(data||[]).filter(n=>n.actor&&!BL.has(n.actor.username)&&prefOn(n.type));NC=NT.filter(n=>!n.read_at).length;loadAvatars(NT.map(n=>n.actor.username));R()}
-const ntTxt=n=>({follow:'começou a seguir você',follow_request:'pediu para seguir você',like:'curtiu sua publicação',comment:'comentou na sua publicação',repost:'republicou sua publicação'}[n.type]||'interagiu com você');
+const ntTxt=n=>({post:'publicou algo novo',follow:'começou a seguir você',follow_request:'pediu para seguir você',like:'curtiu sua publicação',comment:'comentou na sua publicação',repost:'republicou sua publicação'}[n.type]||'interagiu com você');
 const ntPage=()=>`<div><div class="hd"><button data-a="close" aria-label="Voltar">${ic('back')}</button><span>Notificações</span></div><div class="rl" style="scroll-snap-type:none;background:var(--bg)">${NTERR?'<div class="empty">Não foi possível carregar.<br>Falta rodar o SQL (etapa 2).</div>':NT===null?'<div class="empty">Carregando…</div>':NT.length?NT.map(n=>`<div class="nt2 ${n.read_at?'':'un'}" data-a="ntgo" data-i="${n.id}" role="button">${av(n.actor.username,44)}<div style="flex:1"><b>${esc(n.actor.username)}</b> ${ntTxt(n)}<br><span class="mu">${ago(+new Date(n.created_at))}</span></div>${n.type=='follow_request'?`<button class="lk" data-a="freq" data-i="ok:${n.id}">Aceitar</button><button class="lk" data-a="freq" data-i="no:${n.id}">Recusar</button>`:''}</div>`).join(''):'<div class="empty">Nenhuma notificação ainda.</div>'}</div></div>`;
 A.notif=async()=>{NT=null;shf=null;ovl(ntPage);await loadNotifs();draw();if(NT&&NT.some(n=>!n.read_at)){await sb.from('notifications').update({read_at:new Date().toISOString()}).is('read_at',null).eq('user_id',ME.id);NC=0;setBadges()}};
 A.ntgo=id=>{const n=(NT||[]).find(x=>x.id==id);if(!n)return;if(n.type=='follow'||n.type=='follow_request')A.prof(n.actor.username);else if(n.post_id)openPostById(n.post_id)};
@@ -799,7 +799,7 @@ A.freq=async i=>{const[k,id]=i.split(':');const n=(NT||[]).find(x=>x.id==id);if(
  const{error}=await q;if(error)return toast('Não foi possível agora (falta o SQL da etapa 2)');
  await sb.from('notifications').delete().eq('id',id);NT=NT.filter(x=>x.id!=id);if(k=='ok')window.MYF=(window.MYF||0)+1;draw();toast(k=='ok'?'Pedido aceito':'Pedido recusado')};
 function setBadges(){const set=(el,n)=>{if(!el)return;let b=el.querySelector('.bdg');if(!n){b&&b.remove();return}if(!b){b=document.createElement('i');b.className='bdg';el.appendChild(b)}b.textContent=n>9?'9+':n};
- set(document.querySelector('nav [data-i=msg]'),Object.values(UC).reduce((a,b)=>a+b,0));set(document.querySelector('#hd [data-a=notif]'),NC)}
+ set(document.querySelector('nav [data-i=msg]'),Object.entries(UC).reduce((a,[k,b])=>a+(typeof isMuted=='function'&&isMuted(k)?0:b),0));set(document.querySelector('#hd [data-a=notif]'),NC)}
 {const r0=render;render=function(){r0();setBadges()}}
 {const o=A.fol;A.fol=async u=>{const was=!!S.fol[u];await o(u);if(!was&&S.fol[u])notify(ID[u],PRIV[u]?'follow_request':'follow',null)}}
 
@@ -929,7 +929,7 @@ const msgBody=m=>{const mm=(m.x||'').match(/^\[\[post:(\w+)\]\]$/);
  if(m.img)return /\.(mp4|mov|webm)(\?|$)/i.test(m.img)?`<video src="${esc(m.img)}" controls playsinline preload="metadata" style="max-width:100%;border-radius:10px;display:block"></video>`:`<img src="${esc(m.img)}" alt="Foto" style="max-width:100%;border-radius:10px;display:block">`;
  return esc(m.x)};
 const chat2=k=>{const L=S.chats[k]||[],g=isG(k);let lm=-1;L.forEach((m,i)=>{if(m.m)lm=i});
- return `<div><div class="hd"><button data-a="close" aria-label="Voltar">${ic('back')}</button>${g?'<span class="av" style="width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;background:var(--sf)">👥</span>':av(k,34)}<span ${g?'':`data-a="prof" data-i="${esc(k)}"`}>${esc(cname(k))}${g?`<br><small class="mu">${esc((GM[k]||[]).join(', '))}</small>`:''}</span>${g?`<button data-a="soon" aria-label="Chamada em grupo: em breve">📞</button>`:`<button data-a="call" data-i="a|${esc(k)}" aria-label="Chamada de voz">📞</button><button data-a="call" data-i="v|${esc(k)}" aria-label="Chamada de vídeo">🎥</button>`}<button data-a="cmenu" data-i="${esc(k)}" aria-label="Opções">${ic('more')}</button></div><div id="msgs">${L.map((m,i)=>`<div class="bb ${m.m?'me':''}">${g&&!m.m?`<small class="mu" style="display:block">${esc(m.su||'')}</small>`:''}${msgBody(m)}${m.m&&i==lm?`<small style="display:block;opacity:.7;text-align:right">${m.rd?'✓✓ Visto':'✓ Enviado'}</small>`:''}</div>`).join('')||'<p class="empty">Diga olá 👋</p>'}</div><div class="cb"><button data-a="mph" aria-label="Enviar foto ou vídeo">📷</button><input id="mf2" type="file" accept="image/*,video/*" hidden><input id="mi" maxlength="500" placeholder="Mensagem..." aria-label="Mensagem"><button data-a="ms" data-i="${esc(k)}">Enviar</button></div></div>`};
+ return `<div><div class="hd"><button data-a="close" aria-label="Voltar">${ic('back')}</button>${g?'<span class="av" style="width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;background:var(--sf)">👥</span>':av(k,34)}<span ${g?'':`data-a="prof" data-i="${esc(k)}"`}>${esc(cname(k))}${g?`<br><small class="mu">${esc((GM[k]||[]).join(', '))}</small>`:''}</span>${g?`<button data-a="soon" aria-label="Chamadas funcionam só em conversas individuais">📞</button>`:`<button data-a="call" data-i="a|${esc(k)}" aria-label="Chamada de voz">📞</button><button data-a="call" data-i="v|${esc(k)}" aria-label="Chamada de vídeo">🎥</button>`}<button data-a="cmenu" data-i="${esc(k)}" aria-label="Opções">${ic('more')}</button></div><div id="msgs">${L.map((m,i)=>`<div class="bb ${m.m?'me':''}">${g&&!m.m?`<small class="mu" style="display:block">${esc(m.su||'')}</small>`:''}${msgBody(m)}${m.m&&i==lm?`<small style="display:block;opacity:.7;text-align:right">${m.rd?'✓✓ Visto':'✓ Enviado'}</small>`:''}</div>`).join('')||'<p class="empty">Diga olá 👋</p>'}</div><div class="cb"><button data-a="mph" aria-label="Enviar foto ou vídeo">📷</button><input id="mf2" type="file" accept="image/*,video/*" hidden><input id="mi" maxlength="500" placeholder="Mensagem..." aria-label="Mensagem"><button data-a="ms" data-i="${esc(k)}">Enviar</button></div></div>`};
 A.chat=async k=>{if(BL.has(k))return toast('Você bloqueou '+k);cur=k;
  if(!CID[k]&&!isG(k)){if(!ID[k])return toast('Não foi possível abrir a conversa');const{data,error}=await sb.rpc('start_dm',{other:ID[k]});if(error)return toast('Não foi possível abrir a conversa');CID[k]=data}
  S.chats[k]=S.chats[k]||[];shf=null;ovl(()=>chat2(k));scrollMsgs();markRead(k)};
@@ -981,18 +981,18 @@ const tg2=(k,on,l)=>tg(k,on,l).replace('data-a="tgl"','data-a="pref"');
 const setPage=()=>`<div><div class="hd"><button data-a="close" aria-label="Voltar">${ic('back')}</button><span>Configurações</span></div><div class="rl" style="scroll-snap-type:none;background:var(--bg);padding-bottom:40px">
 <div class="hd"><span>Conta</span></div><div style="padding:0 16px">${tg('priv',S.priv,'Conta privada')}</div>
 <button class="mr" data-a="edit"><span>Editar perfil</span><i>›</i></button><button class="mr" data-a="chmail"><span>E-mail da conta</span><i>${esc((ME&&ME.email)||'')}</i></button>
-<div class="hd"><span>Privacidade</span></div><button class="mr" data-a="blkl"><span>Contas bloqueadas</span><i>${BL.size}</i></button><button class="mr" data-a="cfm"><span>Amigos próximos</span><i>›</i></button><button class="mr" data-a="arq"><span>Arquivo de stories</span><i>›</i></button><button class="mr" data-a="soon"><span>Quem pode me enviar mensagens</span><i>em breve</i></button><button class="mr" data-a="soon"><span>Controle de comentários e menções</span><i>em breve</i></button>
-<div class="hd"><span>Notificações</span></div><div style="padding:0 16px">${[['follow','Novos seguidores'],['like','Curtidas e republicações'],['comment','Comentários'],['message','Novas mensagens']].map(([k,l])=>tg2(k,PREF[k]!==false,l)).join('')}</div><p class="mu" style="padding:0 16px">Avisos dentro do app. Notificações push no celular: em breve.</p>
+<div class="hd"><span>Privacidade</span></div><button class="mr" data-a="blkl"><span>Contas bloqueadas</span><i>${BL.size}</i></button><button class="mr" data-a="cfm"><span>Amigos próximos</span><i>›</i></button><button class="mr" data-a="arq"><span>Arquivo de stories</span><i>›</i></button>${x8PrivRows()}
+<div class="hd"><span>Notificações</span></div><div style="padding:0 16px">${[['follow','Novos seguidores'],['like','Curtidas e republicações'],['comment','Comentários'],['message','Novas mensagens']].map(([k,l])=>tg2(k,PREF[k]!==false,l)).join('')}</div><p class="mu" style="padding:0 16px">Avisos dentro do app. Notificações push no celular não estão disponíveis.</p>
 <div class="hd"><span>Segurança</span></div><button class="mr" data-a="chpw"><span>Alterar senha</span><i>›</i></button><button class="mr" data-a="outothers"><span>Sair de outros aparelhos</span><i>›</i></button>
 <div class="hd"><span>Acessibilidade</span></div><div style="padding:0 16px">${tg('dark',S.theme=='dark','Tema escuro')}${tg('calm',S.calm,'Animações reduzidas')}${tg('big',S.big,'Texto maior')}</div>
 <div class="hd"><span>Seus dados</span></div><button class="mr" data-a="expd"><span>Baixar meus dados</span><i>›</i></button><button class="mr" data-a="delacc" style="color:#ff5a6a"><span>Excluir minha conta</span><i>›</i></button>
-<div class="hd"><span>Mais</span></div><button class="mr" data-a="diag"><span>Diagnóstico do app</span><i>›</i></button><button class="mr" data-a="algo"><span>Seu algoritmo</span><i>›</i></button><button class="mr" data-a="out"><span>Sair da conta</span></button><p class="mu" style="text-align:center;margin-top:12px">VELOVERSA · versão ${VER}</p></div></div>`;
+<div class="hd"><span>Mais</span></div><button class="mr" data-a="diag"><span>Diagnóstico do app · v${VER}</span><i>›</i></button><button class="mr" data-a="algo"><span>Seu algoritmo</span><i>›</i></button><button class="mr" data-a="out"><span>Sair da conta</span></button><p class="mu" style="text-align:center;margin-top:12px">VELOVERSA · versão ${VER}</p></div></div>`;
 A.set=()=>{shf=null;ovl(setPage)};
 A.chpw=()=>sheet(()=>`<h3>Alterar senha</h3><input id="pw1" type="password" placeholder="Nova senha" autocomplete="new-password"><input id="pw2" type="password" placeholder="Repita a nova senha" autocomplete="new-password" style="margin-top:8px"><button class="bt" style="margin-top:12px" data-a="chpwgo">Salvar</button>`);
 A.chpwgo=async()=>{const a=$('#pw1').value,b=$('#pw2').value;if(a.length<8||pwScore(a)<3)return toast('Senha fraca: 8+ caracteres com maiúsculas, minúsculas e números');if(a!=b)return toast('As senhas não coincidem');
- const{error}=await sb.auth.updateUser({password:a});if(error)return toast('Não foi possível alterar: '+error.message);shf=null;draw();toast('Senha alterada')};
+ const{error}=await sb.auth.updateUser({password:a});if(error)return toast(x8err(error.message));shf=null;draw();toast('Senha alterada')};
 A.chmail=()=>sheet(()=>`<h3>E-mail da conta</h3><p class="mu">Atual: ${esc((ME&&ME.email)||'')}</p><input id="nem" type="email" placeholder="Novo e-mail"><button class="bt" style="margin-top:12px" data-a="chmailgo">Enviar confirmação</button>`);
-A.chmailgo=async()=>{const e=$('#nem').value.trim().toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e))return toast('Informe um e-mail válido');const{error}=await sb.auth.updateUser({email:e});if(error)return toast('Não foi possível alterar: '+error.message);shf=null;draw();toast('Enviamos um e-mail de confirmação para '+e)};
+A.chmailgo=async()=>{const e=$('#nem').value.trim().toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e))return toast('Informe um e-mail válido');const{error}=await sb.auth.updateUser({email:e});if(error)return toast(x8err(error.message));shf=null;draw();toast('Enviamos um e-mail de confirmação para '+e)};
 A.outothers=async()=>{if(!confirm('Sair da sua conta em todos os outros aparelhos?'))return;const{error}=await sb.auth.signOut({scope:'others'});toast(error?'Não foi possível agora':'Outros aparelhos desconectados')};
 A.expd=async()=>{toast('Preparando seus dados...');try{
  const g=async(t,sel,f)=>{let q=sb.from(t).select(sel);q=f(q);const{data,error}=await q;return error?{erro:'tabela indisponível'}:data};
@@ -1062,7 +1062,7 @@ function mkPC(){const pc=new RTCPeerConnection(ICE);CALL.pc=pc;
  return pc}
 // ---- ligar ----
 A.call=async i=>{const[kind,k]=i.split('|');if(CALL)return toast('Você já está em uma chamada');
- if(isG(k))return toast('Chamadas em grupo: em breve');const peer=ID[k];if(!peer)return toast('Não foi possível ligar agora');if(BL.has(k))return toast('Você bloqueou '+k);
+ if(isG(k))return toast('Chamadas funcionam apenas em conversas individuais');const peer=ID[k];if(!peer)return toast('Não foi possível ligar agora');if(BL.has(k))return toast('Você bloqueou '+k);
  if(!navigator.mediaDevices||!window.RTCPeerConnection)return toast('Este navegador não suporta chamadas');if(!window.isSecureContext)return toast('Chamadas exigem conexão segura (https)');
  CALL={role:'out',peer,key:k,video:kind=='v',ice:[],state:'calling'};callUI();
  try{CALL.stream=await getMedia(CALL.video)}catch(e){return endCall(mediaErr(e))}
@@ -1284,7 +1284,7 @@ const isEmo=x=>x&&x.length<=14&&/^(?:\p{Extended_Pictographic}|\uFE0F|\u200D|\s)
 const dayLabel=t=>{const d=new Date(t),n=new Date(),hm=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),sm=(a,b)=>a.toDateString()==b.toDateString();return sm(d,n)?'Hoje '+hm:sm(d,new Date(n-864e5))?'Ontem '+hm:d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})+' '+hm};
 const statusText=k=>{if(isG(k))return(GM[k]||[]).join(', ');if(TYP[k]&&Date.now()-TYP[k]<3500)return'digitando…';const id=ID[k];if(ONL.has(id))return'Online agora';return LS[id]?'Online há '+ago(LS[id]):''};
 const updSub=()=>{const e=$('#csub');if(e&&cur)e.textContent=statusText(cur);const d=$('.cv .odot i');if(d&&cur)d.style.display=ONL.has(ID[cur])?'':'none'};
-const prevOf=m=>m?(m.f?('Anexo: '+m.f.name):m.img&&!m.x?(/dm-voice-/.test(m.img)?'Mensagem de voz':'Mídia'):/^\[\[post:/.test(m.x||'')?'Publicação':(m.x||'').replace(/^↪ Resposta ao story: /,'')):'Mensagem indisponível';
+let prevOf=m=>m?(m.f?('Anexo: '+m.f.name):m.img&&!m.x?(/dm-voice-/.test(m.img)?'Mensagem de voz':'Mídia'):/^\[\[post:/.test(m.x||'')?'Publicação':(m.x||'').replace(/^↪ Resposta ao story: /,'')):'Mensagem indisponível';
 const wave=id=>{let h=0;for(const c of String(id))h=(h*31+c.charCodeAt(0))|0;return Array.from({length:22},(_,i)=>6+Math.abs((h>>(i%16))*(i+3))%18)};
 function mBody(k,m){const x=m.x||'';
  if(m.img&&/dm-voice-/.test(m.img))return `<div class="vm"><button class="vp" data-a="vplay" data-i="${m.id||''}" aria-label="Tocar áudio">${ic('play',1)}</button><div class="wv">${wave(m.id||m.t).map(h=>`<i style="height:${h}px"></i>`).join('')}</div><span class="vd">0:00</span><audio src="${esc(m.img)}" preload="none"></audio></div>`;
@@ -1292,21 +1292,21 @@ function mBody(k,m){const x=m.x||'';
  const pm=x.match(/^\[\[post:(\w+)\]\]$/);if(pm){const p=find('o'+pm[1]);return p?`<div class="pcard" data-a="open" data-i="${p.id}" style="cursor:pointer"><b>@${esc(p.u)}</b><div style="height:110px;border-radius:12px;overflow:hidden;margin:6px 0;${art(p.art||200)}">${p.img||p.cover?`<img src="${esc(p.img||p.cover)}" alt="" style="width:100%;height:100%;object-fit:cover">`:''}${p.vid?`<span style="position:absolute"></span>`:''}</div><small>${esc((p.cap||'').slice(0,60))}</small></div>`:`<span data-a="openo" data-i="${pm[1]}" style="text-decoration:underline">Publicação compartilhada</span>`}
  if(/^↪ Resposta ao story: /.test(x))return `<small style="display:block;opacity:.75;margin-bottom:2px">Respondeu ao story</small>${esc(x.replace(/^↪ Resposta ao story: /,''))}`;
  return esc(x)}
-function chatBody(k){const L=S.chats[k]||[],g=isG(k);let lm=-1,lr=-1;L.forEach((m,i)=>{if(m.m)lm=i;else lr=i});let h='',lastT=0;
+function chatBody(k){const L=(S.chats[k]||[]).filter(m=>!m.ex||m.ex>Date.now()),g=isG(k);let lm=-1,lr=-1;L.forEach((m,i)=>{if(m.m)lm=i;else lr=i});let h='',lastT=0;
  L.forEach((m,i)=>{const prev=L[i-1],next=L[i+1];if(m.t&&(!lastT||m.t-lastT>3*36e5)){h+=`<div class="tsep">${dayLabel(m.t)}</div>`}if(m.t)lastT=m.t;
   if(sys8(m)){h+=`<div class="sys">${ic('phone')}${esc(m.x.replace(/^📞\s*/,''))}</div>`;return}
   const first=!prev||prev.m!=m.m||sys8(prev)||(m.t&&prev.t&&m.t-prev.t>6e5),last=!next||next.m!=m.m||sys8(next)||(m.t&&next.t&&next.t-m.t>6e5);
   const big=!m.img&&isEmo(m.x),media=(!!m.img&&!/dm-voice-/.test(m.img))||!!(m.f&&m.f.kind!='file');
   let q='';if(m.rt){const o=L.find(y=>String(y.id)==String(m.rt));q=`<div class="qt">${m.m?(o&&o.m?'Você respondeu a você mesmo':'Você respondeu'):(o&&o.m?'respondeu a você':'respondeu')}</div><div class="qb"><i></i><div>${esc(prevOf(o))}</div></div>`}
   const rx={};(m.rx||[]).forEach(r=>{rx[r.e]=rx[r.e]||{n:0,me:0};rx[r.e].n++;if(r.u==ME.id)rx[r.e].me=1});
-  const chips=Object.entries(rx).map(([e,v])=>`<button class="${v.me?'mine':''}" data-a="mrx" data-i="${m.id}|${e}">${e}${v.n>1?' '+v.n:''}</button>`).join('');
+  const chips=/^\[\[poll:/.test(m.x||'')?'':Object.entries(rx).map(([e,v])=>`<button class="${v.me?'mine':''}" data-a="mrx" data-i="${m.id}|${e}">${e}${v.n>1?' '+v.n:''}</button>`).join('');
   h+=`<div class="mrow ${m.m?'me':'you'} ${first?'f':''} ${last?'l':''}" data-mid="${m.id||''}">${!m.m?`<span class="mav">${last?(g?av(m.su||'?',28):av(k,28)):''}</span>`:''}<div class="mcol">${q}${g&&!m.m&&first?`<small class="msu">${esc(m.su||'')}</small>`:''}<div class="mb ${media?'media':''} ${big?'big':''}">${mBody(k,m)}</div>${chips?`<div class="mrx">${chips}</div>`:''}${m.m&&i==lm?`<div class="mst">${m.rd?'Visto':'Enviado'}</div>`:''}</div></div>`;
   if(!m.m&&i==lr&&!(m.rx&&m.rx.length)&&!HINTED[k]&&L.length>1){h+=`<div class="hint">Toque duas vezes para curtir</div>`}});
  if(!L.length)h=`<div class="empty" style="color:#fff">Diga olá 👋</div>`;return h}
 const cbarHtml=k=>CS.rec?`<div class="crec"><span class="rdot"></span><b id="rtm">0:00</b><span>Gravando…</span><button class="ib" data-a="mrcx" aria-label="Cancelar gravação">${ic('trash')}</button><button class="ib ac" data-a="mrsend" aria-label="Enviar áudio">${ic('sendf',1)}</button></div>`
  :`<div class="cbar" id="cbar"><button class="ib ac" data-a="mcam" aria-label="Câmera">${ic('camera')}</button><input id="mi" maxlength="1000" placeholder="Mensagem..." aria-label="Mensagem" autocomplete="off"><span class="cidle"><button class="ib" data-a="mrec" aria-label="Gravar áudio">${ic('mic')}</button><button class="ib" data-a="matt" aria-label="Anexar arquivo">${ic('clip')}</button><button class="ib" data-a="mstk" aria-label="Figurinhas">${ic('smile')}</button><button class="ib" data-a="mplus" aria-label="Mais">${ic('plusc')}</button></span><button class="ib ac csend" data-a="ms" data-i="${esc(k)}" aria-label="Enviar">${ic('sendf',1)}</button></div>`;
 function chatView(k){const t=thOf(k),g=isG(k),on=ONL.has(ID[k]);
- return `<div class="cv" style="--cbg:${t.bg};--cme:${t.me};--cyou:${t.you};--cmt:${t.mt}"><div class="chd"><button class="ib" data-a="close" aria-label="Voltar">${ic('back')}</button><button class="cwho" data-a="cinfo" data-i="${esc(k)}"><span class="odot">${g?`<span class="av" style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;background:#ffffff22">${ic('users')}</span>`:av(k,40)}${g?'':`<i style="${on?'':'display:none'}"></i>`}</span><span><b>${esc(cname(k))}</b><small id="csub">${esc(statusText(k))}</small></span></button><span class="chx">${g?`<button class="ib" data-a="soon" aria-label="Chamada em grupo: em breve">${ic('phone')}</button>`:`<button class="ib" data-a="call" data-i="a|${esc(k)}" aria-label="Chamada de voz">${ic('phone')}</button><button class="ib" data-a="call" data-i="v|${esc(k)}" aria-label="Chamada de vídeo">${ic('video')}</button>`}</span></div>
+ return `<div class="cv" style="--cbg:${t.bg};--cme:${t.me};--cyou:${t.you};--cmt:${t.mt}"><div class="chd"><button class="ib" data-a="close" aria-label="Voltar">${ic('back')}</button><button class="cwho" data-a="cinfo" data-i="${esc(k)}"><span class="odot">${g?`<span class="av" style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;background:#ffffff22">${ic('users')}</span>`:av(k,40)}${g?'':`<i style="${on?'':'display:none'}"></i>`}</span><span><b>${esc(cname(k))}</b><small id="csub">${esc(statusText(k))}</small></span></button><span class="chx">${g?'':`<button class="ib" data-a="call" data-i="a|${esc(k)}" aria-label="Chamada de voz">${ic('phone')}</button><button class="ib" data-a="call" data-i="v|${esc(k)}" aria-label="Chamada de vídeo">${ic('video')}</button>`}</span></div>
  <div id="msgs">${chatBody(k)}</div><button class="ib ac" id="cdown" data-a="mdown" aria-label="Ir para o fim" hidden>${ic('down')}</button>
  <div class="cin">${CS.rep?`<div class="rpb"><div><small>Respondendo a ${esc(CS.rep.who)}</small><span>${esc(CS.rep.text)}</span></div><button class="ib" data-a="mrcancel" aria-label="Cancelar resposta" style="width:30px;height:30px">${ic('close')}</button></div>`:''}${cbarHtml(k)}<input id="mf2" type="file" accept="image/*,video/*" hidden></div></div>`}
 // preservar rolagem e texto digitado quando a tela é redesenhada
@@ -1318,17 +1318,17 @@ document.addEventListener('scroll',e=>{if(e.target.id=='msgs'){const m=e.target,
 A.mdown=()=>{const m=$('#msgs');m&&m.scrollTo({top:m.scrollHeight,behavior:'smooth'})};
 // ---- enviar ----
 async function sendMsg2(k,o){if(!CID[k]&&!isG(k)){if(!ID[k]){toast('Não foi possível enviar');return 0}const{data,error}=await sb.rpc('start_dm',{other:ID[k]});if(error){toast('Não foi possível enviar');return 0}CID[k]=data}
- const row={conversation_id:CID[k]};if(o.text)row.body=o.text;if(o.media)row.media_url=o.media;if(o.file)Object.assign(row,o.file);if(o.reply)row.reply_to=String(o.reply);
+ const row={conversation_id:CID[k]};if(o.text)row.body=o.text;{const tt=typeof ttlOf=='function'?ttlOf(k):0;if(tt&&o.text&&typeof X8!='undefined'&&X8.ttl)row.expires_at=new Date(Date.now()+tt*1000).toISOString()}if(o.media)row.media_url=o.media;if(o.file)Object.assign(row,o.file);if(o.reply)row.reply_to=String(o.reply);
  let r=await sb.from('messages').insert(row).select('id,created_at').single();
  if(r.error&&o.reply){delete row.reply_to;r=await sb.from('messages').insert(row).select('id,created_at').single();if(!r.error)toast('Respostas: falta rodar o SQL (etapa 3)')}
  if(r.error||!r.data){toast('Não foi possível enviar');return 0}
- (S.chats[k]=S.chats[k]||[]).push({id:r.data.id,m:1,x:o.text||'',img:o.media||null,f:o.file?fileOf(o.file):null,t:+new Date(r.data.created_at)||Date.now(),rd:0,rt:o.reply||null,rx:[]});return 1}
+ (S.chats[k]=S.chats[k]||[]).push({id:r.data.id,m:1,x:o.text||'',img:o.media||null,f:o.file?fileOf(o.file):null,t:+new Date(r.data.created_at)||Date.now(),rd:0,rt:o.reply||null,rx:[],ex:row.expires_at?+new Date(row.expires_at):0});return 1}
 sendMsg=async function(k,text){return sendMsg2(k,{text})};
 A.ms=async k=>{const i=$('#mi');if(!i)return;const v=i.value.trim();if(!v)return;i.value='';const cb=$('#cbar');cb&&cb.classList.remove('has');const rep=CS.rep&&CS.rep.id;CS.rep=null;
  if(await sendMsg2(k,{text:v,reply:rep})){HINTED[k]=1;R();scrollMsgs()}};
 A.mstk=()=>sheet(()=>`<h3>Figurinhas</h3><div class="emg">${['😀','😂','🥹','😍','😎','🤩','😭','😡','🥳','😴','🤔','🙄','👍','👏','🙏','💪','🔥','❤️','💜','💯','🎉','✨','👀','🫶','😅','🤣','😘','🤝','👋','🙌','😱','🥰'].map(e=>`<button data-a="mstksend" data-i="${e}">${e}</button>`).join('')}</div>`);
 A.mstksend=async e=>{shf=null;draw();if(await sendMsg2(cur,{text:e})){R();scrollMsgs()}};
-A.mplus=()=>sheet(()=>`<h3>Mais opções</h3><button class="mr" data-a="mph"><span>Fotos e vídeos</span></button><button class="mr" data-a="soon"><span>Enquete</span><i>em breve</i></button><button class="mr" data-a="soon"><span>Localização</span><i>em breve</i></button><button class="mr" data-a="soon"><span>Respostas rápidas</span><i>em breve</i></button><button class="mr" data-a="soon"><span>Mensagens que desaparecem</span><i>em breve</i></button>`);
+A.mplus=()=>sheet(()=>`<h3>Mais opções</h3><button class="mr" data-a="mph"><span>Fotos e vídeos</span></button><button class="mr" data-a="soon"><span>Enquete</span><i></i></button><button class="mr" data-a="soon"><span>Localização</span><i></i></button><button class="mr" data-a="soon"><span>Respostas rápidas</span><i></i></button><button class="mr" data-a="soon"><span>Mensagens que desaparecem</span><i></i></button>`);
 A.mcam=()=>{const f=$('#mf2');if(!f)return;f.setAttribute('capture','environment');f.value='';f.click()};
 A.mph=()=>{shf=null;draw();const f=$('#mf2');if(!f)return;f.removeAttribute('capture');f.value='';f.click()};
 document.addEventListener('change',async e=>{if(e.target.id!='mf2'||!cur)return;const f=e.target.files[0],k=cur;if(!f)return;const vid=f.type.startsWith('video/');
@@ -1376,7 +1376,7 @@ A.mrx=async i=>{const[id,e]=i.split('|');shf=null;draw();const m=msgOf(id);if(!m
  m.rx=m.rx.filter(r=>r.u!=ME.id);m.rx.push({u:ME.id,e});HINTED[cur]=1;R();
  const{error}=await sb.from('message_reactions').upsert({message_id:String(m.id),user_id:ME.id,emoji:e});if(error){m.rx=m.rx.filter(r=>r.u!=ME.id);R();toast('Reações: falta rodar o SQL (etapa 3)')}};
 // ---- tema, informações ----
-A.cinfo=k=>sheet(()=>`<h3>${esc(cname(k))}</h3>${isG(k)?`<p class="mu">${esc((GM[k]||[]).join(', '))}</p>`:`<button class="mr" data-a="prof" data-i="${esc(k)}"><span>Ver perfil</span><i>›</i></button>`}<button class="mr" data-a="ctheme" data-i="${esc(k)}">${ic('palette')}<span>Tema da conversa</span><i>›</i></button><button class="mr" data-a="soon">${ic('bell')}<span>Silenciar</span><i>em breve</i></button><button class="mr" data-a="soon">${ic('sparkle')}<span>Modo que desaparece</span><i>em breve</i></button><button class="mr" data-a="soon">${ic('search')}<span>Pesquisar na conversa</span><i>em breve</i></button>${isG(k)?`<button class="mr" data-a="gleave" data-i="${esc(k)}"><span>Sair do grupo</span></button>`:`<button class="mr" data-a="blk" data-i="${esc(k)}"><span>Bloquear ${esc(k)}</span></button>`}<button class="mr" data-a="cmrpt" data-i="${esc(k)}"><span>Denunciar conversa</span></button><button class="mr" data-a="chide" data-i="${esc(k)}"><span>Ocultar conversa neste aparelho</span></button>`);
+A.cinfo=k=>sheet(()=>`<h3>${esc(cname(k))}</h3>${isG(k)?`<p class="mu">${esc((GM[k]||[]).join(', '))}</p>`:`<button class="mr" data-a="prof" data-i="${esc(k)}"><span>Ver perfil</span><i>›</i></button>`}<button class="mr" data-a="ctheme" data-i="${esc(k)}">${ic('palette')}<span>Tema da conversa</span><i>›</i></button><button class="mr" data-a="cmute" data-i="${esc(k)}">${ic('bell')}<span>${isMuted(k)?'Reativar som':'Silenciar'}</span><i>${isMuted(k)?'silenciada':''}</i></button><button class="mr" data-a="mttl" data-i="${esc(k)}">${ic('sparkle')}<span>Modo que desaparece</span><i>${ttlLabel(k)}</i></button><button class="mr" data-a="csearch" data-i="${esc(k)}">${ic('search')}<span>Pesquisar na conversa</span><i>›</i></button>${isG(k)?`<button class="mr" data-a="gleave" data-i="${esc(k)}"><span>Sair do grupo</span></button>`:`<button class="mr" data-a="blk" data-i="${esc(k)}"><span>Bloquear ${esc(k)}</span></button>`}<button class="mr" data-a="cmrpt" data-i="${esc(k)}"><span>Denunciar conversa</span></button><button class="mr" data-a="chide" data-i="${esc(k)}"><span>Ocultar conversa neste aparelho</span></button>`);
 A.cmenu=A.cinfo;
 A.ctheme=k=>sheet(()=>`<h3>Tema da conversa</h3><p class="mu">Vale só neste aparelho.</p><div class="thg">${THEMES.map(t=>`<button data-a="cthemego" data-i="${t.id}|${esc(k)}" class="${thOf(k).id==t.id?'on':''}" style="background:${t.bg}">${t.n}</button>`).join('')}</div>`);
 A.cthemego=i=>{const[id,k]=i.split('|');try{localStorage.setItem('vvth:'+k,id)}catch(e){}shf=null;draw();R()};
@@ -1392,13 +1392,13 @@ async function loadChatExtras(k){const L=S.chats[k]||[],ids=L.filter(m=>m.id).sl
 loadChats=async function(){if(!ME||!sb)return;
  const{data:cm}=await sb.from('conversation_members').select('conversation_id,user_id,profiles(username)').neq('user_id',ME.id);
  const cv=await sb.from('conversations').select('id,title,is_group'),conv={};if(!cv.error)(cv.data||[]).forEach(c=>conv[c.id]=c);
- let r=null;for(const cols of['id,conversation_id,sender,body,media_url,created_at,read_at,reply_to,msg_type,file_name,file_mime,file_path,file_size,status','id,conversation_id,sender,body,media_url,created_at,read_at,reply_to','id,conversation_id,sender,body,media_url,created_at,read_at','id,conversation_id,sender,body,media_url,created_at']){r=await sb.from('messages').select(cols).order('created_at',{ascending:false}).limit(400);if(!r.error)break}
+ let r=null;for(const cols of['id,conversation_id,sender,body,media_url,created_at,read_at,reply_to,msg_type,file_name,file_mime,file_path,file_size,status'+(typeof X8!='undefined'&&X8.ttl?',expires_at':''),'id,conversation_id,sender,body,media_url,created_at,read_at,reply_to','id,conversation_id,sender,body,media_url,created_at,read_at','id,conversation_id,sender,body,media_url,created_at']){r=await sb.from('messages').select(cols).order('created_at',{ascending:false}).limit(400);if(!r.error)break}
  const ms=r.data||[],mem={};(cm||[]).filter(x=>x.profiles).forEach(x=>{(mem[x.conversation_id]=mem[x.conversation_id]||[]).push(x)});
  S.chats={};CID={};const by={};UN={};UN[ME.id]=S.me.u;
  Object.keys(mem).forEach(cid=>{const L=mem[cid];L.forEach(x=>{UN[x.user_id]=x.profiles.username;ID[x.profiles.username]=x.user_id});
   const grp=L.length>1||(conv[cid]&&conv[cid].is_group),key=grp?'g:'+cid:L[0].profiles.username;CID[key]=cid;by[cid]=key;S.chats[key]=[];
   if(grp){GM[key]=L.map(x=>x.profiles.username);GT[key]=(conv[cid]&&conv[cid].title)||GM[key].join(', ')}});
- UC={};const byId={};ms.reverse().forEach(x=>{const k=by[x.conversation_id];if(!k)return;const it={id:x.id,m:x.sender==ME.id?1:0,x:x.body||'',img:x.media_url,t:+new Date(x.created_at),rd:x.read_at?1:0,su:UN[x.sender]||'',rt:x.reply_to||null,rx:[],f:fileOf(x)};S.chats[k].push(it);byId[String(x.id)]=it;
+ UC={};const byId={};ms.reverse().forEach(x=>{const k=by[x.conversation_id];if(!k)return;const it={id:x.id,m:x.sender==ME.id?1:0,x:x.body||'',img:x.media_url,t:+new Date(x.created_at),rd:x.read_at?1:0,su:UN[x.sender]||'',rt:x.reply_to||null,rx:[],f:fileOf(x),ex:x.expires_at?+new Date(x.expires_at):0};S.chats[k].push(it);byId[String(x.id)]=it;
   if(x.sender!=ME.id&&x.read_at===null)UC[k]=(UC[k]||0)+1});
  const rids=Object.keys(byId).slice(-150);if(rids.length){const rr=await sb.from('message_reactions').select('message_id,user_id,emoji').in('message_id',rids);if(!rr.error)(rr.data||[]).forEach(x=>{const m=byId[String(x.message_id)];if(m)m.rx.push({u:x.user_id,e:x.emoji})})}
  const oth=Object.values(mem).flat().map(x=>x.user_id);if(oth.length){const ls=await sb.from('profiles').select('id,last_seen').in('id',[...new Set(oth)]);if(!ls.error)(ls.data||[]).forEach(p=>{if(p.last_seen)LS[p.id]=+new Date(p.last_seen)})}
@@ -1460,13 +1460,16 @@ loadStories=async function(){if(!ME||!sb)return;const desde=new Date(Date.now()-
 const pollHtml=(it,sid,own)=>{const v=SVT[sid]||{a:0,b:0,mine:null},tot=v.a+v.b,vo=v.mine!==null||own,pa=tot?Math.round(v.a*100/tot):0,pb=tot?100-pa:0;
  return `<div class="spoll" data-sid="${sid}"><b>${esc(it.q||'Enquete')}</b><div>${[[it.a||'Sim',0,pa],[it.b||'Não',1,pb]].map(([l,c,p])=>`<button data-a="spv" data-i="${sid}|${c}" class="${v.mine===c?'on':''}" style="${vo?`background:linear-gradient(90deg,#c9bcff ${p}%,#eef ${p}%)`:''}"><span style="background:none;padding:0">${esc(l)}</span>${vo?`<em>${p}%</em>`:''}</button>`).join('')}</div></div>`};
 function ovLayer(s,own){const m=s&&s.meta;if(!m)return'';const sid=s.id;
- return `<div class="sov">${(m.paths||[]).length?`<svg class="sdraw" viewBox="0 0 100 100" preserveAspectRatio="none">${m.paths.map(p=>`<polyline points="${p.pts.map(q=>q.join(',')).join(' ')}" fill="none" stroke="${esc(p.c)}" stroke-width="${+p.w||6}" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`).join('')}</svg>`:''}${(m.items||[]).map((it,i)=>{const pos=`left:${+it.x||50}%;top:${+it.y||50}%;transform:translate(-50%,-50%) scale(${+it.s||1})`;let b='';
+ return `<div class="sov">${fxLayers(m.items)}${(m.paths||[]).length?`<svg class="sdraw" viewBox="0 0 100 100" preserveAspectRatio="none">${m.paths.map(p=>`<polyline points="${p.pts.map(q=>q.join(',')).join(' ')}" fill="none" stroke="${esc(p.c)}" stroke-width="${+p.w||6}" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`).join('')}</svg>`:''}${(m.items||[]).map((it,i)=>{const pos=`left:${+it.x||50}%;top:${+it.y||50}%;transform:translate(-50%,-50%) scale(${+it.s||1})`;let b='';
   if(it.t=='text')b=`<div class="stxt" style="color:${esc(it.c)};${it.bg?`background:${it.c=='#ffffff'?'#00000099':'#ffffffd9'};`:''}">${esc(it.v).replace(/\n/g,'<br>')}</div>`;
   else if(it.t=='emoji')b=`<div style="font-size:72px;line-height:1">${esc(it.v)}</div>`;
   else if(it.t=='poll')b=typeof sid=='number'?pollHtml(it,sid,own):`<div class="spoll"><b>${esc(it.q||'Enquete')}</b><div><span>${esc(it.a||'Sim')}</span><span>${esc(it.b||'Não')}</span></div></div>`;
   else if(it.t=='ask')b=`<div class="sask" ${own?'':`data-a="sask" data-i="${i}"`}><small>Pergunta</small><b>${esc(it.q)}</b><div>${own?'Respostas chegam nas suas mensagens':'Toque para responder…'}</div></div>`;
   else if(it.t=='loc')b=`<div class="spill">${ic('pin')}${esc(it.v)}</div>`;
   else if(it.t=='men')b=`<div class="spill" data-a="prof" data-i="${esc(it.v)}" style="cursor:pointer">@${esc(it.v)}</div>`;
+  else if(it.t=='link'&&safeUrl(it.u))b=`<a class="slink" href="${esc(safeUrl(it.u))}" target="_blank" rel="noopener noreferrer">${ic('link')}<span>${esc(it.l||safeUrl(it.u).replace(/^https?:\/\//,'').replace(/\/$/,''))}</span></a>`;
+  else if(it.t=='music')b=`<div class="smus">${ic('music')}<div><b>${esc(it.v)}</b>${it.a?`<small>${esc(it.a)}</small>`:''}</div></div>`;
+  else if(it.t=='fx')return '';
   return `<div class="it" style="${pos}">${b}</div>`}).join('')}</div>`}
 async function loadVotes(sid){const{data,error}=await sb.from('story_votes').select('choice,voter_id').eq('story_id',sid);if(error)return;const v={a:0,b:0,mine:null};(data||[]).forEach(r=>{r.choice==0?v.a++:v.b++;if(r.voter_id==ME.id)v.mine=+r.choice});SVT[sid]=v;pollRefresh(sid)}
 function pollRefresh(sid){const o=$('#sv'),s=o._s&&(ST[o._s[0]]||[])[o._s[1]];if(!s||s.id!=sid)return;document.querySelectorAll('#sv .spoll[data-sid="'+sid+'"]').forEach(e=>{const it=(s.meta.items||[]).find(x=>x.t=='poll');if(it)e.outerHTML=pollHtml(it,sid,o._s[0]==S.me.u)})}
@@ -1489,9 +1492,12 @@ const seItem=(it,i)=>{const st=`left:${it.x}%;top:${it.y}%;transform:translate(-
  else if(it.t=='ask')b=`<div class="sask"><small>Pergunta</small><b>${esc(it.q)}</b><div>Responder…</div></div>`;
  else if(it.t=='loc')b=`<div class="spill">${ic('pin')}${esc(it.v)}</div>`;
  else if(it.t=='men')b=`<div class="spill">@${esc(it.v)}</div>`;
+ else if(it.t=='link')b=`<div class="slink">${ic('link')}<span>${esc(it.l||String(it.u||'').replace(/^https?:\/\//,'').replace(/\/$/,''))}</span></div>`;
+ else if(it.t=='music')b=`<div class="smus">${ic('music')}<div><b>${esc(it.v)}</b>${it.a?`<small>${esc(it.a)}</small>`:''}</div></div>`;
+ else if(it.t=='fx')b=`<div class="spill">${ic('sparkle')}Efeito: ${esc((FXS[it.v]||['','?'])[1])}</div>`;
  return `<div class="sei ${SE.sel===i?'sel':''}" data-k="${i}" style="${st}">${b}</div>`};
 const seUI=()=>{const f=FLT[SE.filter]?`filter:${FLT[SE.filter]}`:'';
- return `<div class="sestage" id="sestage" style="${SE.kind=='text'?`background:${tbg(SE.bgi)}`:''}">${SE.kind=='img'?`<img src="${SE.src}" alt="" style="${f}">`:SE.kind=='vid'?`<video src="${SE.src}" autoplay loop muted playsinline style="${f}"></video>`:''}<svg id="sedraw" viewBox="0 0 100 100" preserveAspectRatio="none">${SE.paths.map(p=>`<polyline points="${p.pts.map(q=>q.join(',')).join(' ')}" fill="none" stroke="${p.c}" stroke-width="${p.w}" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`).join('')}</svg><div id="seitems">${SE.items.map(seItem).join('')}</div></div>
+ return `<div class="sestage" id="sestage" style="${SE.kind=='text'?`background:${tbg(SE.bgi)}`:''}">${SE.kind=='img'?`<img src="${SE.src}" alt="" style="${f}">`:SE.kind=='vid'?`<video src="${SE.src}" autoplay loop muted playsinline style="${f}"></video>`:''}<svg id="sedraw" viewBox="0 0 100 100" preserveAspectRatio="none">${SE.paths.map(p=>`<polyline points="${p.pts.map(q=>q.join(',')).join(' ')}" fill="none" stroke="${p.c}" stroke-width="${p.w}" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`).join('')}</svg>${fxLayers(SE.items)}<div id="seitems">${SE.items.map(seItem).join('')}</div></div>
  <div class="setop"><button class="ib gls" data-a="seclose" aria-label="Fechar">${ic('close')}</button><span style="flex:1"></span>${SE.tool=='draw'?'':`<button class="ib gls" data-a="seadd" data-i="text" aria-label="Texto">${ic('text')}</button><button class="ib gls" data-a="seadd" data-i="emoji" aria-label="Figurinha">${ic('smile')}</button><button class="ib gls" data-a="seadd" data-i="menu" aria-label="Adesivos">${ic('sparkle')}</button><button class="ib gls" data-a="sedrawon" aria-label="Desenhar">${ic('draw')}</button>${SE.kind!='text'?`<button class="ib gls" data-a="sefilt" aria-label="Filtros">${ic('filter')}</button>`:''}`}</div>
  ${SE.tool=='draw'?`<div class="sedr"><button class="ib gls" data-a="seundo" aria-label="Desfazer">${ic('undo')}</button>${['#ffffff','#ff3b6b','#ffd23f','#2fd36b','#4f8dff','#000000'].map(c=>`<button class="swc ${SE.color==c?'on':''}" data-a="secol" data-i="${c}" style="background:${c}" aria-label="Cor"></button>`).join('')}<input type="range" min="2" max="14" value="${SE.w}" id="sew" aria-label="Espessura"><button class="ib gls" data-a="sedrawoff" aria-label="Concluir">${ic('check')}</button></div>`:''}
  ${SE.sel!=null&&SE.items[SE.sel]&&!SE.tool?`<div class="sesel"><button class="ib gls" data-a="sesz" data-i="-1" aria-label="Diminuir">A−</button><button class="ib gls" data-a="sesz" data-i="1" aria-label="Aumentar">A+</button>${SE.items[SE.sel].t=='text'?`<button class="ib gls" data-a="secolor" aria-label="Cor do texto">${ic('palette')}</button><button class="ib gls" data-a="seedit" aria-label="Editar texto">${ic('edit')}</button>`:''}<button class="ib gls" data-a="sedel" aria-label="Remover">${ic('trash')}</button></div>`:''}
@@ -1521,7 +1527,10 @@ const seForm=kind=>({
  loc:()=>`<h3>Localização</h3><input id="sev" maxlength="40" placeholder="Nome do lugar"><button class="bt" style="margin-top:12px" data-a="sesave" data-i="loc">Adicionar</button>`,
  men:()=>`<h3>Mencionar</h3><input id="sev" maxlength="20" placeholder="nome de usuário" autocapitalize="none"><button class="bt" style="margin-top:12px" data-a="sesave" data-i="men">Adicionar</button>`,
  emoji:()=>`<h3>Figurinhas</h3><div class="emg">${['😀','😂','🥹','😍','😎','🤩','😭','😡','🥳','😴','🤔','🙄','👍','👏','🙏','💪','🔥','❤️','💜','💯','🎉','✨','👀','🫶','🌹','⭐','🎶','☀️','🌈','🍕','⚽','🏆'].map(e=>`<button data-a="sesave" data-i="emoji|${e}">${e}</button>`).join('')}</div>`,
- menu:()=>`<h3>Adesivos</h3><button class="mr" data-a="seadd" data-i="poll">${ic('poll')}<span>Enquete</span></button><button class="mr" data-a="seadd" data-i="ask">${ic('qmark')}<span>Pergunta</span></button><button class="mr" data-a="seadd" data-i="loc">${ic('pin')}<span>Localização</span></button><button class="mr" data-a="seadd" data-i="men">${ic('at')}<span>Mencionar</span></button><button class="mr" data-a="soon">${ic('music')}<span>Música</span><i>em breve</i></button><button class="mr" data-a="soon">${ic('link')}<span>Link</span><i>em breve</i></button><button class="mr" data-a="soon">${ic('sparkle')}<span>Efeitos</span><i>em breve</i></button><button class="mr" data-a="soon">${ic('users')}<span>Sua vez</span><i>em breve</i></button>`}[kind]);
+ link:()=>`<h3>Link</h3><input id="sev" maxlength="200" placeholder="https://..." inputmode="url" autocapitalize="none"><input id="sev2" maxlength="30" placeholder="Texto do botão (opcional)" style="margin-top:8px"><button class="bt" style="margin-top:12px" data-a="sesave" data-i="link">Adicionar</button>`,
+ music:()=>`<h3>Música</h3><input id="sev" maxlength="50" placeholder="Nome da música"><input id="sev2" maxlength="40" placeholder="Artista" style="margin-top:8px"><p class="mu">Mostra o título e o artista no story (sem tocar áudio).</p><button class="bt" style="margin-top:8px" data-a="sesave" data-i="music">Adicionar</button>`,
+ fx:()=>`<h3>Efeitos</h3><p class="mu">Animação por cima do story.</p><div class="emg">${Object.entries(FXS).map(([k,v])=>`<button data-a="sesave" data-i="fx|${k}">${v[0]} ${v[1]}</button>`).join('')}</div>`,
+ menu:()=>`<h3>Adesivos</h3><button class="mr" data-a="seadd" data-i="poll">${ic('poll')}<span>Enquete</span></button><button class="mr" data-a="seadd" data-i="ask">${ic('qmark')}<span>Pergunta</span></button><button class="mr" data-a="seadd" data-i="loc">${ic('pin')}<span>Localização</span></button><button class="mr" data-a="seadd" data-i="men">${ic('at')}<span>Mencionar</span></button><button class="mr" data-a="seadd" data-i="music">${ic('music')}<span>Música</span></button><button class="mr" data-a="seadd" data-i="link">${ic('link')}<span>Link</span></button><button class="mr" data-a="seadd" data-i="fx">${ic('sparkle')}<span>Efeitos</span></button>`}[kind]);
 A.seadd=k=>{const f=seForm(k);if(f)sheet(f)};
 A.stcol=c=>{window.__stc=c;const v=$('#sev'),t=v?v.value:'';sheet(seForm('text'));const n=$('#sev');if(n)n.value=t};
 A.seedit=()=>{const it=SE.items[SE.sel];if(!it)return;window.__stc=it.c;sheet(()=>seForm('text')().replace('data-i="text">Adicionar','data-i="textedit">Salvar'));setTimeout(()=>{const v=$('#sev');if(v)v.value=it.v},0)};
@@ -1532,6 +1541,9 @@ A.sesave=i=>{const[k,ex]=i.split('|');const add=o=>{SE.items.push(Object.assign(
  else if(k=='ask'){const q=($('#sepq').value||'').trim();if(!q)return toast('Escreva a pergunta');add({t:'ask',q})}
  else if(k=='loc'){const v=($('#sev').value||'').trim();if(!v)return toast('Informe o lugar');add({t:'loc',v})}
  else if(k=='men'){const v=($('#sev').value||'').trim().replace(/^@/,'').toLowerCase();if(!/^[a-z0-9._]{2,20}$/.test(v))return toast('Nome de usuário inválido');add({t:'men',v})}
+ else if(k=='link'){const u=safeUrl($('#sev').value);if(!u)return toast('Informe um link válido (ex.: seusite.com)');add({t:'link',u,l:($('#sev2').value||'').trim().slice(0,30)})}
+ else if(k=='music'){const v=($('#sev').value||'').trim();if(!v)return toast('Informe o nome da música');add({t:'music',v,a:($('#sev2').value||'').trim()})}
+ else if(k=='fx'){if(!FXS[ex])return;SE.items=SE.items.filter(i=>i.t!='fx');add({t:'fx',v:ex,x:50,y:10})}
  shf=null;draw();SE.tool=null;seDraw()};
 // arrastar adesivos
 document.addEventListener('pointerdown',e=>{if(!SE)return;if(SE.tool=='draw'&&e.target.closest('#sedraw')){const r=$('#sedraw').getBoundingClientRect(),x=+((e.clientX-r.left)/r.width*100).toFixed(1),y=+((e.clientY-r.top)/r.height*100).toFixed(1);const p={c:SE.color,w:SE.w,pts:[[x,y]]};SE.paths.push(p);$('#sedraw').insertAdjacentHTML('beforeend',`<polyline points="${x},${y}" fill="none" stroke="${p.c}" stroke-width="${p.w}" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`);DR={p,el:$('#sedraw').lastElementChild,r};return}
@@ -1725,7 +1737,7 @@ storyRow=()=>{const me=S.me.u,mine=ST[me]||[],outros=Object.keys(ST).filter(u=>u
   :`<button class="st" data-a="pick" data-i="story"><span class="rg n">${av(me,58)}<span class="stplus">${ic('plus')}</span></span><span class="stl">Seu story</span></button>`;
  return mineB+outros.map(u=>`<button class="st" data-a="story" data-i="${esc(u)}"><span class="rg ${seen[u]?'s':''}">${av(u,58)}</span><span class="stl">${esc(u).slice(0,10)}</span></button>`).join('')};
 V.home=function(){const L=S.posts.filter(p=>!p.vid&&vis(p)&&(p.u==S.me.u||!(p.cap.match(/#\w+/g)||[]).some(h=>S.top[h]<0))).sort((a,b)=>sc(b)-sc(a));
- return `<div class="row stbar">${storyRow()}</div>${storyHint()}<div class="cmpb" data-a="create" role="button" aria-label="Criar publicação">${av(S.me.u,40)}<span>No que você está pensando?</span><i>${ic('image')}</i></div>`
+ return `<div class="row stbar">${storyRow()}</div>${typeof notesRow=='function'&&notesRow()?`<div class="row stbar xnotes">${notesRow()}</div>`:''}${storyHint()}<div class="cmpb" data-a="create" role="button" aria-label="Criar publicação">${av(S.me.u,40)}<span>No que você está pensando?</span><i>${ic('image')}</i></div>`
   +(L.length?L.map(p=>card(p)).join(''):`<div class="empty">Ainda não há publicações.<br>Siga pessoas em Explorar ou publique a primeira.<br><button class="lk" data-a="tab" data-i="exp" style="margin-top:12px">Encontrar pessoas</button></div>`)+moreHtml()};
 // ---- cabeçalho do início e rótulos da barra inferior ----
 const NAVL={home:'Início',exp:'Explorar',create:'',msg:'Caixa',me:'Perfil'};
@@ -1777,11 +1789,11 @@ chatList=()=>{const ks=chatKeys().filter(k=>!isReq(k)).filter(k=>!MQ||cname(k).t
   const av2=isG(k)?`<span class="av" style="width:54px;height:54px;display:inline-flex;align-items:center;justify-content:center;background:var(--sf)">${ic('users')}</span>`:(hasStory(k)?`<span class="rg">${av(k,50)}</span>`:av(k,54));
   return `<div class="li cl" data-a="chat" data-i="${esc(k)}" role="button"><span style="position:relative;display:inline-flex">${av2}${on?'<i style="position:absolute;right:1px;bottom:1px;width:12px;height:12px;border-radius:50%;background:#2fd36b;border:2px solid var(--bg)"></i>':''}</span><div class="cm"><b style="${n?'':'font-weight:600'}">${esc(cname(k))}</b><p class="mu" style="${n?'color:var(--tx)':''}">${pv}</p></div><div class="ct"><span>${l&&l.t?ago(l.t):''}</span>${n?'<i class="udot"></i>':''}</div></div>`}).join(''):`<div class="empty">${MQ?'Nenhuma conversa encontrada.':'Nenhuma conversa ainda.<br>Toque no lápis para começar uma.'}</div>`};
 V.msg=function(){const rq=chatKeys().filter(isReq).length;
- return `<div class="xh"><h1>Mensagens</h1><button class="ib" data-a="newc" aria-label="Nova mensagem">${ic('edit')}</button></div><div class="sbar">${ic('search')}<input id="mq" type="search" placeholder="Pesquisar conversas" value="${esc(MQ)}" autocomplete="off" aria-label="Pesquisar conversas"></div><div class="row stbar">${storyRow()}</div>${rq?`<div style="padding:0 16px 4px;text-align:right"><button class="lk" data-a="reqs">Pedidos (${rq})</button></div>`:''}<div id="cl">${chatList()}</div>`};
+ return `<div class="xh"><h1>Mensagens</h1><button class="ib" data-a="newc" aria-label="Nova mensagem">${ic('edit')}</button></div><div class="sbar">${ic('search')}<input id="mq" type="search" placeholder="Pesquisar conversas" value="${esc(MQ)}" autocomplete="off" aria-label="Pesquisar conversas"></div><div class="row stbar">${storyRow()}</div>${typeof notesRow=='function'&&notesRow()?`<div class="row stbar xnotes">${notesRow()}</div>`:''}${rq?`<div style="padding:0 16px 4px;text-align:right"><button class="lk" data-a="reqs">Pedidos (${rq})</button></div>`:''}<div id="cl">${chatList()}</div>`};
 // ---------- Perfil ----------
 V.me=function(){const mine=S.posts.filter(p=>p.u==S.me.u).sort((a,b)=>(b.t||0)-(a.t||0)),sub=S.sub||'g',nf=(window.MYG!=null?window.MYG:Object.values(S.fol).filter(Boolean).length);
- const L=sub=='g'?mine:sub=='r'?mine.filter(p=>p.type=='reel'||p.vid):sub=='rp'?S.posts.filter(p=>RPM.has(p.id)):sub=='t'?((window.TGD||{})[S.me.u]||[]):S.posts.filter(p=>p.saved);
- const empty=sub=='t'?'Marcações de outras pessoas: em breve.':sub=='rp'?'Você ainda não republicou nada.':sub=='s'?'Nada salvo ainda. Toque no marcador de uma publicação.':sub=='r'?'Seus vídeos aparecem aqui.':'Nada por aqui ainda.<br>Toque em + para publicar.';
+ const L=sub=='g'?pinSort(mine):sub=='r'?mine.filter(p=>p.type=='reel'||p.vid):sub=='rp'?S.posts.filter(p=>RPM.has(p.id)):sub=='t'?((window.TGD||{})[S.me.u]||[]):S.posts.filter(p=>p.saved);
+ const empty=sub=='t'?'Quando alguém marcar você, aparece aqui.':sub=='rp'?'Você ainda não republicou nada.':sub=='s'?'Nada salvo ainda. Toque no marcador de uma publicação.':sub=='r'?'Seus vídeos aparecem aqui.':'Nada por aqui ainda.<br>Toque em + para publicar.';
  return `<div class="ptop"><b class="pun">${esc(S.me.u)}${S.priv?ic('lock'):''}</b><span><button class="ib" data-a="create" aria-label="Criar">${ic('plus')}</button><button class="ib" data-a="set" aria-label="Configurações">${ic('menu')}</button></span></div>
  <div class="pid"><button data-a="avatar" aria-label="Alterar foto de perfil"><span class="rg big">${av(S.me.u,96)}</span></button><h2>${esc(S.me.n||S.me.u)}</h2><p class="mu">@${esc(S.me.u)}</p>${S.me.b?`<p class="bio">${tags(S.me.b)}</p>`:'<p class="mu">Adicione uma bio em Editar perfil.</p>'}${S.links&&S.links.length?`<p>${S.links.map(l=>`<a href="${esc(l)}" target="_blank" rel="noopener noreferrer" style="color:#8f9cff">${esc(l.replace(/^https?:\/\//,'')).slice(0,34)}</a>`).join(' · ')}</p>`:''}</div>
  <div class="pbtns"><button class="bt g" data-a="edit">Editar perfil</button><button class="ib" data-a="shp" aria-label="Compartilhar perfil">${ic('users')}</button></div>
@@ -1808,7 +1820,7 @@ const cpRow=(a,icn,l,val,di)=>`<button class="cprow" data-a="${a}" ${di?`data-i=
 const cpPage=()=>{if(!CP)return'';const c=CP,has=c.files.length||c.cap.trim();
  return `<div class="cp"><div class="cph"><button class="ib" data-a="cpx" aria-label="Fechar">${ic('close')}</button><b>Criar publicação</b><button class="pubb" data-a="cppub" ${has&&!c.busy?'':'disabled'}>Publicar</button></div>
  <div class="rl" style="scroll-snap-type:none;background:transparent"><div class="cpbox"><textarea id="cpcap" maxlength="1000" placeholder="O que você está pensando?" aria-label="Legenda">${esc(c.cap)}</textarea><div class="cpth">${c.files.map((f,i)=>`<div class="cpt"><img src="${f.type.startsWith('video/')?(c.covers[i]||''):c.urls[i]}" alt="">${f.type.startsWith('video/')?`<span class="pl">${ic('play',1)}</span>`:''}<button class="x" data-a="cprm" data-i="${i}" aria-label="Remover">${ic('close')}</button></div>`).join('')}<button class="cpadd" data-a="cpadd" aria-label="Adicionar foto ou vídeo">${ic('plus')}</button></div></div>
- ${cpRow('cpadd','image','Foto / Vídeo',c.files.length?c.files.length+' selecionado(s)':'')}${cpRow('cpreel','reel','Reels',c.reel?'Ativado':'')}${cpRow('cploc','pin','Localização',c.loc)}${cpRow('cptag','at','Marcar pessoas',c.tags.map(t=>'@'+t).join(' '))}${cpRow('soon','music','Adicionar música','em breve')}
+ ${cpRow('cpadd','image','Foto / Vídeo',c.files.length?c.files.length+' selecionado(s)':'')}${cpRow('cpreel','reel','Reels',c.reel?'Ativado':'')}${cpRow('cploc','pin','Localização',c.loc)}${cpRow('cptag','at','Marcar pessoas',c.tags.map(t=>'@'+t).join(' '))}${x8CpMusicRow(c)}
  <div class="cph2">Configurações</div>${cpRow('cpvis','users','Quem pode ver',c.vis=='all'?'Público':'Só seguidores')}<div class="cprow">${ic('cm')}<span>Permitir comentários</span><label class="sw2"><input type="checkbox" id="cpcm" ${c.coff?'':'checked'} aria-label="Permitir comentários"><i></i></label></div></div>
  ${c.busy?`<div class="cpbusy"><div class="cpbx"><b>Publicando…</b><div class="cpbar"><i style="width:${c.prog}%"></i></div><p class="mu" id="cpmsg">${c.prog}% · ${esc(c.msg)}</p><button class="bt g" data-a="cpcancel">Cancelar</button></div></div>`:''}</div>`};
 A.create=()=>{CP={files:[],urls:[],covers:[],cap:'',loc:'',tags:[],vis:'all',coff:false,reel:false,busy:0,prog:0,msg:'',cancel:0};shf=null;ovl(cpPage)};
@@ -1861,7 +1873,7 @@ A.cppub=async()=>{const c=CP;if(!c||c.busy)return;const cap0=c.cap.trim();if(!c.
    await uploadX(path,it.blob,it.type,p=>{c.prog=Math.min(96,Math.round((done+it.blob.size*p)/total*94)+2);cpBar()},c);done+=it.blob.size;paths.push(path);urls.push(B.getPublicUrl(path).data.publicUrl);
    if(it.video&&c.covers[it.k]){try{const cb=await(await fetch(c.covers[it.k])).blob();await B.upload(path.replace(/\.[^./]+$/,'.cover.jpg'),cb,{contentType:'image/jpeg'})}catch(e){console.error(e)}}}
   c.msg='Salvando…';cpBar();
-  const cap=c.tags.length?(cap0?cap0+'\n':'')+c.tags.map(t=>'@'+t).join(' '):cap0,row={kind:vid&&c.reel?'reel':'post',caption:cap,media_url:urls[0],media_path:paths[0],media_type:vid?'video':'image'},opt={};
+  const cap=c.tags.length?(cap0?cap0+'\n':'')+c.tags.map(t=>'@'+t).join(' '):cap0,row={kind:vid&&c.reel?'reel':'post',caption:cap,media_url:urls[0],media_path:paths[0],media_type:vid?'video':'image',...(c.music&&typeof X8!='undefined'&&X8.pin?{music:c.music}:{})},opt={};
   if(c.loc)opt.location=c.loc;if(c.vis!='all')opt.visibility=c.vis;if(c.coff)opt.comments_off=true;
   let r=await sb.from('posts').insert(Object.assign({},row,opt));
   if(r.error&&Object.keys(opt).length){r=await sb.from('posts').insert(row);if(!r.error)toast('Local, visibilidade e comentários: falta rodar o SQL (etapa 4)')}
@@ -1888,7 +1900,7 @@ A.cppub=async()=>{const c=CP;if(!c||c.busy)return;const cap0=c.cap.trim();if(!c.
 // ---------- Notificações ----------
 let NTF='all';
 const NTMAP={all:null,like:['like','repost'],comment:['comment','mention'],fol:['follow','follow_request']};
-const ntTxt2=n=>({follow:'começou a seguir você',follow_request:'pediu para seguir você',like:'curtiu sua publicação',comment:'comentou na sua publicação',repost:'republicou sua publicação',mention:'marcou você em uma publicação'}[n.type]||'interagiu com você');
+const ntTxt2=n=>({post:'publicou algo novo',follow:'começou a seguir você',follow_request:'pediu para seguir você',like:'curtiu sua publicação',comment:'comentou na sua publicação',repost:'republicou sua publicação',mention:'marcou você em uma publicação'}[n.type]||'interagiu com você');
 const ntIco={like:['heart','#ff4f8a'],repost:['rep','#a46bff'],comment:['cm','#4f8dff'],mention:['at','#19e3ff']};
 const ntPage2=()=>{const L=(NT||[]).filter(n=>!NTMAP[NTF]||NTMAP[NTF].includes(n.type));
  return `<div class="ntp"><div class="xh" style="padding-top:calc(14px + env(safe-area-inset-top,0px))"><button class="ib" data-a="close" aria-label="Voltar">${ic('back')}</button><h1 style="flex:1;margin-left:6px">Notificações</h1></div>
@@ -1909,9 +1921,9 @@ const setHub=()=>`<div class="setp"><div class="xh" style="padding-top:calc(14px
 const FAQ=[['Como publico uma foto, vídeo ou Reel?','Toque no botão + (no centro da barra de baixo). Escolha fotos ou um vídeo, escreva a legenda e toque em Publicar. Para publicar como Reel, ative a opção Reels depois de escolher um vídeo.'],['Como funcionam os stories?','Toque em “Seu story” no início. Eles ficam visíveis por 24 horas para quem segue você (ou só para os amigos próximos). Segure o dedo para pausar.'],['Por que meu amigo não vê meu story?','Para ver os seus stories, ele precisa seguir você — e você precisa seguir quem quer ver. Stories só para amigos próximos exigem estar na lista.'],['Meu vídeo não toca no aparelho do amigo.','Vídeos de iPhone podem vir em formato HEVC. Ao publicar, escolha “Converter (recomendado)” ou ative em Ajustes › Câmera › Formatos › Mais compatível.'],['Como bloqueio ou denuncio alguém?','Abra o perfil, toque nos três pontos e escolha Bloquear ou Denunciar. Em uma conversa, use o menu do nome no topo.'],['Esqueci minha senha.','Na tela de login, toque em “Esqueci a senha” e siga o link enviado ao seu e-mail.'],['Como excluo minha conta?','Configurações › Conta › Excluir minha conta. Você precisará digitar EXCLUIR para confirmar.']];
 const setSub=k=>{const T={acc:'Conta',priv:'Privacidade',ntf:'Notificações',lang:'Idioma',help:'Ajuda',about:'Sobre o VELOVERSA'};let b='';
  if(k=='acc')b=srow('edit','edit','Editar perfil')+srow('chmail','at','E-mail da conta',(ME&&ME.email)||'')+srow('chpw','lock','Alterar senha')+srow('outothers','users','Sair de outros aparelhos')+srow('expd','down','Baixar meus dados')+srow('delacc','trash','Excluir minha conta e dados','', '', 'red');
- else if(k=='priv')b=tgrow('priv',S.priv,'Conta privada')+srow('blkl','close','Contas bloqueadas',String(BL.size))+srow('cfm','star','Amigos próximos')+srow('arq','clock','Arquivo de stories')+srow('soon','cm','Quem pode me enviar mensagens','em breve')+srow('soon','at','Controle de comentários e menções','em breve');
+ else if(k=='priv')b=tgrow('priv',S.priv,'Conta privada')+srow('blkl','close','Contas bloqueadas',String(BL.size))+srow('cfm','star','Amigos próximos')+srow('arq','clock','Arquivo de stories')+x8PrivSrows();
  else if(k=='ntf')b=[['follow','Novos seguidores'],['like','Curtidas e republicações'],['comment','Comentários e menções'],['message','Novas mensagens']].map(([x,l])=>tgrow(x,PREF[x]!==false,l,'pref')).join('')+`<p class="mu" style="padding:12px 18px">Avisos dentro do app. Notificações push no celular dependem de um serviço externo e ainda não estão ativas.</p>`;
- else if(k=='lang')b=`<div class="srow" style="cursor:default"><span>Português (Brasil)</span>${ic('check')}</div><div class="srow" style="cursor:default;opacity:.6"><span>English</span><em>em breve</em></div><div class="srow" style="cursor:default;opacity:.6"><span>Español</span><em>em breve</em></div>`;
+ else if(k=='lang')b=`<div class="srow" style="cursor:default"><span>Português (Brasil)</span>${ic('check')}</div><p class="mu" style="padding:10px 16px;line-height:1.4">O VELOVERSA está disponível apenas em português por enquanto.</p>`;
  else if(k=='help')b=`<div class="faq">${FAQ.map(([q,a])=>`<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>`+srow('diag','sparkle','Diagnóstico do app')+srow('rpt','info','Denunciar um problema ou abuso','', 'app:geral');
  else b=`<div style="padding:22px 18px;text-align:center"><div style="display:inline-block">${LOGO}</div><h2 style="margin:10px 0 4px;letter-spacing:.3em">VELOVERSA</h2><p class="mu">Conecte-se. Crie. Compartilhe.</p><p class="mu">Versão ${VER}</p><p class="mu" style="font-size:.8rem">Dados, mídias e mensagens armazenados no Supabase. Chamadas usam WebRTC.</p></div>`;
  return `<div class="setp"><div class="xh" style="padding-top:calc(14px + env(safe-area-inset-top,0px))"><button class="ib" data-a="set" aria-label="Voltar">${ic('back')}</button><h1 style="flex:1;margin-left:6px;font-size:1.3rem">${T[k]}</h1></div><div class="rl" style="scroll-snap-type:none;background:transparent">${b}</div></div>`};
@@ -1953,8 +1965,8 @@ NAVL.reels='Reels';ICONS.reels='reel';
  if(nav&&ex&&!nav.querySelector('button[data-i="reels"]')){const b=document.createElement('button');b.dataset.a='tab';b.dataset.i='reels';b.setAttribute('aria-label','Reels');ex.insertAdjacentElement('afterend',b)}}
 /* perfil novo */
 V.me=function(){const mine=S.posts.filter(p=>p.u==S.me.u).sort((a,b)=>(b.t||0)-(a.t||0)),sub=S.sub||'g',nf=(window.MYG!=null?window.MYG:Object.values(S.fol).filter(Boolean).length);
- const L=sub=='g'?mine:sub=='r'?mine.filter(p=>p.type=='reel'||p.vid):sub=='rp'?S.posts.filter(p=>RPM.has(p.id)):sub=='t'?((window.TGD||{})[S.me.u]||[]):S.posts.filter(p=>p.saved);
- const empty=sub=='t'?'Marcações de outras pessoas: em breve.':sub=='rp'?'Você ainda não republicou nada.':sub=='s'?'Nada salvo ainda. Toque no marcador de uma publicação.':sub=='r'?'Seus vídeos aparecem aqui.':'Nada por aqui ainda.<br>Toque em + para publicar.';
+ const L=sub=='g'?pinSort(mine):sub=='r'?mine.filter(p=>p.type=='reel'||p.vid):sub=='rp'?S.posts.filter(p=>RPM.has(p.id)):sub=='t'?((window.TGD||{})[S.me.u]||[]):S.posts.filter(p=>p.saved);
+ const empty=sub=='t'?'Quando alguém marcar você, aparece aqui.':sub=='rp'?'Você ainda não republicou nada.':sub=='s'?'Nada salvo ainda. Toque no marcador de uma publicação.':sub=='r'?'Seus vídeos aparecem aqui.':'Nada por aqui ainda.<br>Toque em + para publicar.';
  const links=S.links&&S.links.length?S.links.map(l=>`<a class="pf-lk" href="${esc(l)}" target="_blank" rel="noopener noreferrer">${esc(l.replace(/^https?:\/\//,'')).slice(0,34)}</a>`).join(' · '):'';
  return `<div class="pf-top"><b>${esc(S.me.u)}${S.priv?ic('lock'):''}</b><span><button class="ib" data-a="create" aria-label="Criar">${ic('plus')}</button><button class="ib" data-a="set" aria-label="Configurações">${ic('menu')}</button></span></div>
  <div class="pf-head"><button class="pf-av" data-a="avatar" aria-label="Alterar foto de perfil"><span class="in">${av(S.me.u,92)}</span><span class="pl">${ic('plus')}</span></button>
@@ -2065,18 +2077,18 @@ try{render()}catch(e){console.error(e)}
 Object.assign(P,{userplus:'M14 8a4 4 0 11-8 0 4 4 0 018 0zM2 21c0-3.9 3.1-6 8-6s8 2.1 8 6M20 8v6M17 11h6',chevd:'M6 9l6 6 6-6',stack:'M8 8h11v11H8zM5 16V5h11',playi:'M8 5v14l11-7z',eyeo:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 100-6 3 3 0 000 6z'});
 const igLoc=l=>{l=String(l||'').trim();return l?(/^brasil$/i.test(l)?'🇧🇷 ':'📍 ')+esc(l):''};
 const igTile=(p,sub)=>{const v=p.type=='reel'||p.vid,multi=p.pm&&p.pm.length;const pic=p.img||p.cover;
- return `<div class="ig-t" data-a="open" data-i="${p.id}" style="${art(p.art||200)}" role="button" aria-label="Abrir publicação">${pic?`<img src="${esc(pic)}" alt="" loading="lazy" onerror="this.remove()">`:''}${v?`<span class="ty">${ic('reel')}</span>`:multi?`<span class="ty">${ic('stack')}</span>`:''}${sub=='r'&&p.vw!=null?`<span class="vw">${ic('playi',1)}${fmt(p.vw||0)}</span>`:''}</div>`};
+ return `<div class="ig-t" data-a="open" data-i="${p.id}" style="${art(p.art||200)}" role="button" aria-label="Abrir publicação">${pic?`<img src="${esc(pic)}" alt="" loading="lazy" onerror="this.remove()">`:''}${p.pin?`<span class="pn">${ic('pin')}</span>`:''}${v?`<span class="ty">${ic('reel')}</span>`:multi?`<span class="ty">${ic('stack')}</span>`:''}${sub=='r'&&p.vw!=null?`<span class="vw">${ic('playi',1)}${fmt(p.vw||0)}</span>`:''}</div>`};
 const igGrid=(L,sub,empty)=>L.length?`<div class="ig-gr">${L.map(p=>igTile(p,sub)).join('')}</div>`:`<div class="ig-empty"><b>${empty[0]}</b>${empty[1]}</div>`;
 const igStat=(n,l,a)=>`<div ${a?`data-a="flist" data-i="${a}"`:''}><b>${fmt(n)}</b><span>${l}</span></div>`;
 const igTabs=(sub,act,list)=>`<div class="ig-tabs">${list.map(([k,i,l])=>`<button data-a="${act}" data-i="${k}" class="${sub==k?'on':''}" aria-label="${l}">${ic(i)}</button>`).join('')}</div>`;
 const igChips=(links,mu)=>{const c=[];if(mu)c.push(`<span class="ig-chip">${ic('music')}<span>${esc(mu)}</span></span>`);(links||[]).slice(0,4).forEach(l=>c.push(`<a class="ig-chip" href="${esc(l)}" target="_blank" rel="noopener noreferrer">${ic('link')}<span>${esc(String(l).replace(/^https?:\/\//,'').replace(/\/$/,'')).slice(0,30)}</span></a>`));return c.length?`<div class="ig-chips">${c.join('')}</div>`:''};
 V.me=function(){const mine=S.posts.filter(p=>p.u==S.me.u).sort((a,b)=>(b.t||0)-(a.t||0)),sub=S.sub||'g',nf=(window.MYG!=null?window.MYG:Object.values(S.fol).filter(Boolean).length),u=S.me.u;
- const L=sub=='g'?mine:sub=='r'?mine.filter(p=>p.type=='reel'||p.vid):sub=='rp'?S.posts.filter(p=>RPM.has(p.id)):sub=='t'?((window.TGD||{})[S.me.u]||[]):S.posts.filter(p=>p.saved);
+ const L=sub=='g'?pinSort(mine):sub=='r'?mine.filter(p=>p.type=='reel'||p.vid):sub=='rp'?S.posts.filter(p=>RPM.has(p.id)):sub=='t'?((window.TGD||{})[S.me.u]||[]):S.posts.filter(p=>p.saved);
  const E={g:['Compartilhe sua primeira foto','Toque no + para publicar.'],r:['Nenhum Reel ainda','Seus vídeos aparecem aqui.'],rp:['Nenhuma republicação','Republique publicações de quem você segue.'],s:['Nada salvo ainda','Toque no marcador de uma publicação para salvar.'],t:['Sem marcações','Quando alguém marcar você, aparece aqui.']}[sub];
  const hs=hasStory(u),ring=hs?(seen[u]?'seen':'on'):'';
  return `<div class="ig-top"><button class="ib" data-a="create" aria-label="Criar">${ic('plus')}</button><button class="ig-un" data-a="set" aria-label="Configurações"><span>${esc(u)}</span>${S.priv?ic('lock'):''}${ic('chevd')}${(typeof NC!='undefined'&&NC)?'<i class="ig-dot"></i>':''}</button><button class="ib ig-bd" data-a="notif" aria-label="Notificações">${ic('bell')}${(typeof NC!='undefined'&&NC)?`<i>${NC>9?'9+':NC}</i>`:''}</button><button class="ib" data-a="set" aria-label="Menu">${ic('menu')}</button></div>
  <div class="ig-head"><div class="ig-av"><button class="ig-note ${S.note?'':'me'}" data-a="note" aria-label="Sua nota">${S.note?esc(S.note):'Pergunte algo aos amigos…'}</button><button class="ig-ring ${ring}" data-a="${hs?'story':'avatar'}" ${hs?`data-i="${esc(u)}"`:''} aria-label="${hs?'Ver story':'Alterar foto de perfil'}"><span class="in">${av(u,92)}</span></button><button class="ig-plus" data-a="pick" data-i="story" aria-label="Novo story">${ic('plus')}</button></div>
- <div class="ig-side"><h2>${esc(S.me.n||u)}</h2><div class="ig-stats">${igStat(mine.length,'posts')}${igStat(window.MYF||0,'seguidores','followers:'+esc(u))}${igStat(nf,'seguindo','following:'+esc(u))}</div></div></div>
+ <div class="ig-side"><h2>${esc(S.me.n||u)}${S.me.pron?`<small class="x8pr"> · ${esc(S.me.pron)}</small>`:''}</h2><div class="ig-stats">${igStat(mine.length,'posts')}${igStat(window.MYF||0,'seguidores','followers:'+esc(u))}${igStat(nf,'seguindo','following:'+esc(u))}</div></div></div>
  <div class="ig-bio">${S.me.b?`<p>${tags(S.me.b)}</p>`:'<p class="mu">Adicione uma bio em Editar perfil.</p>'}${S.me.loc?`<div class="ig-loc">${igLoc(S.me.loc)}</div>`:''}</div>
  ${igChips(S.links,S.me.mu)}
  <div class="ig-btns"><button class="w" data-a="edit">Editar perfil</button><button class="w" data-a="shp">Compartilhar perfil</button><button class="sq" data-a="tab" data-i="exp" aria-label="Encontrar pessoas">${ic('userplus')}</button></div>
@@ -2085,17 +2097,17 @@ V.me=function(){const mine=S.posts.filter(p=>p.u==S.me.u).sort((a,b)=>(b.t||0)-(
  ${sub=='s'?'<div class="ig-sv"><b>Salvos</b><button data-a="sub" data-i="g">Voltar</button></div>':''}${igGrid(L,sub,E)}`};
 /* perfil de outras pessoas, mesmo visual */
 profPage=()=>{const u=PV.u,p=PV.p,fol=S.fol[u];
- const top=`<div class="ig-top"><button class="ib" data-a="close" aria-label="Voltar">${ic('back')}</button><span class="ig-un"><span>${esc(u)}</span>${p&&p.is_private?ic('lock'):''}</span><button class="ib" data-a="soon" aria-label="Notificações do perfil">${ic('bell')}</button><button class="ib" data-a="pmenu" data-i="${esc(u)}" aria-label="Mais opções">${ic('more')}</button></div>`;
+ const top=`<div class="ig-top"><button class="ib" data-a="close" aria-label="Voltar">${ic('back')}</button><span class="ig-un"><span>${esc(u)}</span>${p&&p.is_private?ic('lock'):''}</span><button class="ib ${PV&&PV.p&&ALERTS.has(PV.p.id)?'xon':''}" data-a="palert" data-i="${esc(u)}" aria-label="Avisos de publicações">${ic('bell')}</button><button class="ib" data-a="pmenu" data-i="${esc(u)}" aria-label="Mais opções">${ic('more')}</button></div>`;
  let body;
  if(PV.loading)body=`<div class="ig-empty">Carregando perfil…</div>`;
  else if(!p)body=`<div class="ig-empty"><b>Perfil não encontrado</b>Esse usuário não existe.</div>`;
- else{const can=!p.is_private||PV.st=='ok'||fol&&PV.st=='ok',sub=PV.sub||'g',L=sub=='rp'?(PV.rps||[]):sub=='t'?((window.TGD||{})[PV.u]||[]):(PV.posts||[]).filter(x=>sub=='g'||x.type=='reel'||x.vid),hs=ST[u]&&ST[u].length,ring=hs?(seen[u]?'seen':'on'):'';
-  body=`<div class="ig-head"><div class="ig-av"><button class="ig-ring ${ring}" ${hs?`data-a="story" data-i="${esc(u)}"`:''} aria-label="Foto de perfil"><span class="in">${av(u,92)}</span></button></div>
-  <div class="ig-side"><h2>${esc(p.name||u)}</h2><div class="ig-stats">${igStat(PV.pc,'posts')}${igStat(PV.fr,'seguidores','followers:'+esc(u))}${igStat(PV.fg,'seguindo','following:'+esc(u))}</div></div></div>
+ else{const can=!p.is_private||PV.st=='ok'||fol&&PV.st=='ok',sub=PV.sub||'g',L=sub=='rp'?(PV.rps||[]):sub=='t'?((window.TGD||{})[PV.u]||[]):(sub=='g'?pinSort(PV.posts||[]):(PV.posts||[])).filter(x=>sub=='g'||x.type=='reel'||x.vid),hs=ST[u]&&ST[u].length,ring=hs?(seen[u]?'seen':'on'):'';
+  body=`<div class="ig-head"><div class="ig-av">${NOTES[u]?`<span class="ig-note">${esc(NOTES[u].body)}</span>`:''}<button class="ig-ring ${ring}" ${hs?`data-a="story" data-i="${esc(u)}"`:''} aria-label="Foto de perfil"><span class="in">${av(u,92)}</span></button></div>
+  <div class="ig-side"><h2>${esc(p.name||u)}${p.pronouns?`<small class="x8pr"> · ${esc(p.pronouns)}</small>`:''}</h2><div class="ig-stats">${igStat(PV.pc,'posts')}${igStat(PV.fr,'seguidores','followers:'+esc(u))}${igStat(PV.fg,'seguindo','following:'+esc(u))}</div></div></div>
   <div class="ig-bio">${p.bio?`<p>${tags(p.bio)}</p>`:''}${p.location?`<div class="ig-loc">${igLoc(p.location)}</div>`:''}</div>
   <div class="ig-btns">${fol?`<button class="w" data-a="unf" data-i="${esc(u)}">${PV.st=='pending'?'Solicitado':'Seguindo'} ▾</button>`:`<button class="w pri" data-a="fol" data-i="${esc(u)}">Seguir</button>`}<button class="w" data-a="chat" data-i="${esc(u)}">Mensagem</button></div>${hlRow(u)}
   ${igTabs(sub,'psub',[['g','grid','Publicações'],['r','reel','Reels'],['rp','rep','Republicações'],['t','tag','Marcações']])}
-  ${can?igGrid(L,sub,sub=='t'?['Sem marcações','Marcações de outras pessoas: em breve.']:['Nenhuma publicação ainda','Quando '+esc(u)+' publicar, aparece aqui.']):`<div class="ig-empty"><b>🔒 Esta conta é privada</b>Siga para ver as publicações.</div>`}`}
+  ${can?igGrid(L,sub,sub=='t'?['Sem marcações','Quando alguém marcar você, aparece aqui.']:['Nenhuma publicação ainda','Quando '+esc(u)+' publicar, aparece aqui.']):`<div class="ig-empty"><b>🔒 Esta conta é privada</b>Siga para ver as publicações.</div>`}`}
  return `<div>${top}<div class="rl" style="scroll-snap-type:none;background:var(--bg)">${body}</div></div>`};
 /* local no perfil: edição, leitura e gravação */
 {const o=editPage;editPage=()=>o().replace(/(<label class="fl"><span>Música em destaque)/,`<label class="fl"><span>Local (cidade, país…)</span><input id="eloc" maxlength="60" value="${esc(S.me.loc||'')}" placeholder="Ex.: Brasil"></label>$1`)}
@@ -2277,7 +2289,7 @@ A.mfopen=async p=>{const m=(S.chats[cur]||[]).find(x=>x.f&&x.f.path==p),nm=m?m.f
 Object.assign(P,{bnpen:'M17 3a2.8 2.8 0 114 4L7.5 20.5 2 22l1.5-5.5z'});
 let BNOK=false;
 const clampN=(v,a,b,d)=>{v=parseFloat(v);return isFinite(v)?Math.min(b,Math.max(a,v)):d};
-const PCOLS=()=>'id,username,name,bio,is_private,location'+(BNOK?',banner_url,banner_x,banner_y,banner_zoom':'');
+let PCOLS=()=>'id,username,name,bio,is_private,location'+(BNOK?',banner_url,banner_x,banner_y,banner_zoom':'');
 const bnOf=r=>r&&r.banner_url&&String(r.banner_url).startsWith(SB_URL+'/storage/')?{url:r.banner_url,x:clampN(r.banner_x,0,100,50),y:clampN(r.banner_y,0,100,50),z:clampN(r.banner_zoom,1,3,1)}:null;
 const bnStyle=b=>{const z=b.z||1,x=b.x==null?50:b.x,y=b.y==null?50:b.y;return `width:${z*100}%;height:${z*100}%;left:${-(z-1)*x}%;top:${-(z-1)*y}%;object-position:${x}% ${y}%`};
 const BN_MAX=20e6,BN_SEC=15;
@@ -2321,7 +2333,7 @@ async function bnProbe(){try{const r=await sb.from('profiles').select('banner_ur
 {const o=profPage;profPage=function(){const h=o(),m=h.match(/^<div>(<div class="ig-top">[\s\S]*?<\/div>)(<div class="rl"[^>]*>)/);if(!m)return h;return '<div>'+m[2]+bnTop(m[1],PV&&PV.p?bnOf(PV.p):null)+h.slice(m[0].length)}}
 /* leitura: perfil de outras pessoas e o meu (colunas só são pedidas se o SQL já foi rodado) */
 {const b=boot;boot=async function(s){await bnProbe();await b(s);if(ME){S.me.bn=bnOf(ME);save();R()}}}
-/* Editar perfil: seção "Banner do perfil" com lápis (substitui o antigo "Banners · em breve") */
+/* Editar perfil: seção "Banner do perfil" com lápis (substitui o antigo "Banners") */
 const bnSync=()=>{try{if(ME&&S.me&&!S.me.bn){const b=bnOf(ME);if(b)S.me.bn=b}}catch(e){}};
 {const o=V.me;V.me=function(){bnSync();return o.apply(this,arguments)}}
 {const o=editPage;editPage=function(){bnSync();return o.apply(this,arguments)}}
@@ -2408,9 +2420,142 @@ A.bndel=async()=>{bnSync();shf=null;draw();if(!ME||!S.me.bn)return;if(!confirm('
 
 /* Reels: aviso de versão e render */
 try{render()}catch(e){console.error(e)}
-setTimeout(()=>{try{toast('VELOVERSA v7.8 carregado')}catch(e){}},1200);
+setTimeout(()=>{try{toast('VELOVERSA v8.0 carregado')}catch(e){}},1200);
 
 </script>
+<script>
+/* ===== VERSÃO 8.0 · parte A: limpezas e correções ===== */
+{const st=document.createElement('style');st.id='v80css';st.textContent=`
+.ig-note{white-space:nowrap!important;display:block!important;-webkit-line-clamp:unset!important;max-width:150px!important;overflow:hidden;text-overflow:ellipsis;top:-30px!important;left:0!important;padding:5px 12px!important;font-size:.74rem!important;border-radius:14px!important}
+.ig-note::after{left:16px!important}
+.mb:has(.xpoll){min-width:230px}
+.xpoll b{display:block;margin-bottom:8px}.xpoll button{display:flex;justify-content:space-between;gap:8px;width:100%;margin:4px 0;padding:9px 12px;border-radius:12px;border:1px solid #ffffff33;background:#ffffff14;color:inherit;font:inherit;text-align:left;position:relative;overflow:hidden}
+.xpoll button.on{border-color:#a99bff}.xpoll button i{position:absolute;inset:0 auto 0 0;background:#8b6bff44;z-index:0;pointer-events:none}.xpoll button span,.xpoll button em{position:relative;z-index:1;font-style:normal}
+.xpoll small{opacity:.7;display:block;margin-top:4px}
+.xloc{display:block;color:inherit;text-decoration:none}.xloc b{display:flex;align-items:center;gap:6px}.xloc small{opacity:.75;display:block;margin-top:2px}
+.xhl{animation:xhl 1.6s ease}@keyframes xhl{0%,60%{background:#8b6bff55}100%{background:transparent}}
+.xqr{display:flex;gap:8px;margin:6px 0}.xqr input{flex:1}
+.xrow{display:flex;align-items:center;gap:8px}.xrow .mr{flex:1}.xrow .ib{flex:none}
+.fx-lay{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:inherit}.fx-lay i{position:absolute;top:-10%;font-style:normal;animation:fxfall linear infinite;opacity:.9}
+@keyframes fxfall{to{transform:translateY(120vh) rotate(360deg)}}
+.slink{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:#fff;color:#111;font-weight:700;font-size:.9rem;text-decoration:none;max-width:260px}.slink span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.slink svg{width:18px;height:18px;flex:none}
+.smus{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:16px;background:linear-gradient(135deg,#8b6bff,#4f8dff);color:#fff;max-width:270px}.smus svg{width:22px;height:22px;flex:none}.smus b{display:block;font-size:.95rem;line-height:1.15}.smus small{opacity:.85;font-size:.78rem}
+`;document.head.appendChild(st)}
+/* link de e-mail vencido / senha igual à anterior: mensagens claras */
+try{const h=location.hash||'';if(/error_code=otp_expired|error=access_denied/.test(h)){history.replaceState(null,'',location.pathname+location.search);setTimeout(()=>{try{toast('Esse link de e-mail expirou. Peça um novo link.')}catch(e){}},1800)}}catch(e){}
+
+/* limpeza silenciosa dos banners antigos do próprio usuário (arquivos que não são mais usados) */
+async function bnCleanup(){try{if(!ME||!sb||typeof BNOK=='undefined'||!BNOK)return;const B=sb.storage.from('banners'),{data}=await B.list(ME.id,{limit:100});if(!data||!data.length)return;
+ const keep=new Set(),u=ME.banner_url;if(u){const p=bnPathOf(u);if(p){keep.add(p);if(bnIsVid(u)){const q=bnPathOf(bnPoster(u));if(q)keep.add(q)}}}
+ const del=data.filter(f=>f&&f.name&&f.id&&(!f.created_at||Date.now()-new Date(f.created_at)>6e5)).map(f=>ME.id+'/'+f.name).filter(p=>!keep.has(p));if(del.length)await B.remove(del)}catch(e){}}
+
+</script>
+<script>
+/* ===== VERSÃO 8.0 · parte B: chat (enquete, localização, respostas rápidas, pesquisa, silenciar, desaparecer) ===== */
+const pollOf=x=>{const m=String(x||'').match(/^\[\[poll:(\{[\s\S]*\})\]\]$/);if(!m)return null;try{const p=JSON.parse(m[1]);if(p&&p.q&&Array.isArray(p.o)&&p.o.length>1)return p}catch(e){}return null};
+const locOf=x=>{const m=String(x||'').match(/^\[\[loc:(-?\d+\.?\d*),(-?\d+\.?\d*)\]\]$/);return m?[+m[1],+m[2]]:null};
+{const o=mBody;mBody=function(k,m){const x=m&&m.x,p=pollOf(x);
+ if(p){const rx=(m.rx||[]).filter(r=>/^#\d$/.test(r.e)),tot=rx.length,mine=(rx.find(r=>r.u==ME.id)||{}).e;
+  return `<div class="xpoll"><b>${esc(p.q)}</b>${p.o.map((t,i)=>{const n=rx.filter(r=>r.e=='#'+i).length,pc=tot?Math.round(n*100/tot):0;return `<button data-a="pvote" data-i="${m.id}|${i}" class="${mine=='#'+i?'on':''}"><i style="width:${pc}%"></i><span>${esc(t)}</span><em>${tot?pc+'%':''}</em></button>`}).join('')}<small>${tot} voto${tot==1?'':'s'} · toque para votar</small></div>`}
+ const l=locOf(x);if(l)return `<a class="xloc" href="https://www.google.com/maps?q=${l[0]},${l[1]}" target="_blank" rel="noopener noreferrer"><b>${ic('pin')}Localização</b><small>${l[0].toFixed(4)}, ${l[1].toFixed(4)} · abrir no mapa</small></a>`;
+ return o(k,m)}}
+{const o=prevOf;prevOf=m=>{const x=m&&m.x||'',p=pollOf(x);if(p)return 'Enquete: '+p.q;if(locOf(x))return 'Localização';return o(m)}}
+{const o=A.mrx;A.mrx=function(i){const m=msgOf(String(i).split('|')[0]);if(m&&pollOf(m.x))return;return o.apply(this,arguments)}}
+A.pvote=async i=>{const[id,ix]=String(i).split('|'),m=msgOf(id);if(!m||!m.id)return;m.rx=m.rx||[];const e='#'+ix,mine=m.rx.find(r=>r.u==ME.id);
+ if(mine&&mine.e==e){m.rx=m.rx.filter(r=>r.u!=ME.id);R();await sb.from('message_reactions').delete().eq('message_id',String(m.id)).eq('user_id',ME.id);return}
+ m.rx=m.rx.filter(r=>r.u!=ME.id);m.rx.push({u:ME.id,e});R();const{error}=await sb.from('message_reactions').upsert({message_id:String(m.id),user_id:ME.id,emoji:e});if(error){m.rx=m.rx.filter(r=>r.u!=ME.id);R();toast('Não foi possível votar')}};
+A.mpoll=()=>sheet(()=>`<h3>Nova enquete</h3><input id="mpq" maxlength="80" placeholder="Pergunta"><input id="mpa" maxlength="40" placeholder="Opção 1" style="margin-top:8px"><input id="mpb" maxlength="40" placeholder="Opção 2" style="margin-top:8px"><input id="mpc" maxlength="40" placeholder="Opção 3 (opcional)" style="margin-top:8px"><input id="mpd" maxlength="40" placeholder="Opção 4 (opcional)" style="margin-top:8px"><button class="bt" style="margin-top:12px" data-a="mpollgo">Enviar enquete</button>`);
+A.mpollgo=async()=>{const q=($('#mpq').value||'').trim(),o=['mpa','mpb','mpc','mpd'].map(i=>($('#'+i).value||'').trim()).filter(Boolean);if(!q)return toast('Escreva a pergunta');if(o.length<2)return toast('Coloque pelo menos 2 opções');shf=null;draw();if(await sendMsg2(cur,{text:'[[poll:'+JSON.stringify({q,o})+']]'})){R();scrollMsgs()}};
+A.mloc=()=>{shf=null;draw();if(!navigator.geolocation)return toast('Este aparelho não permite localização');if(!window.isSecureContext)return toast('Localização exige conexão segura (https)');toast('Obtendo localização…');
+ navigator.geolocation.getCurrentPosition(async p=>{const la=+p.coords.latitude.toFixed(5),lo=+p.coords.longitude.toFixed(5);if(await sendMsg2(cur,{text:'[[loc:'+la+','+lo+']]'})){R();scrollMsgs()}},e=>toast(e&&e.code==1?'Permissão de localização negada':'Não consegui obter a localização'),{enableHighAccuracy:true,timeout:12000,maximumAge:60000})};
+const qrGet=()=>{try{const a=JSON.parse(localStorage.getItem('vvqr'));if(Array.isArray(a))return a.slice(0,12)}catch(e){}return['Já te respondo 👍','Estou ocupado agora, falo com você mais tarde','Pode falar!']};
+const qrSet=a=>{try{localStorage.setItem('vvqr',JSON.stringify(a.slice(0,12)))}catch(e){}};
+A.mqr=()=>sheet(()=>`<h3>Respostas rápidas</h3>${qrGet().map((t,i)=>`<div class="xrow"><button class="mr" data-a="mqruse" data-i="${i}"><span>${esc(t)}</span></button><button class="ib" data-a="mqrdel" data-i="${i}" aria-label="Apagar">${ic('trash')}</button></div>`).join('')}<div class="xqr"><input id="mqrn" maxlength="120" placeholder="Nova resposta rápida"><button class="bt" style="width:auto;padding:0 16px" data-a="mqradd">Salvar</button></div>`);
+A.mqruse=i=>{const t=qrGet()[+i];shf=null;draw();const inp=$('#mi');if(inp&&t){inp.value=t;inp.focus();const cb=$('#cbar');cb&&cb.classList.add('has')}};
+A.mqradd=()=>{const v=($('#mqrn').value||'').trim();if(!v)return;const a=qrGet();a.push(v);qrSet(a);A.mqr()};
+A.mqrdel=i=>{const a=qrGet();a.splice(+i,1);qrSet(a);A.mqr()};
+A.csearch=k=>{shf=null;draw();sheet(()=>`<h3>Pesquisar na conversa</h3><input id="csq" placeholder="Digite para buscar" autocomplete="off"><div id="csr" style="margin-top:8px;max-height:46vh;overflow:auto"></div>`);setTimeout(()=>{const i=$('#csq');if(i)i.focus()},60)};
+document.addEventListener('input',e=>{if(e.target.id!='csq')return;const q=e.target.value.trim().toLowerCase(),L=(S.chats[cur]||[]).filter(m=>q&&m.x&&!/^\[\[(poll|loc|post)/.test(m.x)&&m.x.toLowerCase().includes(q)).slice(-30).reverse(),r=$('#csr');if(!r)return;
+ r.innerHTML=L.length?L.map(m=>`<button class="mr" data-a="csgo" data-i="${m.id}"><span>${esc((m.m?'Você: ':'')+m.x.slice(0,80))}</span><i>${m.t?ago(m.t):''}</i></button>`).join(''):(q?'<p class="mu">Nada encontrado nas mensagens carregadas.</p>':'')});
+A.csgo=id=>{shf=null;draw();setTimeout(()=>{const e=document.querySelector('.mrow[data-mid="'+id+'"]');if(e){e.scrollIntoView({block:'center'});e.classList.add('xhl');setTimeout(()=>e.classList.remove('xhl'),1800)}else toast('Mensagem não encontrada')},60)};
+const isMuted=k=>{try{return localStorage.getItem('vvmute:'+k)=='1'}catch(e){return false}};
+A.cmute=k=>{try{isMuted(k)?localStorage.removeItem('vvmute:'+k):localStorage.setItem('vvmute:'+k,'1')}catch(e){}shf=null;draw();toast(isMuted(k)?'Conversa silenciada neste aparelho':'Som reativado');try{setBadges()}catch(e){}R()};
+const ttlOf=k=>{try{return +localStorage.getItem('vvttl:'+k)||0}catch(e){return 0}};
+const ttlLabel=k=>ttlOf(k)?(ttlOf(k)>=604800?'7 dias':'24 horas'):'desativado';
+A.mttl=k=>{k=(k&&k!=='undefined')?k:cur;shf=null;draw();
+ if(!(typeof X8!='undefined'&&X8.ttl))return sheet(()=>`<h3>Mensagens que desaparecem</h3><p class="mu">Este recurso precisa de uma atualização no Supabase. Rode o arquivo <b>sql-8.0.sql</b> no SQL Editor e abra o app de novo.</p>`);
+ sheet(()=>`<h3>Mensagens que desaparecem</h3><p class="mu">As mensagens de texto que você enviar nesta conversa somem depois do tempo escolhido.</p>${[[0,'Desativado'],[86400,'Depois de 24 horas'],[604800,'Depois de 7 dias']].map(([s,l])=>`<button class="mr" data-a="mttlset" data-i="${s}|${esc(k)}"><span>${l}</span><i>${ttlOf(k)==s?'✓':''}</i></button>`).join('')}`)};
+A.mttlset=i=>{const[s,k]=String(i).split('|');try{+s?localStorage.setItem('vvttl:'+k,s):localStorage.removeItem('vvttl:'+k)}catch(e){}A.mttl(k);R()};
+A.mplus=()=>sheet(()=>`<h3>Mais opções</h3><button class="mr" data-a="mph"><span>Fotos e vídeos</span></button><button class="mr" data-a="mpoll">${ic('poll')}<span>Enquete</span><i>›</i></button><button class="mr" data-a="mloc">${ic('pin')}<span>Localização</span><i>›</i></button><button class="mr" data-a="mqr">${ic('sparkle')}<span>Respostas rápidas</span><i>›</i></button><button class="mr" data-a="mttl" data-i="${esc(cur||'')}">${ic('search')}<span>Mensagens que desaparecem</span><i>${ttlLabel(cur||'')}</i></button>`);
+
+/* ===== parte C: stories (Link, Música, Efeitos) ===== */
+const FXS={snow:['❄️','Neve'],hearts:['💜','Corações'],stars:['✨','Brilho'],confetti:['🎉','Confete']};
+const fxLayers=items=>(items||[]).filter(it=>it&&it.t=='fx'&&FXS[it.v]).map(it=>`<div class="fx-lay">${Array.from({length:18},(_,i)=>`<i style="left:${(i*37)%100}%;font-size:${14+(i*7)%16}px;animation-duration:${4+(i%5)}s;animation-delay:${-(i*.7).toFixed(1)}s">${FXS[it.v][0]}</i>`).join('')}</div>`).join('');
+const safeUrl=u=>{u=String(u||'').trim();if(!u)return null;if(!/^https?:\/\//i.test(u))u='https://'+u;try{const x=new URL(u);if(!/^https?:$/.test(x.protocol)||!x.hostname.includes('.'))return null;return x.href.slice(0,300)}catch(e){return null}};
+
+</script>
+<script>
+/* ===== VERSÃO 8.0 · parte D: recursos que usam colunas/tabelas novas (o app detecta sozinho) ===== */
+const X8={},NOTES={},ALERTS=new Set(),SEL0=SEL,MA={},CMA={};
+{const st=document.createElement('style');st.textContent=`
+.fl select{width:100%;padding:12px 14px;border-radius:12px;background:var(--sf);color:var(--tx);border:1px solid var(--ln);font:inherit}
+.x8pr{font-weight:400;opacity:.7;font-size:.8rem}
+.ig-t .pn{position:absolute;top:7px;left:7px;color:#fff;filter:drop-shadow(0 1px 3px #000a)}.ig-t .pn svg{width:17px;height:17px}
+.xon{background:#8b6bffcc!important}
+.xnotes .st .nt{position:absolute;top:-6px;left:50%;transform:translateX(-50%);max-width:92px;font-size:.66rem;padding:3px 8px;border-radius:12px;background:#1b2147;border:1px solid #3a46a8;color:#cfd4ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:2}.xnotes .st{position:relative;padding-top:14px}`;document.head.appendChild(st)}
+async function x8Probe(){if(!sb)return;const t=async(k,tab,cols)=>{try{const r=await sb.from(tab).select(cols).limit(1);X8[k]=!r.error}catch(e){X8[k]=false}};
+ await Promise.all([t('prof','profiles','pronouns,gender'),t('priv','profiles','msg_privacy,comment_privacy'),t('pin','posts','pinned_at,music'),t('notes','user_notes','user_id,body,created_at'),t('alerts','profile_alerts','user_id,target_id'),t('ttl','messages','expires_at')]);
+ SEL=SEL0+(X8.pin?',pinned_at,music':'')}
+{const o=PCOLS;PCOLS=()=>o()+(X8.prof?',pronouns,gender':'')+(X8.priv?',msg_privacy,comment_privacy':'')}
+async function loadNotes(){if(!X8.notes||!ME)return;let r=await sb.from('user_notes').select('user_id,body,created_at,profiles(username)');if(r.error)r=await sb.from('user_notes').select('user_id,body,created_at');if(r.error)return;
+ Object.keys(NOTES).forEach(k=>delete NOTES[k]);(r.data||[]).forEach(x=>{if(Date.now()-new Date(x.created_at)>864e5)return;const u=(x.profiles&&x.profiles.username)||UN[x.user_id]||(x.user_id==ME.id?S.me.u:null);if(u)NOTES[u]={body:x.body,t:+new Date(x.created_at)}});S.note=NOTES[S.me.u]?NOTES[S.me.u].body:''}
+async function loadAlerts(){ALERTS.clear();if(!X8.alerts||!ME)return;const{data,error}=await sb.from('profile_alerts').select('target_id');if(error)return;(data||[]).forEach(r=>ALERTS.add(r.target_id))}
+{const ob=boot;boot=async s=>{try{await x8Probe()}catch(e){}await ob(s);if(ME){S.me.pron=ME.pronouns||'';S.me.gen=ME.gender||'';S.priv_msg=ME.msg_privacy||'all';S.priv_cm=ME.comment_privacy||''||'all'}
+ try{await loadNotes();await loadAlerts()}catch(e){}try{R()}catch(e){}setTimeout(bnCleanup,5000)}}
+A.x8need=()=>sheet(()=>`<h3>Atualização necessária</h3><p class="mu">Este recurso usa colunas/tabelas novas do Supabase. Abra o SQL Editor, rode o arquivo <b>sql-8.0.sql</b> e depois abra o app de novo.</p>`);
+/* Editar perfil: pronomes, gênero, fixar publicações */
+function x8EditRows(){const need=t=>`<button class="mr" data-a="x8need"><span>${t}</span><i>precisa do SQL ›</i></button>`;let h='';
+ h+=X8.prof?`<label class="fl"><span>Pronomes</span><input id="epr" maxlength="30" placeholder="ela/dela, ele/dele, elu/delu…" value="${esc(S.me.pron||'')}"></label><label class="fl"><span>Gênero (só você vê)</span><select id="egd">${[['','Prefiro não dizer'],['female','Feminino'],['male','Masculino'],['custom','Outro']].map(([v,l])=>`<option value="${v}" ${(S.me.gen||'')==v?'selected':''}>${l}</option>`).join('')}</select></label>`:need('Pronomes e gênero');
+ h+=X8.pin?`<button class="mr" data-a="pinmenu"><span>Fixar publicações na grade</span><i>${S.posts.filter(p=>p.u==S.me.u&&p.pin).length}/3 ›</i></button>`:need('Fixar publicações na grade');return h}
+{const o=A.esave;A.esave=async function(){const pr=$('#epr'),gd=$('#egd'),pv=pr?pr.value.trim().slice(0,30):null,gv=gd?gd.value:null;await o.apply(this,arguments);
+ if(X8.prof&&pv!==null&&ME&&sb){const{error}=await sb.from('profiles').update({pronouns:pv||null,gender:gv||null}).eq('id',ME.id);if(!error){S.me.pron=pv;S.me.gen=gv;Object.assign(ME,{pronouns:pv||null,gender:gv||null});save();R()}}}}
+/* fixar publicações (até 3) */
+const pinSort=a=>a.slice().sort((x,y)=>(y.pin||0)-(x.pin||0));
+A.pinmenu=()=>{const L=S.posts.filter(p=>p.u==S.me.u&&p.oid);sheet(()=>`<h3>Fixar na grade</h3><p class="mu">Até 3 publicações ficam no começo do seu perfil.</p>${L.length?L.slice(0,40).map(p=>`<button class="mr" data-a="pintog" data-i="${p.id}"><span>${esc((p.cap||'Publicação').slice(0,40))}</span><i>${p.pin?'📌 fixada':'fixar'}</i></button>`).join(''):'<p class="mu">Você ainda não tem publicações.</p>'}`)};
+A.pintog=async id=>{const p=find(id);if(!p||!p.oid)return;const on=!p.pin;if(on&&S.posts.filter(x=>x.u==S.me.u&&x.pin).length>=3)return toast('Você pode fixar no máximo 3 publicações');
+ const when=on?new Date().toISOString():null,{error}=await sb.from('posts').update({pinned_at:when}).eq('id',p.oid);if(error)return toast('Não foi possível fixar. Rode o sql-8.0.sql');p.pin=on?+new Date(when):0;A.pinmenu();R();toast(on?'Publicação fixada':'Publicação desafixada')};
+/* música na publicação */
+const x8CpMusicRow=c=>X8.pin?cpRow('cpmusic','music','Adicionar música',c.music||''):cpRow('x8need','music','Adicionar música','precisa do SQL');
+A.cpmusic=()=>sheet(()=>`<h3>Música</h3><input id="cpmt" maxlength="60" placeholder="Música — artista" value="${esc((typeof CP!='undefined'&&CP&&CP.music)||'')}"><p class="mu">Aparece ao lado do seu nome na publicação (sem tocar áudio).</p><button class="bt" style="margin-top:8px" data-a="cpmusicgo">Salvar</button>`);
+A.cpmusicgo=()=>{CP.music=(($('#cpmt')||{}).value||'').trim().slice(0,90);shf=null;draw()};
+/* notas compartilhadas */
+A.nsave=async()=>{const el=$('#nt'),v=((el&&el.value)||'').trim().slice(0,60);
+ if(!X8.notes){S.note=v;save();shf=null;draw();R();toast(v?'Nota salva só neste aparelho. Para compartilhar, rode o sql-8.0.sql':'Nota removida');return}
+ try{if(!v){const{error}=await sb.from('user_notes').delete().eq('user_id',ME.id);if(error)throw error;delete NOTES[S.me.u];S.note=''}
+  else{const{error}=await sb.from('user_notes').upsert({user_id:ME.id,body:v,created_at:new Date().toISOString()});if(error)throw error;NOTES[S.me.u]={body:v,t:Date.now()};S.note=v}}catch(e){return toast('Não foi possível salvar a nota')}
+ save();shf=null;draw();R();toast(v?'Nota compartilhada por 24 horas':'Nota removida')};
+const notesRow=()=>Object.entries(NOTES).filter(([u])=>u!=S.me.u).map(([u,n])=>`<button class="st" data-a="chat" data-i="${esc(u)}"><span class="nt">${esc(n.body)}</span><span class="rg">${av(u,56)}</span>${esc(u)}</button>`).join('');
+/* privacidade */
+const PRIV_L={all:'Todos',followers:'Quem me segue',none:'Ninguém'};
+function x8PrivRows(){if(!X8.priv)return `<button class="mr" data-a="x8need"><span>Quem pode me enviar mensagens</span><i>precisa do SQL ›</i></button><button class="mr" data-a="x8need"><span>Quem pode comentar</span><i>precisa do SQL ›</i></button>`;
+ return `<button class="mr" data-a="privset" data-i="msg_privacy"><span>Quem pode me enviar mensagens</span><i>${PRIV_L[S.priv_msg||'all']} ›</i></button><button class="mr" data-a="privset" data-i="comment_privacy"><span>Quem pode comentar</span><i>${PRIV_L[S.priv_cm||'all']} ›</i></button>`}
+function x8PrivSrows(){if(!X8.priv)return srow('x8need','cm','Quem pode me enviar mensagens','precisa do SQL')+srow('x8need','at','Quem pode comentar','precisa do SQL');return srow('privset','cm','Quem pode me enviar mensagens',PRIV_L[S.priv_msg||'all'],'msg_privacy')+srow('privset','at','Quem pode comentar',PRIV_L[S.priv_cm||'all'],'comment_privacy')}
+A.privset=k=>sheet(()=>{const cur=(k=='msg_privacy'?S.priv_msg:S.priv_cm)||'all';return `<h3>${k=='msg_privacy'?'Quem pode me enviar mensagens':'Quem pode comentar nas minhas publicações'}</h3>${Object.entries(PRIV_L).map(([v,l])=>`<button class="mr" data-a="privgo" data-i="${k}|${v}"><span>${l}</span><i>${cur==v?'✓':''}</i></button>`).join('')}${k=='msg_privacy'?'<p class="mu">"Quem me segue" libera só quem já segue você.</p>':''}`});
+A.privgo=async i=>{const[k,v]=String(i).split('|');const{error}=await sb.from('profiles').update({[k]:v}).eq('id',ME.id);if(error)return toast('Não foi possível salvar');if(k=='msg_privacy')S.priv_msg=v;else S.priv_cm=v;ME[k]=v;shf=null;draw();R();toast('Privacidade atualizada')};
+async function msgAllowed(k){const id=ID[k];if(!id)return true;const c=MA[k];if(c&&Date.now()-c.t<6e4)return c.ok;let ok=true;try{const{data:p}=await sb.from('profiles').select('msg_privacy').eq('id',id).maybeSingle(),pr=(p&&p.msg_privacy)||'all';
+ if(pr=='none')ok=false;else if(pr=='followers'){const{data:f}=await sb.from('follows').select('status').eq('follower',ME.id).eq('following',id).maybeSingle();ok=!!(f&&f.status=='ok')}}catch(e){ok=true}MA[k]={ok,t:Date.now()};return ok}
+{const o=sendMsg2;sendMsg2=async function(k,opt){if(X8.priv&&!isG(k)&&!(await msgAllowed(k))){toast(k+' não aceita mensagens suas');return 0}return o(k,opt)}}
+async function cmAllowed(p){const c=CMA[p.uid];if(c&&Date.now()-c.t<6e4)return c.ok;let ok=true;try{const{data:r}=await sb.from('profiles').select('comment_privacy').eq('id',p.uid).maybeSingle(),pr=(r&&r.comment_privacy)||'all';
+ if(pr=='none')ok=false;else if(pr=='followers'){const{data:f}=await sb.from('follows').select('status').eq('follower',ME.id).eq('following',p.uid).maybeSingle();ok=!!(f&&f.status=='ok')}}catch(e){ok=true}CMA[p.uid]={ok,t:Date.now()};return ok}
+{const o=A.cms;A.cms=async function(id){const p=find(id);if(X8.priv&&p&&p.uid&&p.u!=S.me.u&&!(await cmAllowed(p))){toast('Quem publicou limitou os comentários');return}return o.apply(this,arguments)}}
+/* sino: avisos quando alguém publicar */
+A.palert=async u=>{if(!X8.alerts)return A.x8need();const id=(PV&&PV.p&&PV.p.id)||ID[u];if(!id)return toast('Não foi possível agora');
+ if(ALERTS.has(id)){const{error}=await sb.from('profile_alerts').delete().eq('user_id',ME.id).eq('target_id',id);if(error)return toast('Não foi possível desativar');ALERTS.delete(id);toast('Avisos desativados')}
+ else{const{error}=await sb.from('profile_alerts').insert({user_id:ME.id,target_id:id});if(error)return toast('Não foi possível ativar');ALERTS.add(id);toast('Você vai receber um aviso quando @'+u+' publicar')}
+ draw()};
+
+</script>
+<script>function x8err(m){m=String(m||'');return /same|different/i.test(m)?'Use uma senha diferente da atual.':/weak|pwned|leaked|breach/i.test(m)?'Senha fraca ou já vazada. Escolha outra.':/rate|too many|seconds/i.test(m)?'Muitas tentativas. Aguarde um pouco.':/expired|invalid/i.test(m)?'Link expirado. Peça um novo.':'Não foi possível alterar. Tente de novo.'}</script>
 <script>/* Rede de segurança: se após 10 s nada apareceu, mostra aviso em vez de tela branca */
 setTimeout(function(){try{var m=document.getElementById('main'),a=document.getElementById('au');if((!m||!m.innerHTML.trim())&&(!a||a.hidden||!a.innerHTML.trim())){try{localStorage.removeItem('vv1')}catch(e){}var d=document.createElement('div');d.style.cssText='position:fixed;inset:0;z-index:99998;background:#05060f;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font:16px system-ui;text-align:center;padding:24px';d.innerHTML='<b style="letter-spacing:.3em">VELOVERSA</b><span>Não foi possível carregar. Verifique a internet.</span><button style="background:#8b6bff;color:#fff;border:0;border-radius:12px;padding:10px 20px;font:inherit" onclick="location.href=location.pathname+\'?r=\'+Date.now()">Tentar de novo</button>';document.body.appendChild(d)}}catch(e){}},10000);</script>
 </body>
