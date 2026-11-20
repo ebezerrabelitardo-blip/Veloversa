@@ -1,7 +1,10 @@
 <!doctype html>
+<!-- VELOVERSA 8.2 · arquivo único · se você abriu este arquivo e vê esta linha, ele é a versão 8.2 -->
 <html lang="pt-BR" data-theme="dark">
 <head>
+<script>window.__lastErr='';window.addEventListener('error',function(e){window.__lastErr=(e.message||'erro')+(e.lineno?' (linha '+e.lineno+')':'')});window.addEventListener('unhandledrejection',function(e){var r=e.reason;window.__lastErr=String((r&&r.message)||r||'erro')})</script>
 <meta charset="utf-8">
+<meta name="app-version" content="8.2">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>VELOVERSA</title>
 <style>
@@ -114,7 +117,7 @@ nav .cr{background:linear-gradient(135deg,var(--ac),#3d8bff);box-shadow:0 6px 18
 <input type="file" id="fcv" accept="image/*" hidden>
 <input type="file" id="cpf" multiple accept="image/*,video/*" hidden>
 <script>
-const VER='8.1';
+const VER='8.2';
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const P={home:'M3 11l9-8 9 8v10h-6v-6H9v6H3z',search:'M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5',plus:'M12 5v14M5 12h14',send:'M22 3L9.5 13.5M22 3l-7 18-5.5-7.5L2 10z',user:'M12 3a4.5 4.5 0 100 9 4.5 4.5 0 000-9zM4 21c0-4.4 3.6-7 8-7s8 2.6 8 7',heart:'M12 21s-8-5-8-11a4.5 4.5 0 018-3 4.5 4.5 0 018 3c0 6-8 11-8 11z',cm:'M21 12a8 8 0 01-11.5 7.2L3 21l1.8-6A8 8 0 1121 12z',bm:'M6 3h12v18l-6-4-6 4z',reel:'M4 4h16v16H4zM10 9l5 3-5 3z',x:'M5 5l14 14M19 5L5 19',menu:'M4 6h16M4 12h16M4 18h16',back:'M15 5l-7 7 7 7',edit:'M4 20h4L19 9l-4-4L4 16zM14 6l4 4',feed:'M4 4h16v7H4zM4 14h16v6H4z',rep:'M17 2l4 4-4 4M3 11V9a3 3 0 013-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 01-3 3H3'};
 const ic=(n,f)=>`<svg viewBox="0 0 24 24" width="24" height="24" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${P[n]}"/></svg>`;
@@ -986,7 +989,7 @@ const setPage=()=>`<div><div class="hd"><button data-a="close" aria-label="Volta
 <div class="hd"><span>Segurança</span></div><button class="mr" data-a="chpw"><span>Alterar senha</span><i>›</i></button><button class="mr" data-a="outothers"><span>Sair de outros aparelhos</span><i>›</i></button>
 <div class="hd"><span>Acessibilidade</span></div><div style="padding:0 16px">${tg('dark',S.theme=='dark','Tema escuro')}${tg('calm',S.calm,'Animações reduzidas')}${tg('big',S.big,'Texto maior')}</div>
 <div class="hd"><span>Seus dados</span></div><button class="mr" data-a="expd"><span>Baixar meus dados</span><i>›</i></button><button class="mr" data-a="delacc" style="color:#ff5a6a"><span>Excluir minha conta</span><i>›</i></button>
-<div class="hd"><span>Mais</span></div><button class="mr" data-a="diag"><span>Diagnóstico do app · v${VER}</span><i>›</i></button><button class="mr" data-a="algo"><span>Seu algoritmo</span><i>›</i></button><button class="mr" data-a="out"><span>Sair da conta</span></button><p class="mu" style="text-align:center;margin-top:12px">VELOVERSA · versão ${VER}</p></div></div>`;
+<div class="hd"><span>Mais</span></div><button class="mr" data-a="chkupd"><span>Verificar atualização</span><i>v${VER} ›</i></button><button class="mr" data-a="diag"><span>Diagnóstico do app · v${VER}</span><i>›</i></button><button class="mr" data-a="algo"><span>Seu algoritmo</span><i>›</i></button><button class="mr" data-a="out"><span>Sair da conta</span></button><p class="mu" style="text-align:center;margin-top:12px">VELOVERSA · versão ${VER}</p></div></div>`;
 A.set=()=>{shf=null;ovl(setPage)};
 A.chpw=()=>sheet(()=>`<h3>Alterar senha</h3><input id="pw1" type="password" placeholder="Nova senha" autocomplete="new-password"><input id="pw2" type="password" placeholder="Repita a nova senha" autocomplete="new-password" style="margin-top:8px"><button class="bt" style="margin-top:12px" data-a="chpwgo">Salvar</button>`);
 A.chpwgo=async()=>{const a=$('#pw1').value,b=$('#pw2').value;if(a.length<8||pwScore(a)<3)return toast('Senha fraca: 8+ caracteres com maiúsculas, minúsculas e números');if(a!=b)return toast('As senhas não coincidem');
@@ -1175,7 +1178,7 @@ const rvSec=p=>`<section class="rv" id="rv${p.id}" data-id="${p.id}"><video src=
 const rvEnd=()=>`<section class="rv" id="rvmore" style="display:flex;align-items:center;justify-content:center;text-align:center;padding:24px"><span class="mu">${RV.done?'Você viu todos os vídeos por enquanto ✦':RV.err?'Não foi possível carregar mais.':'Carregando mais vídeos…'}</span></section>`;
 const reelsHdr=()=>`<button data-a="create" aria-label="Criar">${ic('plus')}</button><div class="rvhdt"><button data-a="rtab" data-i="all" class="${window.RT=='fr'?'':'on'}">Reels</button><button data-a="rtab" data-i="fr" class="${window.RT=='fr'?'on':''}">Amigos</button></div><button data-a="rmute" aria-label="Som">${ic(window.RMUTE===0?'vol':'voloff')}</button>`;
 V.reels=()=>'';
-function rvWire(root){root.querySelectorAll('video').forEach(v=>{v.onerror=()=>v.closest('.rv').classList.add('failed');v.onloadedmetadata=()=>{v.style.objectFit=v.videoWidth>v.videoHeight?'contain':'cover'};
+function rvWire(root){root.querySelectorAll('video').forEach(v=>{v.onerror=()=>{const rv=v.closest('.rv');rv.classList.add('failed');try{vFailInfo(rv,v)}catch(e){}};v.onloadedmetadata=()=>{v.style.objectFit=v.videoWidth>v.videoHeight?'contain':'cover'};
   v.ontimeupdate=()=>{const i=v.closest('.rv').querySelector('.rvpr i');if(i&&v.duration)i.style.width=(v.currentTime/v.duration*100)+'%'}});
  if(RV.io)root.querySelectorAll('.rv').forEach(s=>RV.io.observe(s))}
 function rvObserve(){if(RV.io)RV.io.disconnect();if(!('IntersectionObserver' in window))return;
@@ -1331,7 +1334,7 @@ A.mstksend=async e=>{shf=null;draw();if(await sendMsg2(cur,{text:e})){R();scroll
 A.mplus=()=>sheet(()=>`<h3>Mais opções</h3><button class="mr" data-a="mph"><span>Fotos e vídeos</span></button><button class="mr" data-a="soon"><span>Enquete</span><i></i></button><button class="mr" data-a="soon"><span>Localização</span><i></i></button><button class="mr" data-a="soon"><span>Respostas rápidas</span><i></i></button><button class="mr" data-a="soon"><span>Mensagens que desaparecem</span><i></i></button>`);
 A.mcam=()=>{const f=$('#mf2');if(!f)return;f.setAttribute('capture','environment');f.value='';f.click()};
 A.mph=()=>{shf=null;draw();const f=$('#mf2');if(!f)return;f.removeAttribute('capture');f.value='';f.click()};
-document.addEventListener('change',async e=>{if(e.target.id!='mf2'||!cur)return;const f=e.target.files[0],k=cur;if(!f)return;const vid=f.type.startsWith('video/');
+document.addEventListener('change',async e=>{if(e.target.id!='mf2'||!cur)return;let f=e.target.files[0];const k=cur;if(!f)return;const vid=f.type.startsWith('video/');if(vid)f=await ensureCompat(f);
  if(f.size>(vid?5e7:1e7))return toast(vid?'Vídeo muito grande (máx. 50 MB)':'Foto muito grande (máx. 10 MB)');
  const B=sb.storage.from('media'),ext=vid?(f.type.split('/')[1]||'mp4').replace('quicktime','mov'):'jpg',path=ME.id+'/dm-'+Date.now()+'.'+ext;toast('Enviando...');
  const up=await B.upload(path,f,{contentType:f.type||(vid?'video/mp4':'image/jpeg')});if(up.error)return toast('Não foi possível enviar');
@@ -1555,7 +1558,7 @@ document.addEventListener('input',e=>{if(e.target.id=='sew'&&SE)SE.w=+e.target.v
 async function bgBlob(i){const c=document.createElement('canvas');c.width=1080;c.height=1920;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,1080,1920),[a,b]=TBG[i].split(',');g.addColorStop(0,a);g.addColorStop(1,b);x.fillStyle=g;x.fillRect(0,0,1080,1920);return new Promise(r=>c.toBlob(r,'image/jpeg',.9))}
 A.sepub=async()=>{if(!SE)return;if(SE.kind=='text'&&!SE.items.length)return toast('Adicione um texto ao story');const E=SE;toast('Publicando story...');
  try{const B=sb.storage.from('media');let blob,ext,type;
-  if(E.kind=='text'){blob=await bgBlob(E.bgi);ext='jpg';type='image'}else if(E.kind=='img'){blob=await(await fetch(E.src)).blob();ext='jpg';type='image'}else{blob=await(await fetch(E.src)).blob();ext=(blob.type.split('/')[1]||'mp4').replace('quicktime','mov');type='video'}
+  if(E.kind=='text'){blob=await bgBlob(E.bgi);ext='jpg';type='image'}else if(E.kind=='img'){blob=await(await fetch(E.src)).blob();ext='jpg';type='image'}else{blob=await(await fetch(E.src)).blob();blob=await ensureCompat(blob);ext=(blob.type.split('/')[1]||'mp4').replace('quicktime','mov');type='video'}
   const path=ME.id+'/story-'+Date.now()+'.'+ext,up=await B.upload(path,blob,{contentType:blob.type||(type=='video'?'video/mp4':'image/jpeg')});if(up.error)throw up.error;
   const row={user_id:ME.id,caption:'',media_url:B.getPublicUrl(path).data.publicUrl,media_path:path,media_type:type};if(E.aud)row.audience='close';
   const meta={filter:E.filter,items:E.items,paths:E.paths,bg:E.bg};if(E.items.length||E.paths.length||E.filter!='none'||(E.bg&&(E.bg.fit=='contain'||E.bg.s!=1||E.bg.r||E.bg.fl||E.bg.x||E.bg.y)))row.meta=meta;
@@ -1920,7 +1923,7 @@ const setHub=()=>`<div class="setp"><div class="xh" style="padding-top:calc(14px
  <button class="outb" data-a="out">${ic('hangup')} Sair da conta</button></div></div>`;
 const FAQ=[['Como publico uma foto, vídeo ou Reel?','Toque no botão + (no centro da barra de baixo). Escolha fotos ou um vídeo, escreva a legenda e toque em Publicar. Para publicar como Reel, ative a opção Reels depois de escolher um vídeo.'],['Como funcionam os stories?','Toque em “Seu story” no início. Eles ficam visíveis por 24 horas para quem segue você (ou só para os amigos próximos). Segure o dedo para pausar.'],['Por que meu amigo não vê meu story?','Para ver os seus stories, ele precisa seguir você — e você precisa seguir quem quer ver. Stories só para amigos próximos exigem estar na lista.'],['Meu vídeo não toca no aparelho do amigo.','Vídeos de iPhone podem vir em formato HEVC. Ao publicar, escolha “Converter (recomendado)” ou ative em Ajustes › Câmera › Formatos › Mais compatível.'],['Como bloqueio ou denuncio alguém?','Abra o perfil, toque nos três pontos e escolha Bloquear ou Denunciar. Em uma conversa, use o menu do nome no topo.'],['Esqueci minha senha.','Na tela de login, toque em “Esqueci a senha” e siga o link enviado ao seu e-mail.'],['Como excluo minha conta?','Configurações › Conta › Excluir minha conta. Você precisará digitar EXCLUIR para confirmar.']];
 const setSub=k=>{const T={acc:'Conta',priv:'Privacidade',ntf:'Notificações',lang:'Idioma',help:'Ajuda',about:'Sobre o VELOVERSA'};let b='';
- if(k=='acc')b=srow('edit','edit','Editar perfil')+srow('chmail','at','E-mail da conta',(ME&&ME.email)||'')+srow('chpw','lock','Alterar senha')+srow('outothers','users','Sair de outros aparelhos')+srow('expd','down','Baixar meus dados')+srow('delacc','trash','Excluir minha conta e dados','', '', 'red');
+ if(k=='acc')b=srow('edit','edit','Editar perfil')+srow('chmail','at','E-mail da conta',(ME&&ME.email)||'')+srow('chpw','lock','Alterar senha')+srow('vfixall','video','Converter meus vídeos antigos')+srow('outothers','users','Sair de outros aparelhos')+srow('expd','down','Baixar meus dados')+srow('delacc','trash','Excluir minha conta e dados','', '', 'red');
  else if(k=='priv')b=tgrow('priv',S.priv,'Conta privada')+srow('blkl','close','Contas bloqueadas',String(BL.size))+srow('cfm','star','Amigos próximos')+srow('arq','clock','Arquivo de stories')+x8PrivSrows();
  else if(k=='ntf')b=[['follow','Novos seguidores'],['like','Curtidas e republicações'],['comment','Comentários e menções'],['message','Novas mensagens']].map(([x,l])=>tgrow(x,PREF[x]!==false,l,'pref')).join('')+`<p class="mu" style="padding:12px 18px">Avisos dentro do app. Notificações push no celular dependem de um serviço externo e ainda não estão ativas.</p>`;
  else if(k=='lang')b=`<div class="srow" style="cursor:default"><span>Português (Brasil)</span>${ic('check')}</div><p class="mu" style="padding:10px 16px;line-height:1.4">O VELOVERSA está disponível apenas em português por enquanto.</p>`;
@@ -2420,7 +2423,7 @@ A.bndel=async()=>{bnSync();shf=null;draw();if(!ME||!S.me.bn)return;if(!confirm('
 
 /* Reels: aviso de versão e render */
 try{render()}catch(e){console.error(e)}
-setTimeout(()=>{try{toast('VELOVERSA v8.1 carregado')}catch(e){}},1200);
+setTimeout(()=>{try{toast('VELOVERSA v8.2 carregado')}catch(e){}},1200);
 
 </script>
 <script>
@@ -2803,7 +2806,116 @@ function decorateRows(root){if(!root)return;root.querySelectorAll('.mr').forEach
 {const sb=document.getElementById('sb');if(sb){new MutationObserver(()=>decorateRows(sb)).observe(sb,{childList:true,subtree:true});decorateRows(sb)}}
 
 </script>
+<script>
+/* ===== VERSÃO 8.2 · vídeos que tocam em qualquer aparelho (conversão automática de HEVC) ===== */
+{const st=document.createElement('style');st.id='v82css';st.textContent=`/* ===== 8.2 · botões transparentes (vidro), emoji e vídeos sem moldura ===== */
+.mr>svg:first-child,.srow>svg:first-child,.cprow>svg:first-child,.xt .xi,.sx-t span,.sx-aud .ai,.mr[data-a]>svg:first-child{background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.2)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.22)!important;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff}
+.cbar .ib,.cbar [data-a="mcam"],.cbar [data-a="mrec"],.cbar [data-a="matt"],.cbar [data-a="mstk"],.cbar [data-a="mplus"]{background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.2)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)!important}
+.cbar .csend{background:rgba(255,255,255,.18)!important;border:1px solid rgba(255,255,255,.35)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)!important}
+.chd .chx .ib:nth-child(n){background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.2)!important}
+.sx-pub{background:rgba(255,255,255,.16)!important;border:1px solid rgba(255,255,255,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 10px 26px -10px rgba(0,0,0,.6)!important;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+.sx-btn.on{background:rgba(255,255,255,.2)!important;border-color:rgba(255,255,255,.5)!important}
+#sb .bt,.vconv{background:rgba(255,255,255,.14)!important;border:1px solid rgba(255,255,255,.3)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)!important;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+#app>nav .cr{background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.3)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 10px 26px -12px rgba(0,0,0,.6)!important}
+.sx-sel button.del{background:rgba(255,80,110,.35)!important;border-color:rgba(255,120,140,.5)}
+.sx-dr .sx-ok,.sx-dr .sx-undo{background:rgba(255,255,255,.16)!important}
+/* emoji sozinho: só o emoji, sem balão */
+.cv .mrow .mb.big{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;font-size:3.2rem;line-height:1.15}
+/* foto e vídeo no chat: sem moldura, no formato original (horizontal ou vertical) */
+.cv .mrow .mb.media{background:none!important;border:0!important;box-shadow:none!important;padding:0!important}
+.cv .mb.media video,.cv .mb.media .mimg{max-width:min(300px,72vw);max-height:56vh;width:auto;height:auto;border-radius:18px;display:block;background:#000;object-fit:contain}
+.cv .mrow .mb:has(.pcard){background:none!important;border:0!important;box-shadow:none!important;padding:0!important}
+.cv .pcard{padding:10px;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);min-width:220px;max-width:300px;color:#fff}
+.cv .pcard>div{height:auto!important;max-height:340px;background:#000}
+.cv .pcard img,.cv .pcard video{width:100%!important;height:auto!important;max-height:340px;object-fit:contain!important;display:block}
+/* aviso de vídeo que não toca */
+.vfail{position:absolute;left:8px;right:8px;bottom:8px;text-align:center;color:#fff;background:rgba(10,10,30,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:10px 12px;font-size:.8rem;display:flex;flex-direction:column;gap:3px}
+.vfail b{font-size:.9rem}.vfail small{opacity:.8}.vfail em{font-style:normal;opacity:.5;font-size:.68rem}
+/* barra de progresso da conversão */
+#xconv{position:fixed;left:0;right:0;bottom:calc(100px + env(safe-area-inset-bottom,0px));z-index:95;display:flex;justify-content:center;pointer-events:none}
+#xconv[hidden]{display:none}
+.xcv{display:flex;align-items:center;gap:12px;padding:13px 20px;border-radius:26px;background:rgba(14,16,44,.72);border:1px solid rgba(255,255,255,.22);color:#fff;-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);box-shadow:0 14px 40px rgba(0,0,0,.5);font-weight:700;font-size:.88rem}
+.xcv i{width:18px;height:18px;border-radius:50%;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;animation:xspin .8s linear infinite}
+@keyframes xspin{to{transform:rotate(360deg)}}
+.xcv span{opacity:.85;min-width:34px;text-align:right}
+`;document.head.appendChild(st)}
+let XCV=null;
+function xConvShow(label){let e=document.getElementById('xconv');if(!e){e=document.createElement('div');e.id='xconv';document.body.appendChild(e)}e.hidden=false;e.innerHTML=`<div class="xcv"><i></i><b>${esc(label)}</b><span id="xcvp">0%</span></div>`;clearInterval(XCV);XCV=setInterval(()=>{const p=document.getElementById('xcvp');if(p)p.textContent=(window.__vp||0)+'%'},300)}
+function xConvHide(){clearInterval(XCV);const e=document.getElementById('xconv');if(e)e.hidden=true}
+/* converte HEVC para um formato que todo aparelho reproduz (H.264/MP4, ou WebM quando o navegador não grava MP4) */
+async function ensureCompat(file){try{if(!file||!/^video\//.test(file.type||''))return file;const cd=await codecOf(file);if(cd!='hevc')return file;
+ window.__vp=0;xConvShow('Convertendo o vídeo para tocar em todos os aparelhos');
+ try{const blob=await transcode(file);if(!blob||!blob.size)throw new Error('vazio');const t=String(blob.type||'video/mp4').split(';')[0],nf=new File([blob],'video.'+(t.includes('mp4')?'mp4':'webm'),{type:t});xConvHide();toast('Vídeo convertido');return nf}
+ catch(err){xConvHide();console.error('conversão',err);toast(err&&err.message=='nosupport'?'Este navegador não consegue converter. Alguns aparelhos podem não reproduzir.':'Não consegui converter. Alguns aparelhos podem não reproduzir.');return file}}catch(e){return file}}
+/* post/reel: HEVC converte sozinho (sem a opção de manter como está) */
+{const o=cpVideoCheck;cpVideoCheck=async function(i){const f=CP&&CP.files[i];if(f&&/^video\//.test(f.type||'')){const cd=await codecOf(f);if(cd=='hevc'){const nf=await ensureCompat(f);if(nf!==f&&CP&&CP.files[i]===f){try{URL.revokeObjectURL(CP.urls[i])}catch(e){}CP.files[i]=nf;CP.urls[i]=URL.createObjectURL(nf);try{draw()}catch(e){}}return}}return o.apply(this,arguments)}}
+{const o=A.cppub;A.cppub=async function(){const c=CP;if(c&&!c.busy){for(let i=0;i<c.files.length;i++){const f=c.files[i];if(f&&/^video\//.test(f.type||'')){const nf=await ensureCompat(f);if(nf!==f){c.files[i]=nf;try{URL.revokeObjectURL(c.urls[i])}catch(e){}c.urls[i]=URL.createObjectURL(nf)}}}}return o.apply(this,arguments)}}
+/* ---------- por que um vídeo não toca? diagnóstico em linguagem clara ---------- */
+async function vDiag(url,er){const out={code:er?er.code:0,kind:'other'};try{const r=await fetch(url,{headers:{Range:'bytes=0-1999999'}});out.status=r.status;out.type=(r.headers.get('content-type')||'').split(';')[0];
+ const cr=r.headers.get('content-range');out.size=cr?+cr.split('/')[1]:+(r.headers.get('content-length')||0);
+ if(r.status==404||r.status==400){out.kind='missing';return out}if(!r.ok&&r.status!=206){out.kind='http';return out}
+ const b=await r.blob();if(b.size<1000){out.kind='empty';return out}out.codec=await codecOf(b);out.kind=out.codec=='hevc'?'hevc':'other'}catch(e){out.kind='net'}return out}
+const vMsg=d=>({missing:['Vídeo não encontrado','O arquivo foi apagado. Peça para quem publicou enviar de novo.'],empty:['Vídeo incompleto','O envio desse vídeo não terminou. Peça para quem publicou enviar de novo.'],
+ hevc:['Vídeo em formato HEVC','Este aparelho não reproduz HEVC. Quem publicou pode corrigir em Configurações › Conta › Converter meus vídeos antigos.'],net:['Sem conexão','Verifique a internet e tente de novo.'],http:['Não foi possível baixar o vídeo','O servidor recusou o arquivo. Tente de novo em instantes.'],
+ other:['Não foi possível reproduzir','O arquivo pode estar incompleto ou em um formato incomum. Se foi você que publicou, envie de novo pelo app.']}[d.kind]||['Não foi possível reproduzir','Tente de novo.']);
+const vDet=d=>['código '+(d.code||'?'),d.status?'status '+d.status:'',d.type||'',d.codec&&d.codec!='?'?d.codec:''].filter(Boolean).join(' · ');
+vidErr=function(v){const p=v.getAttribute('poster'),u=v.currentSrc||v.src,er=v.error,id='vf'+Math.random().toString(36).slice(2,7);v.outerHTML=(p?`<img src="${p}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`:'')+`<span id="${id}" class="vfail"><b>Não foi possível reproduzir</b><small>Verificando…</small></span>`;
+ vDiag(u,er).then(d=>{const e=document.getElementById(id);if(e){const m=vMsg(d);e.innerHTML=`<b>${m[0]}</b><small>${m[1]}</small><em>${vDet(d)}</em>`}})};
+function vFailInfo(rv,v){const f=rv.querySelector('.rvfail');if(!f)return;const b=f.querySelector('b'),p=f.querySelector('p'),u=v.currentSrc||v.src,er=v.error;if(b)b.textContent='Verificando o vídeo…';if(p)p.textContent='';
+ vDiag(u,er).then(d=>{const m=vMsg(d);if(b)b.textContent=m[0];if(p)p.innerHTML=m[1]+`<br><small style="opacity:.6">${vDet(d)}</small>`;const id=rv.dataset.id,post=find(id);
+  if(d.kind=='hevc'&&post&&post.u==S.me.u&&post.oid&&!f.querySelector('.vconv'))f.insertAdjacentHTML('beforeend',`<button class="bt vconv" data-a="vfix1" data-i="${id}" style="width:auto;padding:10px 20px">Converter este vídeo</button>`)})}
+/* ---------- consertar vídeos antigos em HEVC (precisa ser feito no aparelho que consegue tocá-los) ---------- */
+async function vfixPost(p){const B=sb.storage.from('media');if(!p||!p.oid||!p.vid||!/^https?:/.test(p.vid))return 'skip';
+ const r=await fetch(p.vid,{headers:{Range:'bytes=0-1999999'}});if(!(r.ok||r.status==206))return 'fail';const cd=await codecOf(await r.blob());if(cd!='hevc')return 'skip';
+ const full=await(await fetch(p.vid)).blob();window.__vp=0;const out=await transcode(new File([full],'v.mov',{type:full.type||'video/quicktime'}));if(!out||!out.size)return 'fail';
+ const t=String(out.type||'video/mp4').split(';')[0],np=ME.id+'/fix-'+Date.now()+'.'+(t.includes('mp4')?'mp4':'webm'),up=await B.upload(np,out,{contentType:t});if(up.error)return 'fail';
+ const url=B.getPublicUrl(np).data.publicUrl,cov=np.replace(/\.[^./]+$/,'.cover.jpg');
+ if(p.path){try{const oc=p.path.replace(/\.[^./]+$/,'.cover.jpg'),cb=await(await fetch(B.getPublicUrl(oc).data.publicUrl)).blob();if(cb.size>500)await B.upload(cov,cb,{contentType:'image/jpeg'})}catch(e){}}
+ const{error}=await sb.from('posts').update({media_url:url,media_path:np,media_type:'video'}).eq('id',p.oid);if(error){await B.remove([np,cov]).catch(()=>{});return 'fail'}
+ try{if(p.path)await B.remove([p.path,p.path.replace(/\.[^./]+$/,'.cover.jpg')])}catch(e){}
+ p.vid=url;p.path=np;p.cover=B.getPublicUrl(cov).data.publicUrl;return 'ok'}
+A.vfix1=async id=>{const p=find(id);if(!p)return;xConvShow('Convertendo o vídeo');let r='fail';try{r=await vfixPost(p)}catch(e){console.error(e)}xConvHide();toast(r=='ok'?'Vídeo convertido! Ele já toca em todos os aparelhos':r=='skip'?'Este vídeo já está num formato compatível':'Não consegui converter neste aparelho');try{save();R()}catch(e){}};
+A.vfixall=async()=>{const L=S.posts.filter(p=>p.u==S.me.u&&p.oid&&p.vid&&/^https?:/.test(p.vid));if(!L.length)return toast('Você não tem vídeos publicados');let ok=0,fail=0;
+ for(let i=0;i<L.length;i++){xConvShow('Verificando vídeo '+(i+1)+' de '+L.length);window.__vp=0;try{const r=await vfixPost(L[i]);if(r=='ok')ok++;else if(r=='fail')fail++}catch(e){console.error(e);fail++}}
+ xConvHide();toast(ok?`${ok} vídeo(s) convertido(s)${fail?`, ${fail} falharam`:''}`:fail?`Não consegui converter ${fail} vídeo(s) neste aparelho`:'Todos os seus vídeos já estão num formato compatível');try{save();R()}catch(e){}};
+
+</script>
+<script>
+/* ===== VERSÃO 8.3 · o app confere sozinho se existe versão nova e atualiza com um toque ===== */
+{const st=document.createElement('style');st.textContent=`
+#xupd{position:fixed;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top,0px));z-index:300;display:flex;justify-content:center;pointer-events:none}
+#xupd[hidden]{display:none}
+#xupd .xu{pointer-events:auto;display:flex;align-items:center;gap:12px;padding:10px 12px 10px 16px;border-radius:26px;background:rgba(14,16,44,.78);border:1px solid rgba(255,255,255,.26);color:#fff;-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);box-shadow:0 14px 40px rgba(0,0,0,.5);font-weight:700;font-size:.85rem;animation:up .25s}
+#xupd .xu button{padding:9px 16px;border-radius:18px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;font-weight:800;font-size:.82rem}`;document.head.appendChild(st)}
+const vcmp=(a,b)=>{const x=String(a).split('.').map(Number),y=String(b).split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
+let UPDV=null,UPDT=0;
+function showUpd(v){UPDV=v;let e=document.getElementById('xupd');if(!e){e=document.createElement('div');e.id='xupd';document.body.appendChild(e)}e.hidden=false;e.innerHTML=`<div class="xu"><span>Nova versão v${esc(v)} disponível</span><button data-a="doupd">Atualizar</button></div>`}
+async function checkUpdate(manual){UPDT=Date.now();try{if(!/^https?:$/.test(location.protocol)){if(manual)toast('Abra pelo endereço do site para verificar');return}
+ const r=await fetch(location.pathname+'?chk='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('http');const t=await r.text(),m=t.match(/const VER='([\d.]+)'/);if(!m)throw new Error('sem versão');
+ if(vcmp(m[1],VER)>0)showUpd(m[1]);else{const e=document.getElementById('xupd');if(e)e.hidden=true;if(manual)toast('Você já está na versão mais nova (v'+VER+')')}}
+ catch(e){if(manual)toast('Não consegui verificar agora. Tente de novo.')}}
+A.doupd=()=>{try{toast('Atualizando…')}catch(e){}setTimeout(()=>{location.replace(location.pathname+'?u='+Date.now()+location.hash)},250)};
+A.chkupd=()=>{toast('Verificando…');checkUpdate(true)};
+setTimeout(checkUpdate,5000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now()-UPDT>6e5)checkUpdate()});
+
+/* abas do perfil: ignora valores inválidos (evita erro de tela) */
+{const OK=['g','r','rp','s','t'];const o=A.sub;A.sub=function(k){if(!OK.includes(k))return;return o.apply(this,arguments)};const p=A.psub;A.psub=function(k){if(!OK.includes(k))return;return p.apply(this,arguments)}}
+
+</script>
+<script>
+/* ===== VERSÃO 8.4 · cabeçalho cabe em telas pequenas + janela "Novidades" ao abrir uma versão nova ===== */
+{const st=document.createElement('style');st.textContent=`
+@media(max-width:360px){#hd{gap:8px!important;padding-left:12px!important;padding-right:12px!important}#hd .logo{font-size:.88rem!important;letter-spacing:.12em!important;min-width:0;gap:6px}#hd .logo svg{width:22px;height:22px}#hd .ib{width:36px!important;height:36px!important}}
+.xnov{margin:6px 0 14px;padding:0;list-style:none}.xnov li{display:flex;gap:12px;align-items:flex-start;padding:11px 12px;margin:7px 0;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);line-height:1.3;font-size:.9rem}
+.xnov li b{display:block;font-size:.95rem;margin-bottom:2px}.xnov li span.n{flex:none;width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);font-size:1.05rem}`;document.head.appendChild(st)}
+const NOVID=[['🫧','Botões em vidro transparente','Menus, chat, editor de story e a barra de baixo, com o “+” no centro.'],['🎞️','Vídeos em qualquer aparelho','Vídeo em HEVC é convertido sozinho. Em Configurações › Conta há “Converter meus vídeos antigos”.'],['💬','Chat mais limpo','Emoji sozinho, sem balão. Fotos e vídeos sem moldura, no formato original.'],['🖼️','Story sem foto achatada','Foto inteira com fundo desfocado, zoom com dois dedos, girar e espelhar.'],['🔄','Atualização automática','O app avisa quando existe versão nova e atualiza com um toque.']];
+function showNovidades(){try{if(!ME||typeof sheet!='function')return;sheet(()=>`<h3>Novidades · v${esc(VER)}</h3><ul class="xnov">${NOVID.map(([e,t,d])=>`<li><span class="n">${e}</span><div><b>${esc(t)}</b>${esc(d)}</div></li>`).join('')}</ul><button class="bt" data-a="novok">Entendi</button>`)}catch(e){}}
+A.novok=()=>{shf=null;try{draw()}catch(e){}};
+{const ob=boot;boot=async s=>{await ob(s);try{if(localStorage.getItem('vvseen')!==VER){localStorage.setItem('vvseen',VER);setTimeout(showNovidades,1600)}}catch(e){}}}
+
+</script>
 <script>/* Rede de segurança: se após 10 s nada apareceu, mostra aviso em vez de tela branca */
-setTimeout(function(){try{var m=document.getElementById('main'),a=document.getElementById('au');if((!m||!m.innerHTML.trim())&&(!a||a.hidden||!a.innerHTML.trim())){try{localStorage.removeItem('vv1')}catch(e){}var d=document.createElement('div');d.style.cssText='position:fixed;inset:0;z-index:99998;background:#05060f;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font:16px system-ui;text-align:center;padding:24px';d.innerHTML='<b style="letter-spacing:.3em">VELOVERSA</b><span>Não foi possível carregar. Verifique a internet.</span><button style="background:#8b6bff;color:#fff;border:0;border-radius:12px;padding:10px 20px;font:inherit" onclick="location.href=location.pathname+\'?r=\'+Date.now()">Tentar de novo</button>';document.body.appendChild(d)}}catch(e){}},10000);</script>
+setTimeout(function(){try{var m=document.getElementById('main'),a=document.getElementById('au');if((!m||!m.innerHTML.trim())&&(!a||a.hidden||!a.innerHTML.trim())){try{localStorage.removeItem('vv1')}catch(e){}var d=document.createElement('div');d.style.cssText='position:fixed;inset:0;z-index:99998;background:#05060f;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font:16px system-ui;text-align:center;padding:24px';d.innerHTML='<b style="letter-spacing:.3em">VELOVERSA</b><span>Não foi possível carregar. Verifique a internet.</span><small style="opacity:.6;max-width:320px">'+String(window.__lastErr||'').replace(/[<>&]/g,'')+'</small><button style="background:#8b6bff;color:#fff;border:0;border-radius:12px;padding:10px 20px;font:inherit" onclick="location.href=location.pathname+\'?r=\'+Date.now()">Tentar de novo</button>';document.body.appendChild(d)}}catch(e){}},10000);</script>
 </body>
 </html>
